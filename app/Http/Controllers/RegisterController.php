@@ -167,27 +167,47 @@ class RegisterController extends Controller
     }
 
     public function childSchedule(Request $request, $child_id, $package_id)
-    {
-        $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id);
-        $package = Package::find($package_id);
+{
+    $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
+    $package = Package::find($package_id);
 
-        if (!$childInfo || !$package) {
-            abort(404);
-        }
-
-        $selectedSlots = json_decode($request->input('selected_slots'));
-        $additionalSessions = $request->input('additional_sessions', 0);
-
-        if (!$selectedSlots || !is_array($selectedSlots)) {
-            return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
-        }
-
-        // Calculate total price
-        $basePrice = $package->package_wkday_price; // Adjust according to your logic for weekends
-        $additionalPrice = $additionalSessions * 100; // Example: RM 100 per additional session
-
-        return view('checkout-parent', compact('package', 'childInfo', 'basePrice', 'additionalPrice', 'selectedSlots'));
+    if (!$childInfo || !$package) {
+        abort(404);
     }
+
+    $selectedSlots = json_decode($request->input('selected_slots'));
+    $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
+    $totalSessions = $package->session_quantity + $additionalSessions;
+    $basePrice = 0; // To track base price calculation
+    $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
+
+    if (!$selectedSlots || !is_array($selectedSlots)) {
+        return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+    }
+
+    // Calculate base price
+    foreach ($selectedSlots as $slotData) {
+        $slotDay = $slotData->day;
+        $basePrice = in_array($slotDay, ['Friday', 'Saturday']) ? $package->package_wkend_price : $package->package_wkday_price;
+    }
+
+    $sessionId = (string) Str::uuid(); // Generate a unique session ID
+
+    return view('checkout-parent', [
+        'package' => $package,
+        'childInfo' => $childInfo,
+        'fatherInfo' => $childInfo->fatherInfo,
+        'motherInfo' => $childInfo->motherInfo,
+        'parentAccount' => $childInfo->parentAccount,
+        'totalPrice' => $basePrice + $additionalPrice,
+        'selectedSlots' => $selectedSlots,
+        'additionalSessions' => $additionalSessions,
+        'additionalPrice' => $additionalPrice,
+        'child_id' => $child_id, // Pass $child_id to the view
+        'basePrice' => $basePrice,
+        'sessionId' => $sessionId
+    ]);
+}
 
     public function checkoutParent()
     {
