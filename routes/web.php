@@ -53,13 +53,26 @@ Route::post('registerNew', [RegisterController::class, 'registerNew'])->name('re
 Route::get('register2-parent/{id}', [RegisterController::class, 'register2'])->name('register2-parent');
 Route::get('product-parent/{child_id}', [RegisterController::class, 'packageView'])->name('product-parent');
 Route::post('/packageProceed/{child_id}/{package_id}', [RegisterController::class, 'packageProceed'])->name('packageProceed-parent');
+// Route to view the child schedule form (GET)
 Route::get('/childScheduleView/{child_id}/{package_id}', [RegisterController::class, 'childScheduleView'])->name('childSchedule.view');
+
+// Route to handle the form submission and save the child schedule (POST)
 Route::post('/childSchedule/{child_id}/{package_id}', [RegisterController::class, 'childSchedule'])->name('childSchedule.submit');
+
+// Route to view the checkout page after schedule submission (GET)
 Route::get('checkoutParent', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
-Route::post('/submit-payment', [RegisterController::class, 'submitPayment'])->name('payment.submit-parent');
-Route::get('/chip/callback', [RegisterController::class, 'handleCallback'])->name('payment.callback-parent');
+
+// Route to handle the payment submission (POST)
+Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
+
+// Route for handling payment callback (GET or POST, depending on Chip's method)
+Route::post('/chip/callback', [RegisterController::class, 'handleCallback'])->name('chip.callback');
+
+// Routes for payment success and failure pages
 Route::get('/payment/success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment/failure', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
+
+
 
 
 
