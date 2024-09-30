@@ -212,6 +212,8 @@
         onFinish: null
     }
 })(jQuery);
+
+
 (function ($) {
     "use strict";
 
@@ -222,33 +224,7 @@
     });
 
     // Callback for form submission when the finish button is clicked
-    function onFinishCallback() {
-        const form = $('#registrationForm'); // Use the form's ID
-        if (form.length && checkRequiredFields(form)) {
-            form.submit(); // Trigger form submission on finish if no validation errors
-        }
-    }
 
-    // Check for required fields when submitting the form
-    function checkRequiredFields(form) {
-        let isValid = true;
-
-        // Loop through required inputs and validate
-        $(form).find(':input[required]').each(function () {
-            if (!this.value) {
-                isValid = false;
-                $(this).addClass('is-invalid'); // Highlight empty fields
-            } else {
-                $(this).removeClass('is-invalid'); // Remove highlight if valid
-            }
-        });
-
-        if (!isValid) {
-            alert('Please fill in all required fields.');
-        }
-
-        return isValid;
-    }
 
     // Document Ready Event
     document.addEventListener('DOMContentLoaded', function() {
@@ -272,31 +248,84 @@
         password.addEventListener('keyup', checkPasswordMatch);
         confirmPassword.addEventListener('keyup', checkPasswordMatch);
 
-        // Confirmation on Form Submission
+    });
+    function onFinishCallback() {
+        const form = $('#registrationForm'); // Use the form's ID
+        if (form.length && checkRequiredFields(form)) {
+            form.submit(); // Trigger form submission on finish if no validation errors
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+        // Password Match Check Function
+        function checkPasswordMatch() {
+            if (password.value !== confirmPassword.value) {
+                passwordMatchMessage.textContent = 'Passwords do not match.';
+                passwordMatchMessage.style.color = 'red';
+                submitBtn.disabled = true;
+            } else {
+                passwordMatchMessage.textContent = 'Passwords match.';
+                passwordMatchMessage.style.color = 'green';
+                submitBtn.disabled = false;
+            }
+        }
+
+        password.addEventListener('keyup', checkPasswordMatch);
+        confirmPassword.addEventListener('keyup', checkPasswordMatch);
+
+        // Check for required fields when the submit button is clicked
+        function checkRequiredFields(event) {
+            let isValid = true;
+
+            // Loop through required inputs and validate
+            $(form).find(':input[required]').each(function () {
+                if (!this.value) {
+                    isValid = false;
+                    $(this).addClass('is-invalid'); // Highlight empty fields
+                } else {
+                    $(this).removeClass('is-invalid'); // Remove highlight if valid
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if invalid
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        // Attach the validation check to the submit button
+        submitBtn.addEventListener('click', checkRequiredFields);
+
+        // Confirmation on Form Submission
         form.addEventListener('submit', function(event) {
             if (!confirm('Please ensure that all of the information is correct. Click OK to confirm.')) {
                 event.preventDefault(); // Prevent form submission if the user cancels
             }
         });
+
+        // Function to set the current date and time automatically
+        window.onload = function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = ('0' + (now.getMonth() + 1)).slice(-2); // Zero-padding for months
+            const day = ('0' + now.getDate()).slice(-2); // Zero-padding for days
+            const formattedDate = year + '-' + month + '-' + day;
+
+            const hours = ('0' + now.getHours()).slice(-2); // Zero-padding for hours
+            const minutes = ('0' + now.getMinutes()).slice(-2); // Zero-padding for minutes
+            const formattedTime = hours + ':' + minutes;
+
+            // Set the date and time fields automatically
+            document.getElementById('sign_date').value = formattedDate;
+            document.getElementById('sign_time').value = formattedTime;
+        };
     });
-
-    // Function to set the current date and time automatically
-    window.onload = function() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = ('0' + (now.getMonth() + 1)).slice(-2); // Zero-padding for months
-        const day = ('0' + now.getDate()).slice(-2); // Zero-padding for days
-        const formattedDate = year + '-' + month + '-' + day;
-
-        const hours = ('0' + now.getHours()).slice(-2); // Zero-padding for hours
-        const minutes = ('0' + now.getMinutes()).slice(-2); // Zero-padding for minutes
-        const formattedTime = hours + ':' + minutes;
-
-        // Set the date and time fields automatically
-        document.getElementById('sign_date').value = formattedDate;
-        document.getElementById('sign_time').value = formattedTime;
-    };
 
 })(jQuery);
 

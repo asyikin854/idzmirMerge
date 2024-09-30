@@ -9,7 +9,7 @@
     <div class="alert alert-danger">
         <h1>Payment Failed</h1>
         <p>Unfortunately, your payment was not successful. Please try again or contact support for assistance.</p>
-        <a href="{{ route('checkout-parent') }}" class="btn btn-primary">Try Again</a>
+        <a href="{{ route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]) }}" class="btn btn-primary">Try Again</a>
     </div>
 </div>
 @endsection

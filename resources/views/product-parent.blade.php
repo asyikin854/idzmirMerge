@@ -111,7 +111,7 @@
                            <div class="product-qnty">
                              <div class="addcart-btn">
                                <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</a>
-                               <form action="{{ route('packageProceed-parent', ['child_id' => $child_id, 'package_id' => $package->id]) }}" method="POST" style="display:inline;">
+                               <form action="{{ route('packageProceed-parent', ['child_id' => $childInfo->id, 'package_id' => $package->id]) }}" method="POST" style="display:inline;">
                                  @csrf
                                  <input type="hidden" name="package_id" value="{{$package->id}}">
                                  <button class="btn btn-primary ms-2" type="submit">Proceed</button>

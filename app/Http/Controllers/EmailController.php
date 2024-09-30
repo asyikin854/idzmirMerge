@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
-use Illuminate\Http\Request;
+use App\Models\EmailLog;
 
+use Illuminate\Http\Request;
 use App\Mail\CsEmailMailable;
 use App\Mail\YourEmailMailable;
 use Illuminate\Support\Facades\Auth;
@@ -149,4 +150,35 @@ return redirect()->back()->with('success', 'Email sent successfully.');
 
         return view('inbox-cs', compact('messages', 'csName'));
     }
+
+    
+    public function parentInbox()
+    {
+        // Get the logged-in parent account
+        $user = Auth::guard('parent')->user();
+    $parentAccount = $user->childInfo->parentAccount;
+
+    // Fetch only the email logs (or announcements) for the parentAccount's email
+    $messages = EmailLog::where('recipient', $parentAccount->email)->get();
+
+    // Select the first message by default if no specific message is selected
+    $selectedMessage = $messages->first();
+    
+        return view('announcement-parent', compact('messages', 'parentAccount', 'selectedMessage'));
+    }
+
+    public function fetchMessage(Request $request)
+{
+    // Fetch the message by ID
+    $message = EmailLog::find($request->id);
+
+    if (!$message) {
+        return response()->json(['error' => 'Message not found'], 404);
+    }
+
+    // Return a partial view with message details
+    return view('messageDetails-parent', compact('message'))->render();
+}
+
+    
 }

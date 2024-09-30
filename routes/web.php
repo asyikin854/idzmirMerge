@@ -46,7 +46,8 @@ Route::get('rescheduleView-parent/{id}', [ParentController::class, 'rescheduleVi
 Route::post('reschedule-parent/{id}', [ParentController::class, 'reschedule'])->name('reschedule-parent');
 Route::get('profile-parent', [ParentController::class, 'parentProfile'])->name('profile-parent');
 Route::get('paymentList', [ParentController::class, 'paymentList'])->name('paymentList-parent');
-Route::get('announcement', [ParentController::class, 'announcement'])->name('announcement-parent');
+Route::get('announcement-parent', [EmailController::class, 'parentInbox'])->name('announcement-parent');
+Route::get('/messageDetails-parent', [EmailController::class, 'fetchMessage'])->name('fetchMessage-parent');
 
 Route::get('register-parent', [RegisterController::class, 'registerView'])->name('register-parent');
 Route::post('registerNew', [RegisterController::class, 'registerNew'])->name('register.new');
@@ -60,7 +61,7 @@ Route::get('/childScheduleView/{child_id}/{package_id}', [RegisterController::cl
 Route::post('/childSchedule/{child_id}/{package_id}', [RegisterController::class, 'childSchedule'])->name('childSchedule.submit');
 
 // Route to view the checkout page after schedule submission (GET)
-Route::get('checkoutParent', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
+Route::get('/checkout-parent/{child_id}/{package_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
 
 // Route to handle the payment submission (POST)
 Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
@@ -70,7 +71,7 @@ Route::match(['get', 'post'],'/chip/callback', [RegisterController::class, 'hand
 
 // Routes for payment success and failure pages
 Route::get('/payment-success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
-Route::get('/payment-failure', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
+Route::get('/payment-failure/{child_id}/{package_id}', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
 
 
 

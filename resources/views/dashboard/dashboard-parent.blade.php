@@ -70,7 +70,7 @@
                     </svg>
                   </div>
                   <div> 
-                    <h4 class="mb-0">{{ $sessionLeft }} </h4><span class="f-light">Upcoming Sessions </span><a class="btn btn-light f-light" href="{{ route('learning-list-view')}}">View Schedule<span class="ms-2"> 
+                    <h4 class="mb-0">{{ $sessionLeft }} </h4><span class="f-light">Upcoming Sessions </span><a class="btn btn-light f-light" href="{{ route('schedule.view')}}">View Schedule<span class="ms-2"> 
                         <svg class="fill-icon f-light">
                           <use href="{{ asset('assets/svg/icon-sprite.svg#arrowright') }}"></use>
                         </svg></span></a>
@@ -104,50 +104,39 @@
         </div>
       </div>
       <div class="col-xl-2 col-ed-3 d-xxl-block d-sm-none box-col-none">
-        <div class="card get-card overflow-hidden"> 
-          <div class="card-header card-no-border">
-            <h5>Do You Want to Get</h5><span class="f-14 f-w-500 f-light">Better Results?</span><a class="btn btn-primary btn-hover-effect" href="#">More details<span class="ms-1"> 
-                <svg class="fill-icon">
-                  <use href="{{ asset('assets/svg/icon-sprite.svg#arrowright') }}"></use>
-                </svg></span></a>
-          </div>
-          <div class="card-body pt-0">
-            <div class="get-image text-center"> <img class="img-fluid" src="{{ asset('assets/images/dashboard-3/better.png') }}" alt="leptop with men vector"></div>
-          </div>
-          <ul class="square-group">
-            <li class="square-1 warning"></li>
-            <li class="square-1 primary"></li>
-            <li class="square-2 warning1"></li>
-            <li class="square-3 danger"></li>
-            <li class="square-4 light"></li>
-            <li class="square-5 warning"></li>
-            <li class="square-6 success"></li>
-            <li class="square-7 success"></li>
-          </ul>
-        </div>
       </div>
-      <div class="col-xxl-5 col-ed-7 col-xl-7 box-col-7">
-        <div class="card"> 
-          <div class="card-header card-no-border">
-            <div class="header-top">
-              <h5 class="m-0">Learning Overview<span class="f-14 f-w-500 ms-1 f-light">(75% activity growth)</span></h5>
-              <div class="card-header-right-icon">
-                <div class="dropdown icon-dropdown">
-                  <button class="btn dropdown-toggle" id="learningButton" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="icon-more-alt"></i></button>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="learningButton"><a class="dropdown-item" href="#">Today</a><a class="dropdown-item" href="#">Tomorrow</a><a class="dropdown-item" href="#">Yesterday</a></div>
+      <div class="col-xxl-3 col-ed-5 col-xl-5 col-sm-6 box-col-5">
+          <div class="card course-box"> 
+            <div class="card-body"> 
+              <div class="course-widget"> 
+                <div class="course-icon warning"> 
+                  <svg class="fill-icon">
+                    <use href="{{ asset('assets/svg/icon-sprite.svg#course-2') }}"></use>
+                  </svg>
+                </div>
+                <div> 
+                  <h4 class="mb-0">{{ $pendingSession }} </h4><span class="f-light">Pending Approval Sessions </span><a class="btn btn-light f-light" href="{{ route('schedule.view')}}">View Schedule<span class="ms-2"> 
+                      <svg class="fill-icon f-light">
+                        <use href="{{ asset('assets/svg/icon-sprite.svg#arrowright') }}"></use>
+                      </svg></span></a>
                 </div>
               </div>
             </div>
+            <ul class="square-group">
+              <li class="square-1 warning"></li>
+              <li class="square-1 primary"></li>
+              <li class="square-2 warning1"></li>
+              <li class="square-3 danger"></li>
+              <li class="square-4 light"></li>
+              <li class="square-5 warning"></li>
+              <li class="square-6 success"></li>
+              <li class="square-7 success"></li>
+            </ul>
           </div>
-          <div class="card-body pt-0"> 
-            <div class="learning-wrap"> 
-              <div id="learning-chart"></div>
-            </div>
-          </div>
-        </div>
+
       </div>
 
-      <div class="col-xxl-3 col-ed-5 col-xl-5 col-sm-6 box-col-5">
+      <div class="col-xxl-5 col-ed-7 col-xl-7 box-col-7">
         <div class="card schedule-card">
           <div class="card-header card-no-border">
             <div class="header-top">
@@ -182,7 +171,7 @@
             </ul>
           </div>
         </div>
-      </div>
+      </div></div></div>
 @endsection
 
 @section('script')

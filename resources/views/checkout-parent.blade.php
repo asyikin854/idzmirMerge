@@ -22,6 +22,7 @@
                   <input type="hidden" name="selected_slots" value="{{ json_encode($selectedSlots) }}">
                   <input type="hidden" name="additional_sessions" value="{{ $additionalSessions }}">
                   <input type="hidden" name="session_id" value="{{ $sessionId }}">
+                  <input type="hidden" name="package_id" value="{{ $package->id}} ">
                   <div class="row">
                      <div class="mb-3 col-sm-12">
                      <h5>Child Details</h5>

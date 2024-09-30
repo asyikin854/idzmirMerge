@@ -70,7 +70,7 @@
                            <h5>Child Information</h5>
                            <div class="form-group mb-3">
                               <label for="child_name">Full name</label>
-                              <input class="form-control" name="child_name" id="child_name" type="text" placeholder="Johan" required="required">
+                              <input class="form-control" name="child_name" id="child_name" type="text" placeholder="Johan" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="child_ic">IC Number</label>
@@ -143,7 +143,7 @@
                            </div>
                            <div class="form-group mb-3">
                               <label for="child_posscode">Posscode</label>
-                              <input class="form-control" name="child_posscode" id="child_posscode" type="number" requiredrequired>
+                              <input class="form-control" name="child_posscode" id="child_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="child_city">City</label>
@@ -252,7 +252,7 @@
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_posscode">Posscode</label>
-                              <input class="form-control" name="father_posscode" id="father_posscode" type="number" required>
+                              <input class="form-control" name="father_posscode" id="father_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_city">City</label>
@@ -264,7 +264,7 @@
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_work_posscode">Posscode</label>
-                              <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" required>
+                              <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_work_city">City</label>
@@ -301,7 +301,7 @@
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_posscode">Posscode</label>
-                              <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" required>
+                              <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_city">City</label>
@@ -313,7 +313,7 @@
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_work_posscode">Posscode</label>
-                              <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number required">
+                              <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_work_city">City</label>

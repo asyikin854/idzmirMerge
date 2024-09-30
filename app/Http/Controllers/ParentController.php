@@ -35,8 +35,11 @@ class ParentController extends Controller
             })->all();
             
             $package = $childInfo->package;
+            $pendingSession = ChildSchedule::where('child_id', $childInfo->id)
+            ->whereNull('attendance')->where('status', 'pending')
+            ->count();
             $sessionLeft = ChildSchedule::where('child_id', $childInfo->id)
-            ->whereNull('attendance')
+            ->whereNull('attendance')->where('status', 'approved')
             ->count();
             $sessionQuantity = ChildSchedule::where('child_id', $childInfo->id)
             ->count();
@@ -58,7 +61,8 @@ class ParentController extends Controller
                 ->with('sessionLeft', $sessionLeft)
                 ->with('sessionQuantity', $sessionQuantity)
                 ->with('sessionPresent', $sessionPresent)
-                ->with('reportCount', $reportCount);
+                ->with('reportCount', $reportCount)
+                ->with('pendingSession', $pendingSession);
         }
 
          return Redirect::route('login')->with('error', 'The session has expired. Please return to the login page to log back into your account.');

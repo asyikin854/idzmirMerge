@@ -114,6 +114,7 @@
                 @csrf
                 <input type="hidden" name="selected_slots" id="selectedSlots" />
                 <input type="hidden" name="totalPrice" id="totalPrice" />
+                <input type="hidden" name="basePrice" id="basePrice">
                 <input type="hidden" name="additional_sessions" id="additionalSessions" value="0" />
                 <button type="submit" class="btn btn-primary mt-3">Confirm</button>
             </form>
