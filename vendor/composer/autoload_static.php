@@ -17,16 +17,16 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '265b4faa2b3a9766332744949e83bf97' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections/helpers.php',
         'c7a3c339e7e14b60e06a2d7fcce9476b' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Events/functions.php',
         'f57d353b41eb2e234b26064d63d8c5dd' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Filesystem/functions.php',
@@ -165,6 +165,7 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         'C' => 
         array (
             'Cron\\' => 5,
+            'Chip\\' => 5,
             'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
@@ -510,6 +511,10 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
         ),
+        'Chip\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chip/chip-sdk-php/lib',
+        ),
         'Carbon\\Doctrine\\' => 
         array (
             0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
@@ -526,6 +531,16 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         array (
             0 => __DIR__ . '/../..' . '/app',
             1 => __DIR__ . '/..' . '/laravel/pint/app',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'J' => 
+        array (
+            'JsonMapper' => 
+            array (
+                0 => __DIR__ . '/..' . '/netresearch/jsonmapper/src',
+            ),
         ),
     );
 
@@ -556,8 +571,10 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         'App\\Models\\ChildInfo' => __DIR__ . '/../..' . '/app/Models/ChildInfo.php',
         'App\\Models\\ChildSchedule' => __DIR__ . '/../..' . '/app/Models/ChildSchedule.php',
         'App\\Models\\CsInfo' => __DIR__ . '/../..' . '/app/Models/CsInfo.php',
+        'App\\Models\\EmailLog' => __DIR__ . '/../..' . '/app/Models/EmailLog.php',
         'App\\Models\\FatherInfo' => __DIR__ . '/../..' . '/app/Models/FatherInfo.php',
         'App\\Models\\MotherInfo' => __DIR__ . '/../..' . '/app/Models/MotherInfo.php',
+        'App\\Models\\Notification' => __DIR__ . '/../..' . '/app/Models/Notification.php',
         'App\\Models\\Package' => __DIR__ . '/../..' . '/app/Models/Package.php',
         'App\\Models\\ParentAccount' => __DIR__ . '/../..' . '/app/Models/ParentAccount.php',
         'App\\Models\\ParentsPermission' => __DIR__ . '/../..' . '/app/Models/ParentsPermission.php',
@@ -671,6 +688,27 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
         'Carbon\\TranslatorImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/TranslatorImmutable.php',
         'Carbon\\TranslatorStrongTypeInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/TranslatorStrongTypeInterface.php',
+        'Chip\\ChipApi' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/ChipApi.php',
+        'Chip\\Model\\BankAccount' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/BankAccount.php',
+        'Chip\\Model\\Billing\\BillingTemplate' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Billing/BillingTemplate.php',
+        'Chip\\Model\\Billing\\BillingTemplateClient' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Billing/BillingTemplateClient.php',
+        'Chip\\Model\\Billing\\BillingTemplateClientAddSubscriber' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Billing/BillingTemplateClientAddSubscriber.php',
+        'Chip\\Model\\Billing\\BillingTemplateClientList' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Billing/BillingTemplateClientList.php',
+        'Chip\\Model\\Billing\\BillingTemplateList' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Billing/BillingTemplateList.php',
+        'Chip\\Model\\ClientDetails' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/ClientDetails.php',
+        'Chip\\Model\\ClientList' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/ClientList.php',
+        'Chip\\Model\\IssuerDetails' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/IssuerDetails.php',
+        'Chip\\Model\\PaymentDetails' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/PaymentDetails.php',
+        'Chip\\Model\\PaymentMethods' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/PaymentMethods.php',
+        'Chip\\Model\\Product' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Product.php',
+        'Chip\\Model\\Purchase' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Purchase.php',
+        'Chip\\Model\\PurchaseDetails' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/PurchaseDetails.php',
+        'Chip\\Model\\Webhook' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Model/Webhook.php',
+        'Chip\\Traits\\Api\\Billing' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Traits/Api/Billing.php',
+        'Chip\\Traits\\Api\\Client' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Traits/Api/Client.php',
+        'Chip\\Traits\\Api\\PaymentMethod' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Traits/Api/PaymentMethod.php',
+        'Chip\\Traits\\Api\\Purchase' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Traits/Api/Purchase.php',
+        'Chip\\Traits\\Api\\Webhook' => __DIR__ . '/..' . '/chip/chip-sdk-php/lib/Traits/Api/Webhook.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Cron\\AbstractField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/AbstractField.php',
         'Cron\\CronExpression' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/CronExpression.php',
@@ -2794,6 +2832,8 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         'Illuminate\\View\\ViewFinderInterface' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewFinderInterface.php',
         'Illuminate\\View\\ViewName' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewName.php',
         'Illuminate\\View\\ViewServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewServiceProvider.php',
+        'JsonMapper' => __DIR__ . '/..' . '/netresearch/jsonmapper/src/JsonMapper.php',
+        'JsonMapper_Exception' => __DIR__ . '/..' . '/netresearch/jsonmapper/src/JsonMapper/Exception.php',
         'Laravel\\Prompts\\Concerns\\Colors' => __DIR__ . '/..' . '/laravel/prompts/src/Concerns/Colors.php',
         'Laravel\\Prompts\\Concerns\\Cursor' => __DIR__ . '/..' . '/laravel/prompts/src/Concerns/Cursor.php',
         'Laravel\\Prompts\\Concerns\\Erase' => __DIR__ . '/..' . '/laravel/prompts/src/Concerns/Erase.php',
@@ -6647,6 +6687,7 @@ class ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit3cc103bb845e9d02d8758e54e8e63801::$classMap;
 
         }, null, ClassLoader::class);

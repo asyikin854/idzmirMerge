@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cc103bb845e9d02d8758e54e8e63801",
+    "content-hash": "17b48ff9b5a5d280e905cdfbbd454421",
     "packages": [
         {
             "name": "brick/math",
@@ -134,6 +134,43 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "chip/chip-sdk-php",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CHIPAsia/chip-php-sdk.git",
+                "reference": "587a3ba25ef2a68d54a6d9dbca261a13047e99c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CHIPAsia/chip-php-sdk/zipball/587a3ba25ef2a68d54a6d9dbca261a13047e99c9",
+                "reference": "587a3ba25ef2a68d54a6d9dbca261a13047e99c9",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "netresearch/jsonmapper": "^4.0",
+                "php": ">=8.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Chip\\": "lib"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "source": "https://github.com/CHIPAsia/chip-php-sdk/tree/v1.1.2",
+                "issues": "https://github.com/CHIPAsia/chip-php-sdk/issues"
+            },
+            "time": "2023-05-29T10:19:28+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -2091,6 +2128,57 @@
                 }
             ],
             "time": "2024-06-03T19:18:41+00:00"
+        },
+        {
+            "name": "netresearch/jsonmapper",
+            "version": "v4.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweiske/jsonmapper.git",
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-reflection": "*",
+                "ext-spl": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.5 || ~8.0 || ~9.0 || ~10.0",
+                "squizlabs/php_codesniffer": "~3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JsonMapper": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Weiske",
+                    "email": "cweiske@cweiske.de",
+                    "homepage": "http://github.com/cweiske/jsonmapper/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Map nested JSON structures onto PHP classes",
+            "support": {
+                "email": "cweiske@cweiske.de",
+                "issues": "https://github.com/cweiske/jsonmapper/issues",
+                "source": "https://github.com/cweiske/jsonmapper/tree/v4.5.0"
+            },
+            "time": "2024-09-08T10:13:13+00:00"
         },
         {
             "name": "nette/schema",
@@ -8125,5 +8213,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
