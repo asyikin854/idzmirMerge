@@ -30,5 +30,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    
+    'chip' => [
+    'api_key' => env('CHIP_API_KEY'),
+    'endpoint' => 'https://gate.chip-in.asia/api/v1/', // Ensure this is the actual API base URL
+],
 
 ];
