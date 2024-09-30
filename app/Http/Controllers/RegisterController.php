@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Log;
 use Exception;
+use Chip\ChipApi;
 use Carbon\Carbon;
 use App\Models\Slot;
 use App\Models\Package;
@@ -302,13 +303,14 @@ class RegisterController extends Controller
         $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
         $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
         $totalSessions = $package->session_quantity + $additionalSessions;
-        $basePrice = 0; // To track base price calculation
         $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
     
         // Validate selected slots
         if (!$selectedSlots || !is_array($selectedSlots)) {
             return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
         }
+        $hasWeekendSlot = false;
+        $basePrice = $package->package_wkday_price; // Default to weekday price
     
         // Sort the selected slots by date before inserting
         usort($selectedSlots, function($a, $b) {
@@ -339,10 +341,12 @@ class RegisterController extends Controller
     
             // Calculate price based on weekday or weekend
             if (in_array($slotDay, ['Friday', 'Saturday'])) {
-                $basePrice = $package->package_wkend_price; // Weekend price
-            } else {
-                $basePrice = $package->package_wkday_price; // Weekday price
+                $hasWeekendSlot = true; // Set the flag if a weekend slot is found
+                break; // No need to check further, we found a weekend slot
             }
+        }
+        if ($hasWeekendSlot) {
+            $basePrice = $package->package_wkend_price; // Set to weekend price
         }
 
     session([
@@ -351,15 +355,16 @@ class RegisterController extends Controller
         'fatherInfo' => $childInfo->fatherInfo,
         'motherInfo' => $childInfo->motherInfo,
         'parentAccount' => $childInfo->parentAccount,
-        'totalPrice' => $basePrice + $additionalPrice,
         'selectedSlots' => $selectedSlots,
+        'basePrice' => $basePrice,
         'additionalSessions' => $additionalSessions,
         'additionalPrice' => $additionalPrice,
+        'totalPrice' => $basePrice + $additionalPrice,
         'child_id' => $child_id,
-        'basePrice' => $basePrice,
         'sessionId' => $sessionId,
         'sessionCounter' => $sessionCounter
     ]);
+
 
     return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
 }
@@ -410,7 +415,8 @@ public function submitPayment(Request $request)
     $selectedSlots = session('selectedSlots'); // Retrieve slots from session
     $sessionCounter = session('sessionCounter'); // Retrieve slots from session
     $reference = Str::uuid();
-
+    $parentAccount = ParentAccount::where('child_id', $child_id)->first();
+    
     // Insert selected slots into the ChildSchedule table
     foreach ($selectedSlots as $slotData) {
         $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
@@ -440,17 +446,19 @@ public function submitPayment(Request $request)
         'status' => 'pending', // Initial status is 'pending'
         'session_id' => $session_id
     ]);
+    $parentEmail = $parentAccount->email;
 
     // Payment request data for Chip
     $paymentData = [
         'amount' => $totalPrice * 100, // Amount in cents
         'currency' => 'MYR',
-        'email' => 'testuser@example.com', // Replace with the parent's email
+        'email' => $parentEmail, // Replace with the parent's email
         'description' => 'Payment for Child ID: ' . $child_id,
         'redirect_url' => route('chip.callback'),
         'reference' => $reference,
         'payment_method' => 'FPX',
     ];
+    dd($paymentData);
     Log::info('Chip Payment Data Prepared', $paymentData);
     try {
         $response = Http::withHeaders([

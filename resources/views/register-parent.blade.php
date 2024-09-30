@@ -142,7 +142,7 @@
                               <input class="form-control" name="child_address" id="child_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_posscode">Posscode</label>
+                              <label for="child_posscode">Postcode</label>
                               <input class="form-control" name="child_posscode" id="child_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
@@ -251,7 +251,7 @@
                               <input class="form-control" name="father_address" id="father_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_posscode">Posscode</label>
+                              <label for="father_posscode">Postcode</label>
                               <input class="form-control" name="father_posscode" id="father_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
@@ -263,7 +263,7 @@
                               <input class="form-control" name="father_work_address" id="father_work_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_posscode">Posscode</label>
+                              <label for="father_work_posscode">Postcode</label>
                               <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
@@ -300,7 +300,7 @@
                               <input class="form-control" name="mother_address" id="mother_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_posscode">Posscode</label>
+                              <label for="mother_posscode">Postcode</label>
                               <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
@@ -312,7 +312,7 @@
                               <input class="form-control" name="mother_work_address" id="mother_work_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_posscode">Posscode</label>
+                              <label for="mother_work_posscode">Postcode</label>
                               <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
