@@ -66,11 +66,11 @@ Route::get('checkoutParent', [RegisterController::class, 'checkoutParent'])->nam
 Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
 
 // Route for handling payment callback (GET or POST, depending on Chip's method)
-Route::post('/chip/callback', [RegisterController::class, 'handleCallback'])->name('chip.callback');
+Route::match(['get', 'post'],'/chip/callback', [RegisterController::class, 'handleCallback'])->name('chip.callback');
 
 // Routes for payment success and failure pages
-Route::get('/payment/success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
-Route::get('/payment/failure', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
+Route::get('/payment-success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment-failure', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
 
 
 
@@ -107,6 +107,10 @@ Route::get('/approveReqView-cs/{id}', [CsController::class, 'csApproveReqView'])
 Route::put('/csApproveReq/{id}', [CsController::class, 'csApproveReq'])->name('cs.approveReq');
 Route::get('/reportApproval-cs/{id}', [CsController::class, 'csReportApproval'])->name('reportApproval-cs');
 Route::post('/csReportApproved', [CsController::class, 'csReportApproved'])->name('cs.reportApproved');
+Route::get('sendEmail-cs', [EmailController::class, 'csCompose'])->name('composeEmail-cs');
+Route::post('csSend', [EmailController::class, 'csSend'])->name('sendEmail-cs');
+Route::get('csInbox', [EmailController::class, 'csInbox'])->name('inbox-cs');
+
 
 // Admin Dashboard Route
 Route::prefix('admin')->middleware('auth:admin')->group(function () {

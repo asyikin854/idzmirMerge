@@ -24,14 +24,15 @@ class LoginController extends Controller
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
-
+    
         $user = $this->attemptLogin($credentials['username'], $credentials['password']);
-
+    
         if ($user) {
             Auth::guard($user['guard'])->loginUsingId($user['user']->id);
             return redirect()->route("{$user['guard']}.dashboard");
         }
-
+    
+        // Return back with an error message if login fails
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ]);

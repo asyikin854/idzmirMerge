@@ -61,8 +61,8 @@
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#notification') }}"></use>
                             </svg><span>Announcement</span></a>
                         <ul class="sidebar-submenu">
-                            <li><a href="{{ route('assignedSession-cs') }}">Create Announcement</a></li>
-                            <li><a href="{{ route('unassignedList-cs') }}">View Announcement</a></li>
+                            <li><a href="{{ route('composeEmail-cs') }}">Create Announcement</a></li>
+                            <li><a href="{{ route('inbox-cs') }}">View Announcement</a></li>
                         </ul>
                     </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a

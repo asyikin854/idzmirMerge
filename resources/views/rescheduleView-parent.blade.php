@@ -27,6 +27,7 @@
                         <div class="md-sidebar-aside job-left-aside custom-scrollbar">
                             <div id="external-events">
                                 <h4>Reschedule Session</h4>
+                                <span>You can only reschedule your session in the same month. Please contact our customer service for any assistance.</span>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>

@@ -193,9 +193,9 @@ class RegisterController extends Controller
 
     $sessionId = (string) Str::uuid(); // Generate a unique session ID
 
-    return view('checkout-parent', [
-        'package' => $package,
+    session([
         'childInfo' => $childInfo,
+        'package' => $package,
         'fatherInfo' => $childInfo->fatherInfo,
         'motherInfo' => $childInfo->motherInfo,
         'parentAccount' => $childInfo->parentAccount,
@@ -203,89 +203,138 @@ class RegisterController extends Controller
         'selectedSlots' => $selectedSlots,
         'additionalSessions' => $additionalSessions,
         'additionalPrice' => $additionalPrice,
-        'child_id' => $child_id, // Pass $child_id to the view
+        'child_id' => $child_id,
         'basePrice' => $basePrice,
         'sessionId' => $sessionId
     ]);
+
+    return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
 }
 
-    public function checkoutParent()
-    {
-        return view('checkout-parent');
+public function checkoutParent($child_id, $package_id)
+{
+    if (!session()->has('childInfo') || !session()->has('package')) {
+        return redirect()->back()->withErrors('Session data not found.');
     }
 
-    public function submitPayment(Request $request)
-    {
-        $child_id = $request->input('child_id');
-        $totalPrice = $request->input('total_price');
-        $parent_id = $request->input('parent_id');
-        $session_id = $request->input('session_id');
-        $reference = Str::uuid();
+    // Retrieve data from the session
+    $childInfo = session('childInfo');
+    $package = session('package');
+    $fatherInfo = session('fatherInfo');
+    $motherInfo = session('motherInfo');
+    $parentAccount = session('parentAccount');
+    $totalPrice = session('totalPrice');
+    $selectedSlots = session('selectedSlots');
+    $additionalSessions = session('additionalSessions');
+    $additionalPrice = session('additionalPrice');
+    $basePrice = session('basePrice');
+    $sessionId = session('sessionId');
 
-        // Create a new payment record
-        $payment = Payment::create([
+    return view('checkout-parent');
+}
+
+public function submitPayment(Request $request)
+{
+    $child_id = $request->input('child_id');
+    $totalPrice = $request->input('total_price');
+    $parent_id = $request->input('parent_id');
+    $session_id = $request->input('session_id');
+    $selectedSlots = session('selectedSlots'); // Retrieve slots from session
+    $reference = Str::uuid();
+
+    // Insert selected slots into the ChildSchedule table
+    foreach ($selectedSlots as $slotData) {
+        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
+        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
+        $slotDay = $slotData->day;
+
+        // Insert each selected slot into ChildSchedule
+        ChildSchedule::create([
             'child_id' => $child_id,
-            'parent_id' => $parent_id,
-            'reference' => $reference,
-            'total_amount' => $totalPrice,
-            'payment_method' => 'FPX',
-            'status' => 'pending',
-            'session_id' => $session_id
+            'session_id' => $session_id,
+            'day' => $slotDay,
+            'date' => $slotDate,
+            'time' => $slotTime, // Store only the start time
+            'price' => $totalPrice, // Store the total price
+            'status' => 'pending', // Status for the schedule, not related to payment
+        ]);
+    }
+
+    // Create a new payment record
+    $payment = Payment::create([
+        'child_id' => $child_id,
+        'parent_id' => $parent_id,
+        'reference' => $reference,
+        'total_amount' => $totalPrice,
+        'payment_method' => 'FPX',
+        'status' => 'pending', // Initial status is 'pending'
+        'session_id' => $session_id
+    ]);
+
+    // Payment request data for Chip
+    $paymentData = [
+        'amount' => $totalPrice * 100, // Amount in cents
+        'currency' => 'MYR',
+        'email' => 'testuser@example.com', // Replace with the parent's email
+        'description' => 'Payment for Child ID: ' . $child_id,
+        'redirect_url' => route('chip.callback'),
+        'reference' => $reference,
+        'payment_method' => 'FPX',
+    ];
+    Log::info('Chip Payment Data Prepared', $paymentData);
+    try {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('services.chip.api_key'),
+        ])->post(config('services.chip.endpoint') . 'payments', $paymentData);
+
+        if ($response->successful() && isset($response['payment_url'])) {
+            Log::info('Payment URL received: ', $response->json());
+            return redirect($response['payment_url']); // Redirect to Chip payment page
+        } else {
+            // Log the failure and update Payment status to 'failed'
+            Log::error('Payment URL not received or API failed: ', $response->json());
+            $payment->update(['status' => 'failed']); // Update the payment status to 'failed'
+            return redirect()->route('payment.failure')->withErrors(['error' => 'Payment failed.']);
+        }
+    } catch (Exception $e) {
+        // Handle exception, log error, and update Payment status to 'failed'
+        Log::error('Chip API Error: ' . $e->getMessage());
+        $payment->update(['status' => 'failed']); // Update the payment status to 'failed'
+        return redirect()->route('payment.failure')->withErrors(['error' => 'Payment processing error.']);
+    }
+}
+
+
+
+
+public function handleCallback(Request $request)
+{
+    $reference = $request->input('reference');
+    $status = $request->input('status');
+
+    Log::info('Chip Callback Data: ', $request->all());
+
+    $payment = Payment::where('reference', $reference)->first();
+
+    if ($payment) {
+        $payment->update([
+            'status' => $status,
+            'payment_date' => now()
         ]);
 
-        // Payment request data for Chip
-        $paymentData = [
-            'amount' => $totalPrice * 100, // Amount in cents
-            'currency' => 'MYR',
-            'email' => 'testuser@example.com', // Replace with the parent's email
-            'description' => 'Payment for Child ID: ' . $child_id,
-            'redirect_url' => config('services.chip.baseUrl') . '/chip/callback',
-            'reference' => $reference,
-            'payment_method' => 'FPX',
-        ];
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.chip.api_key'),
-            ])->post(config('services.chip.endpoint') . 'payments', $paymentData);
-
-            if ($response->successful() && isset($response['payment_url'])) {
-                Log::info('Payment initiated successfully: ', $response->json());
-                return redirect($response['payment_url']);
-            } else {
-                $payment->update(['status' => 'failed']);
-                return back()->withErrors(['error' => 'Payment failed.']);
-            }
-        } catch (Exception $e) {
-            Log::error('Chip API Error: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Payment processing error.']);
+        // Update ChildSchedule records based on session_id
+        if ($status == 'successful') {
+            ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'confirmed']);
+            return redirect()->route('payment.success');
+        } else {
+            ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'failed']);
+            return redirect()->route('payment.failure');
         }
     }
 
-    public function handleCallback(Request $request)
-    {
-        $reference = $request->input('reference');
-        $status = $request->input('status');
+    return redirect()->route('payment.failure')->withErrors(['error' => 'Payment not found']);
+}
 
-        Log::info('Chip Callback Data: ', $request->all());
-
-        $payment = Payment::where('reference', $reference)->first();
-
-        if ($payment) {
-            $payment->update([
-                'status' => $status,
-                'payment_date' => now()
-            ]);
-
-            if ($status == 'successful') {
-                return redirect()->route('payment.success');
-            } else {
-                return redirect()->route('payment.failure');
-            }
-        }
-
-        return redirect()->route('payment.failure')->withErrors(['error' => 'Payment not found']);
-    }
 
     public function paymentSuccess()
     {

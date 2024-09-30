@@ -585,6 +585,7 @@ class CsController extends Controller
         $schedule = ChildSchedule::findOrFail($id);
         $therapists = TherapistInfo::all();
         $availableTherapists = [];
+        $childInfo = $schedule->childInfo;
 
         // Check for availability of therapists
         foreach ($therapists as $therapist) {
@@ -597,23 +598,33 @@ class CsController extends Controller
             }
         }
 
-        return view('approveReqView-cs', compact('schedule', 'availableTherapists', 'csName'));
+        return view('approveReqView-cs', compact('schedule', 'availableTherapists', 'csName', 'childInfo'));
     }
 
     public function csApproveReq(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'therapist' => 'required|string',
+            'therapist' => 'nullable|string',
+            'status' => 'required|string',
         ]);
     
         $schedule = ChildSchedule::findOrFail($id);
+        $childInfo = $schedule->childInfo;
+
         $schedule->update([
             'therapist' => $validatedData['therapist'],
-            'status' => 'approved',
+            'status' => $validatedData['status'],
         ]);
-        
-        return redirect()->route('approveRescheduleList-cs')->with('success', 'Therapist assigned successfully!');
-
+        if ($validatedData['status'] === 'pending') {
+            // Redirect to the 'stdDetails-cs' page if status is 'pending'
+            return redirect()->route('stdDetails-cs', ['id' => $childInfo->id])->with('success', 'Therapist assigned, status pending.');
+        } elseif ($validatedData['status'] === 'approved') {
+            // Redirect to the 'approveRescheduleList-cs' page if status is 'approved'
+            return redirect()->route('approveRescheduleList-cs')->with('success', 'Therapist assigned and schedule approved successfully!');
+        }
+    
+        // Default fallback if no known status is passed
+        return redirect()->back()->with('error', 'Invalid status value provided.');
     }
     public function csApproveReschedule (Request $request)
     {

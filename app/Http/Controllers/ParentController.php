@@ -201,7 +201,7 @@ class ParentController extends Controller
                     'title' => $isFull ? 'Slot is Full' : 'Available Slot',
                     'start' => $slot->date . 'T' . substr($slot->start_time, 0, 5), // Format time as HH:MM
                     'end' => $slot->date . 'T' . substr($slot->end_time, 0, 5),     // Format time as HH:MM
-                    'quota' => 10 - $bookedSessions, // Remaining quota
+                    'quota' => $package->quota - $bookedSessions, // Remaining quota
                     'isFull' => $isFull,
                 ];
             });
