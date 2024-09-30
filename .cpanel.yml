@@ -1,21 +1,12 @@
 deployment:
   tasks:
     - export DEPLOY_PATH=/home/mbp5i4lxqyhm/public_html/system.idzmirkidshub.com
-    # Step 1: Copy all files (including hidden ones) to the deployment directory
     - /bin/cp -r . $DEPLOY_PATH
-    
-    # Step 2: Change directory to the deployment path
     - cd $DEPLOY_PATH
-    
-    # Step 3: Install Composer dependencies
     - /usr/local/bin/php /usr/local/bin/composer install --no-dev --prefer-dist --optimize-autoloader
-    
-    # Step 4: Set appropriate file permissions for Laravel
     - /bin/chmod -R 755 $DEPLOY_PATH
     - /bin/chmod -R 775 $DEPLOY_PATH/storage
     - /bin/chmod -R 775 $DEPLOY_PATH/bootstrap/cache
-    
-    # Step 5: Clear and optimize caches (for routes, config, etc.)
     - /usr/local/bin/php artisan config:clear
     - /usr/local/bin/php artisan route:clear
     - /usr/local/bin/php artisan cache:clear
@@ -23,9 +14,4 @@ deployment:
     - /usr/local/bin/php artisan config:cache
     - /usr/local/bin/php artisan route:cache
     - /usr/local/bin/php artisan view:cache
-    
-    # Step 6: Run migrations (optional)
-    - /usr/local/bin/php artisan migrate --force
-
-    # Step 7: Output completion message
     - echo "Deployment to $DEPLOY_PATH complete."
