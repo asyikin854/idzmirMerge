@@ -34,7 +34,7 @@ class RegisterController extends Controller
             'child_name' => 'required|string',
             'child_ic' => 'required|string',
             'child_dob' => 'required|date',
-            'child_passport' => 'nullable|string',
+            'child_passport' => 'nullable|string', // Assuming it's optional
             'child_nationality' => 'required|string',
             'child_race' => 'required|string',
             'child_bp' => 'required|string',
@@ -84,34 +84,104 @@ class RegisterController extends Controller
             'username' => 'required|string',
             'email' => 'required|string',
             'password' => 'required|string',
+
+        ]);
+        // Create a new ChildInfo record
+        $childInfo = ChildInfo::create([
+            'child_name' => $validatedData['child_name'],
+            'child_ic' => $validatedData['child_ic'],
+            'child_dob' => $validatedData['child_dob'],
+            'child_passport' => $validatedData['child_passport'],
+            'child_nationality' => $validatedData['child_nationality'],
+            'child_race' => $validatedData['child_race'],
+            'child_bp' => $validatedData['child_bp'],
+            'child_religion' => $validatedData['child_religion'],
+            'child_sex' => $validatedData['child_sex'],
+            'child_address' => $validatedData['child_address'],
+            'child_posscode' => $validatedData['child_posscode'],
+            'child_city' => $validatedData['child_city'],
+            'child_country' => $validatedData['child_country'],
+            'pediatricians' => $validatedData['pediatricians'],
+            'recommend' => $validatedData['recommend'],
+            'deadline' => $validatedData['deadline'],
+            'diagnosis' => $validatedData['diagnosis'],
+            'occ_therapy' => $validatedData['occ_therapy'],
+            'sp_therapy' => $validatedData['sp_therapy'],
+            'others' => $validatedData['others'],
+            'house_income' => $validatedData['house_income'],
+        ]);
+       
+        // Create a new FatherInfo record linked to ChildInfo
+        $fatherInfo = FatherInfo::create([
+             // Set child_id with the ID of the associated ChildInfo
+        // Assign fatherInfo fields
+        'child_id' => $childInfo->id, // Link to ChildInfo
+        'father_name' => $validatedData['father_name'],
+        'father_phone' => $validatedData['father_phone'],
+        'father_ic' => $validatedData['father_ic'],
+        'father_race' => $validatedData['father_race'],
+        'father_occ' => $validatedData['father_occ'],
+        'father_email' => $validatedData['father_email'],
+        'father_address' => $validatedData['father_address'],
+        'father_posscode' => $validatedData['father_posscode'],
+        'father_city' => $validatedData['father_city'],
+        'father_work_address' => $validatedData['father_work_address'],
+        'father_work_posscode' => $validatedData['father_work_posscode'],
+        'father_work_city' => $validatedData['father_work_city'],
         ]);
 
-        // Create a new ChildInfo record
-        $childInfo = ChildInfo::create($validatedData);
+        // Create a new MotherInfo record linked to ChildInfo
+        $motherInfo = MotherInfo::create([
+            'child_id' => $childInfo->id,
+            'mother_name' => $validatedData['mother_name'],
+            'mother_phone' => $validatedData['mother_phone'],
+            'mother_ic' => $validatedData['mother_ic'],
+            'mother_race' => $validatedData['mother_race'],
+            'mother_occ' => $validatedData['mother_occ'],
+            'mother_email' => $validatedData['mother_email'],
+            'mother_address' => $validatedData['mother_address'],
+            'mother_posscode' => $validatedData['mother_posscode'],
+            'mother_city' => $validatedData['mother_city'],
+            'mother_work_address' => $validatedData['mother_work_address'],
+            'mother_work_posscode' => $validatedData['mother_work_posscode'],
+            'mother_work_city' => $validatedData['mother_work_city'],
+            // Add other fields from MotherInfo table
+        ]);
 
-        // Create related FatherInfo, MotherInfo, ParentPermission, and ParentAccount records
-        FatherInfo::create(array_merge($validatedData, ['child_id' => $childInfo->id]));
-        MotherInfo::create(array_merge($validatedData, ['child_id' => $childInfo->id]));
-        ParentsPermission::create(array_merge($validatedData, ['child_id' => $childInfo->id]));
-
-        ParentAccount::create([
+        // Create a new ParentPermission record linked to ChildInfo
+        $parentPermission = ParentsPermission::create([
+            'child_id' => $childInfo->id,
+            'parent_sign' => $validatedData['parent_sign'],
+            'sign_date' => $validatedData['sign_date'],
+            'sign_name' => $validatedData['sign_name'],
+            'sign_time' => $validatedData['sign_time'],
+            'agree_disagree' => $validatedData['agree_disagree'],
+        ]);
+        
+        $parentAccount = ParentAccount::create([
             'child_id' => $childInfo->id,
             'password' => bcrypt($validatedData['password']),
             'email' => $validatedData['email'],
             'username' => $validatedData['username'],
         ]);
+        // Optionally, you can add additional logic or redirection here
 
-        return view('register2-parent', compact('childInfo'));
+        // Redirect the user after successful form submission
+        return view('register2-parent', ['childInfo' => $childInfo, 'motherInfo' => $childInfo->motherInfo, 
+        'fatherInfo' => $childInfo->fatherInfo, 'parentPermission' => $childInfo->parentPermission]);
     }
-
     public function register2($id)
     {
-        $childInfo = ChildInfo::with('motherInfo', 'fatherInfo', 'parentPermission')->find($id);
+        $childInfo = ChildInfo::with('motherInfo','fatherInfo', 'parentPermission')->find($id);
+
         if (!$childInfo) {
-            abort(404);
+            // Handle case where pemohon does not exist
+            abort(404); // Or you can return a view indicating that the pemohon was not found
         }
 
-        return view('register2-parent', compact('childInfo'));
+        // Pass the pemohon and motherInfo details to the view
+        return view('register2-parent', ['childInfo' => $childInfo, 'motherInfo' => $childInfo->motherInfo, 
+        'fatherInfo' => $childInfo->fatherInfo, 'parentPermission' => $childInfo->parentPermission]);
     }
 
     public function packageView(Request $request, $child_id)
