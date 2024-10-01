@@ -7,15 +7,15 @@
     <meta name="description" content="Idzmir Kids Hub Parent Portal">
     <meta name="keywords" content="Idzmir Kids Hub">
     <meta name="author">
-    <link rel="icon" href="{{asset('assets/images/logo/logoidzmir.png')}}"
+    <link rel="icon" href="{{secure_asset('assets/images/logo/logoidzmir.png')}}"
      type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('assets/images/logo/logoidzmir.png')}}"
+    <link rel="shortcut icon" href="{{secure_asset('assets/images/logo/logoidzmir.png')}}"
      type="image/x-icon">
     <title>Parent</title>
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('assets\css\style.css')}}">
+    <link rel="stylesheet" href="{{secure_asset('assets\css\style.css')}}">
     @include('layouts.simple.css')
     @yield('style')
   </head>
