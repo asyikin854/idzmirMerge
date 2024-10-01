@@ -21,21 +21,40 @@
 
 
 @section('content')
-<div class="container">
-    <h1>Inbox</h1>
+<div class="container-fluid">
+    <div class="email-wrap">
+        <div class="row">
+            <div class="card">
+            <div class="card-body">
+    <h4>All Sent Email</h4>
 
     @if($messages->isEmpty())
-        <p>No messages.</p>
+        <div class="alert alert-warning" role="alert">
+            No messages found.
+        </div>
     @else
-        <ul>
-            @foreach($messages as $message)
-                <li>
-                    <strong>{{ $message->subject }}</strong><br>
-                    <p>{{ $message->message }}</p>
-                    <small>Received: {{ $message->created_at }}</small>
-                </li>
-            @endforeach
-        </ul>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Body</th>
+                    <th>Recipient</th>
+                    <th>Sent On</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($messages as $message)
+                    <tr>
+                        <td>{{ $message->subject }}</td>
+                        <td>{{ $message->message }}</td>
+                        <td>{{ $message->recipient }}</td> <!-- Assuming you have a recipient_name field -->
+                        <td>{{ \Carbon\Carbon::parse($message->created_at)->format('M d, Y H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     @endif
-</div>
+</div></div></div></div></div></div>
+
 @endsection

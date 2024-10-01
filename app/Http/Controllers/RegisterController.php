@@ -458,7 +458,7 @@ public function submitPayment(Request $request)
         'reference' => $reference,
         'payment_method' => 'FPX',
     ];
-    dd($paymentData);
+
     Log::info('Chip Payment Data Prepared', $paymentData);
     try {
         $response = Http::withHeaders([

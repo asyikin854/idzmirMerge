@@ -41,7 +41,7 @@
                     </svg>
                   </div>
                   <div> 
-                    <h4 class="mb-0">{{ $sessionPresent }} </h4><span class="f-light">Completed Sessions</span><a class="btn btn-light f-light" href="{{ route('learning-list-view')}}">View skills update<span class="ms-2"> 
+                    <h4 class="mb-0">{{ $sessionPresent }} </h4><span class="f-light">Completed Sessions</span><a class="btn btn-light f-light" href="{{ route('schedule.view')}}">View schedule<span class="ms-2"> 
                         <svg class="fill-icon f-light">
                           <use href="{{ asset('assets/svg/icon-sprite.svg#arrowright') }}"></use>
                         </svg></span></a>

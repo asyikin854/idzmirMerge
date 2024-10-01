@@ -1,5 +1,5 @@
 @extends('layouts.authentication.master')
-@section('title', 'Sign-up-wizard')
+@section('title', 'Parent Sign-up')
 
 
 

@@ -36,16 +36,12 @@
                               @endif
                            </div>
                         </div>
+                        <hr>
                         <ul class="nav main-menu" role="tablist">
                            <li class="nav-item">
-                              <button class="badge-light-primary btn-block btn-mail w-100" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="me-2" data-feather="check-circle"></i> New Task</button>
                               <div class="modal fade modal-bookmark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                  <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
-                                       <div class="modal-header">
-                                          <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
-                                          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                       </div>
                                        <div class="modal-body">
                                           <form class="form-bookmark needs-validation" id="bookmark-form" novalidate="">
                                              <div class="row">
@@ -147,7 +143,6 @@
                            <div class="card mb-0">
                               <div class="card-header d-flex">
                                  <h5 class="mb-0">Child Details</h5>
-                                 <a href="#"><i class="me-2" data-feather="printer"></i>Print</a>
                               </div>
                               <div class="card-body p-0">
                                  <div class="taskadd">
@@ -181,7 +176,6 @@
                            <div class="card mb-0">
                               <div class="card-header d-flex">
                                  <h6 class="mb-0">Father Details</h6>
-                                 <a href="#"><i class="me-2" data-feather="printer"></i>Print</a>
                               </div>
                               <div class="card-body p-0">
                                  <div class="taskadd">
@@ -215,7 +209,6 @@
                            <div class="card mb-0">
                               <div class="card-header d-flex">
                                  <h6 class="mb-0">Mother Details</h6>
-                                 <a href="#"><i class="me-2" data-feather="printer"></i>Print</a>
                               </div>
                               <div class="card-body p-0">
                                  <div class="taskadd">
@@ -248,8 +241,7 @@
                         <div class="fade tab-pane" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
                            <div class="card mb-0">
                               <div class="card-header d-flex">
-                                 <h6 class="mb-0">Others</h6>
-                                 <a href="#"><i class="me-2" data-feather="printer"></i>Print</a>
+                                 <h6 class="mb-0">Program Subscription</h6>
                               </div>
                               <div class="card-body p-0">
                                  <div class="taskadd">

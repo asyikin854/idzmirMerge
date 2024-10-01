@@ -100,6 +100,7 @@ Route::get('/unassignedList-cs', [CsController::class, 'csUnassignedList'])->nam
 Route::get('/assignedSession-cs', [CsController::class, 'csAssignedSession'])->name('assignedSession-cs');
 Route::get('/assignedDetails-cs/{id}', [CsController::class, 'csAssignedDetails'])->name('assignedDetails-cs');
 Route::get('/stdReportList-cs', [CsController::class, 'csStdReportList'])->name('stdReportList-cs');
+Route::get('/allSession-cs', [CsController::class, 'csAllSession'])->name('allSession-cs');
 
 Route::get('/assignTherapist-cs/{id}', [CsController::class, 'csAssignTherapist'])->name('assignTherapist-cs');
 Route::post('/assignTherapist', [CsController::class, 'assignTherapist'])->name('assign.therapist');

@@ -36,36 +36,11 @@
                                                 <div class="media-size-email"><img class="me-3 rounded-circle"
                                                         src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
                                                 <div class="media-body">
-                                                    <h6 class="f-w-600">ADMIN ASYIKIN</h6>
-                                                    <p>asyikin@gmail.com</p>
+                                                    <h6 class="f-w-600">{{$csName}}</h6>
+                                                    <p>{{$csEmail}} </p>
                                                 </div>
                                             </div>
                                             <ul class="nav main-menu" role="tablist">
-                                                <li class="nav-item"><a class="btn-primary btn-block btn-mail show"
-                                                        id="pills-darkhome-tab" data-bs-toggle="pill" href="#pills-darkhome"
-                                                        role="tab" aria-controls="pills-darkhome"
-                                                        aria-selected="true"><i class="icofont icofont-envelope me-2"></i>
-                                                        NEW MAIL</a></li>
-                                                <li class="nav-item"><a id="pills-darkprofile-tab" data-bs-toggle="pill"
-                                                        href="#pills-darkprofile" role="tab"
-                                                        aria-controls="pills-darkprofile" aria-selected="false"><span
-                                                            class="title"><i class="icon-import"></i> Inbox</span><span
-                                                            class="badge pull-right">(236)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-folder"></i> All
-                                                            Announcement</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-new-window"></i>
-                                                            Sent</span><span class="badge pull-right">(69)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-pencil-alt"></i>
-                                                            DRAFT</span><span class="badge pull-right">(59)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-trash"></i>
-                                                            TRASH</span><span class="badge pull-right">(99)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-info-alt"></i>
-                                                            IMPORTANT</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-star"></i>
-                                                            Starred</span></a></li>
-                                                <li>
-                                                    <hr>
-                                                </li>
                                                 
                                             </ul>
                                         </div>
@@ -81,85 +56,8 @@
                             <div class="row">
                                 <div class="col-xl-4 col-md-12 box-md-12 pr-0">
                                     <div class="pe-0 b-r-light"></div>
-                                    <div class="email-top">
-                                        <div class="row">
-                                            <div class="col">
-                                                <h5>Inbox</h5>
-                                            </div>
-                                            <div class="col text-end">
-                                                <div class="dropdown">
-                                                    <button class="btn dropdown-toggle" id="dropdownMenuButton"
-                                                        type="button" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">More</button>
-                                                    <div class="dropdown-menu dropdown-menu-end"
-                                                        aria-labelledby="dropdownMenuButton"><a class="dropdown-item"
-                                                            href="#">Action</a><a class="dropdown-item"
-                                                            href="#">Another action</a><a class="dropdown-item"
-                                                            href="#">Something else here</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="inbox">
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Promo Announcement <small><span>(15</span> July <span>2024)</span></small></h6>
-                                                <p>Promo Merdeka 2024</p>
-                                            </div>
-                                        </div>
-                                        <div class="media active">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Cuti Hari Malaysia<small><span>(16</span> September)</small></h6>
-                                                <p>Selamat Hari Malaysia</p>
-                                            </div>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Cuti Maulidur Rasul <small><span>(20</span> Aug<span> 2018)</span></small></h6>
-                                                <p>Selamat Menyambut Maulidur Rasul </p>
-                                            </div>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Lion Lorpa <small><span>(02</span> Jun <span>2016)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6 class="mt-0">Solvn Relto <small><span>(25</span> July
-                                                        <span>2015)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Repro Soft <small><span>(15</span> July <span>2018)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
-                                        <div class="media media-size-email"><img class="me-3 rounded-circle"
-                                                src="{{ asset('assets/images/user/user.png') }}" alt="">
-                                            <div class="media-body">
-                                                <h6>Lion Lorpa <small><span>(02</span> Jun <span>2016)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="col-xl-8 col-md-12 box-md-12 pl-0">
+                                <div class="col-xl-12 col-md-12 box-md-12">
                                     <div class="email-right-aside">
                                         <div class="email-body radius-left">
                                             <div class="ps-0">

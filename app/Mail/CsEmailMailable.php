@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class YourEmailMailable extends Mailable
+class CsEmailMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class YourEmailMailable extends Mailable
 
     public function build()
     {
-        return $this->view('admin.email.template')
+        return $this->view('csEmailTemplate')
                     ->subject($this->subject)
                     ->with([
                         'subject' => $this->subject,

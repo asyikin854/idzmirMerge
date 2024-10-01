@@ -33,7 +33,7 @@ return [
     
     'chip' => [
     'api_key' => env('CHIP_API_KEY'),
-    'endpoint' => 'https://gate.chip-in.asia/api/v1/', // Ensure this is the actual API base URL
+    'endpoint' => 'https://gate.chip-in.asia/api/v1/payments', // Ensure this is the actual API base URL
 ],
 
 ];

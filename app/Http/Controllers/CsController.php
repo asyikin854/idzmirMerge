@@ -652,4 +652,38 @@ class CsController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Therapist assigned successfully!');
     }
+
+    public function csAllSession()
+    {
+        $user = Auth::guard('cs')->user();
+        $csName = $user->name;
+    
+        $schedules = ChildSchedule::all();
+    
+        $events = $schedules->map(function ($schedule) {
+            $formattedTime = ($schedule->time);
+            $sessionDateTime = ($schedule->date . ' ' . $schedule->time);
+            $currentDateTime = new \DateTime();
+    
+            $color = '#007bff'; // Default color (blue)
+                if ($schedule->status === 'approved') {
+                    $color = '#28a745'; // Green for present
+                } elseif ($schedule->status === 'pending') {
+                    $color = '#dc3545'; // Red for absent
+                }
+    
+    
+            return [
+                'title' => "\nSession: " . $schedule->childInfo->package->package_name . "\n" . $schedule->childInfo->child_name,
+                'start' => $schedule->date . 'T' . $formattedTime,
+                'details' => "Package: " . $schedule->childInfo->package->package_name . "<br>Session: " . $schedule->session . "<br>Date & Time: " . $schedule->date . " / " . $schedule->time .
+                            "<br>Student: " . $schedule->childInfo->child_name . "<br>Therapist: " . $schedule->therapist . "<br>Status: " . $schedule->status,
+                'attendance' => $schedule->attendance, // Add attendance info
+                'color' => $color,
+            ];
+        });
+    
+        return view('allSession-cs', compact('events', 'csName'));
+    }
+    
 }

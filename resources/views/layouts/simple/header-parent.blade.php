@@ -28,12 +28,6 @@
             </svg>
           </div>
         </li>
-        <li class="onhover-dropdown">
-          <div class="notification-box">
-            <svg>
-              <use href="{{ asset('assets/svg/icon-sprite.svg#notification') }}"></use>
-            </svg><span class="badge rounded-pill badge-secondary">4 </span>
-          </div>
         <li class="profile-nav onhover-dropdown pe-0 py-0">
           <div class="media profile-media"><img class="b-r-10" src="{{ asset('assets/images/dashboard/profile.png') }}" alt="">
             <div class="media-body"><span>{{ $parentAccount->username}} </span>
@@ -42,7 +36,6 @@
           </div>
           <ul class="profile-dropdown onhover-show-div">
             <li><a href="{{route('profile-parent')}}"><i data-feather="user"></i><span>Profile</span></a></li>
-            <li><a href="#"><i data-feather="users"></i><span>Switch</span></a></li>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               @csrf
           </form>

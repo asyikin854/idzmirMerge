@@ -89,8 +89,9 @@ return redirect()->back()->with('success', 'Email sent successfully.');
         $user = Auth::guard('cs')->user();
         $csInfo = $user;
         $csName = $user->name;
+        $csEmail = $user->email;
         $parents = DB::table('parent_accounts')->get();
-        return view('sendEmail-cs', compact('parents', 'csName')); // Pointing to the send.blade.php view
+        return view('sendEmail-cs', compact('parents', 'csName', 'csEmail')); // Pointing to the send.blade.php view
     }
 
     public function csSend(Request $request)
@@ -146,7 +147,7 @@ return redirect()->back()->with('success', 'Email sent successfully.');
         // Assume logged-in user is a parent
 
         // Fetch notifications sent to the logged-in user (adjust the table/logic as necessary)
-        $messages = DB::table('notifications')->get();
+        $messages = DB::table('email_logs')->get();
 
         return view('inbox-cs', compact('messages', 'csName'));
     }
