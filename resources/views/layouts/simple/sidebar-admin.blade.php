@@ -70,14 +70,39 @@
                             <svg class="fill-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-to-do') }}"> </use>
                             </svg><span>Schedules</span></a></li>
-                            <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                                class="sidebar-link sidebar-title link-nav" href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
-                                </svg><span>Report and Full Analytic</span></a></li>
+                           
+                                <li class="sidebar-main-title">
+                                    <div>
+                                        <h6>Report and Full Analytic</h6>
+                                    </div>
+                                </li>
+                                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                    class="sidebar-link sidebar-title link-nav" href="{{ route('admin.child.rts')}}">
+                                    <svg class="stroke-icon">
+                                        <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
+                                    </svg>
+                                    <svg class="fill-icon">
+                                        <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
+                                    </svg><span>RTS</span></a></li>
+                                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                        class="sidebar-link sidebar-title link-nav" href="{{ route('admin.child.fa')}}">
+                                        <svg class="stroke-icon">
+                                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
+                                        </svg>
+                                        <svg class="fill-icon">
+                                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
+                                        </svg><span>Full Assesment</span></a></li>
+                                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+                                            class="sidebar-link sidebar-title link-nav" href="{{ route('admin.child.intervention')}}">
+                                            <svg class="stroke-icon">
+                                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
+                                            </svg><span>Intervention with Consistency</span></a></li>
+                                           
+                                   
+                                </li>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
         </nav>
     </div>
