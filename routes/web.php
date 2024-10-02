@@ -10,6 +10,8 @@ use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\CsController;
+use App\Http\Controllers\ChildController;
+
 
 
 
@@ -517,5 +519,8 @@ Route::get('/admin/email/compose', [EmailController::class, 'compose'])->name('a
 Route::post('/admin/email/send', [EmailController::class, 'send'])->name('admin.email.send');
 Route::get('/inbox', [EmailController::class, 'inbox'])->name('inbox');
 
-
+Route::get('/children/ready-to-school', [ChildController::class, 'showReadyToSchoolSchedules'])->name('admin.child.rts');
+Route::get('/children/full-assessment', [ChildController::class, 'showFullAssessmentSchedules'])->name(name: 'admin.child.fa');
+// Route for Intervention with Consistency
+Route::get('/children/intervention-with-consistency', [ChildController::class, 'showInterventionWithConsistencySchedules'])->name('admin.child.intervention');
 

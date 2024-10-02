@@ -32,7 +32,7 @@
                         <div class="row card-body pb-0 m-0">
                             <div class="col-xl-9 col-lg-8 col-9 p-0">
                                 <h6 class="mb-2">Total Student</h6>
-                                <h4>$3654.00</h4><span>Compare to last month</span>
+                                <h4>50</h4><span>Compare to last month</span>
                             </div>
                             <div class="col-xl-3 col-lg-4 col-3 text-end p-0">
                                 <h6 class="txt-success">+65%</h6>
@@ -50,7 +50,7 @@
                         <div class="row card-body pb-0 m-0">
                             <div class="col-xl-9 col-lg-8 col-9 p-0">
                                 <h6 class="mb-2">Actual Active Session</h6>
-                                <h4>12569</h4><span>Compare to last month</span>
+                                <h4>330</h4><span>Compare to last month</span>
                             </div>
                             <div class="col-xl-3 col-lg-4 col-3 text-end p-0">
                                 <h6 class="txt-success">+65%</h6>

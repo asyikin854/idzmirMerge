@@ -47,23 +47,7 @@
                                                         role="tab" aria-controls="pills-darkhome"
                                                         aria-selected="true"><i class="icofont icofont-envelope me-2"></i>
                                                         NEW MAIL</a></li>
-                                                <li class="nav-item"><a id="pills-darkprofile-tab" data-bs-toggle="pill"
-                                                        href="#pills-darkprofile" role="tab"
-                                                        aria-controls="pills-darkprofile" aria-selected="false"><span
-                                                            class="title"><i class="icon-import"></i> Inbox</span><span
-                                                            class="badge pull-right">(236)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-folder"></i> All
-                                                            Announcement</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-new-window"></i>
-                                                            Sent</span><span class="badge pull-right">(69)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-pencil-alt"></i>
-                                                            DRAFT</span><span class="badge pull-right">(59)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-trash"></i>
-                                                            TRASH</span><span class="badge pull-right">(99)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-info-alt"></i>
-                                                            IMPORTANT</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-star"></i>
-                                                            Starred</span></a></li>
+                                                
                                                 <li>
                                                     <hr>
                                                 </li>
@@ -126,14 +110,7 @@
                                                 <p>Selamat Menyambut Maulidur Rasul </p>
                                             </div>
                                         </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Lion Lorpa <small><span>(02</span> Jun <span>2016)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="media">
                                             <div class="media-size-email"><img class="me-3 rounded-circle"
                                                     src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
@@ -143,14 +120,7 @@
                                                 <p>Mattis luctus. Donec nisi diam,</p>
                                             </div>
                                         </div>
-                                        <div class="media">
-                                            <div class="media-size-email"><img class="me-3 rounded-circle"
-                                                    src="{{ asset('assets/images/user/user.png') }}" alt=""></div>
-                                            <div class="media-body">
-                                                <h6>Repro Soft <small><span>(15</span> July <span>2018)</span></small></h6>
-                                                <p>Mattis luctus. Donec nisi diam,</p>
-                                            </div>
-                                        </div>
+                                       
                                         <div class="media media-size-email"><img class="me-3 rounded-circle"
                                                 src="{{ asset('assets/images/user/user.png') }}" alt="">
                                             <div class="media-body">
@@ -310,18 +280,6 @@
         </div>
     </div>
     </div>
-    @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
 @endsection
 
 @section('script')
