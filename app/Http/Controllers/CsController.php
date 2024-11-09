@@ -558,7 +558,30 @@ class CsController extends Controller
             return redirect()->route('stdReportList-cs')->with('success', 'Schedule updated successfully.');
         }
     }
-    
+    public function csApprovedReportList()
+    {
+        $user = Auth::guard('cs')->user();
+        $csInfo = $user;
+        $csName = $user->name;
+        $schedules = ChildSchedule::where('attendance', 'present')
+        ->whereHas('sessionReport', function ($query) {
+            $query->where('status', 'approved');
+        })
+        ->with('childInfo')
+        ->get();
+        return view ('approvedReportList-cs', compact('schedules', 'csName'));
+    }
+    public function csApprovedReport($id)
+    {
+        $user = Auth::guard('cs')->user();
+        $csInfo = $user;
+        $csName = $user->name;
+        $report = SessionReport::where('schedules_id', $id)
+        ->with('childSchedule')
+        ->first();
+
+        return view ('approvedReport-cs', compact('report', 'csName'));
+    }
     public function csApproveRescheduleList()
     {
         $user = Auth::guard('cs')->user();

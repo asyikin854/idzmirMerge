@@ -1,24 +1,38 @@
-@extends('layouts.authentication.master')
-@section('title', 'Payment')
+@extends('layouts.simple.master-sales')
+@section('title', 'Schedules')
 
 @section('css')
+@endsection
+
+@section('style')
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/calendar.css') }}">
+@endsection
+
+@section('breadcrumb-title')
+<h3>Scheduling & Payment Confirmation </h3>
+@endsection
+
+@section('breadcrumb-items')
+<li class="breadcrumb-item">New Customer</li>
+<li class="breadcrumb-item">Registration</li>
+<li class="breadcrumb-item">Scheduling</li>
+<li class="breadcrumb-item active">Confirmation</li>
 @endsection
 
 @section('content')
 <div class="container-fluid checkout">
    <div class="card">
       <div class="card-header">
-         <h4>Payment Details</h4>
+         <h4>Scheduling Details</h4>
       </div>
       <div class="card-body">
          <div class="row">
             <div class="col-xl-6 col-sm-12">
-               <form action="{{ route('submitPayment') }}" method="POST">
+               <form action="{{ route('confirmSchedule.submit') }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   <!-- Hidden fields to send necessary data -->
                   <input type="hidden" name="child_id" value="{{ $child_id }}">
                   <input type="hidden" name="total_price" value="{{ $totalPrice }}">
-                  <input type="hidden" name="parent_id" value="{{ $parentAccount->id }}">
                   <input type="hidden" name="selected_slots" value="{{ json_encode($selectedSlots) }}">
                   <input type="hidden" name="additional_sessions" value="{{ $additionalSessions }}">
                   <input type="hidden" name="session_id" value="{{ $sessionId }}">
@@ -43,32 +57,19 @@
                      </table></div></div>
 
                      <div class="mb-3 col-sm-12">
-                     <h5>Account Details</h5>
-                     <div class="table-responsive">
-                     <table class="table table-bordered">
-                        <tr>
-                           <th>Username</th>
-                           <td>{{$parentAccount->username}} </td>
-                        </tr><tr>
-                           <th>Email</th>
-                           <td>{{$parentAccount->email}} </td>
-                        </tr>
-                     </table></div></div>
-
-                     <div class="mb-3 col-sm-12">
                      <h5>Parent Details</h5>
                      <div class="table-responsive">
                      <table class="table table-bordered">
                         <tr>
                            <th>Father's Name</th>
-                           <td>{{$fatherInfo->father_name}} </td>
+                           <td>{{$fatherInfo->father_name ?? 'N/A'}} </td>
                            <th>Mother's Name</th>
-                           <td>{{$motherInfo->mother_name}} </td>
+                           <td>{{$motherInfo->mother_name ?? 'N/A'}} </td>
                         </tr><tr>
                            <th>Phone No.</th>
-                           <td>{{$fatherInfo->father_phone}} </td>
+                           <td>{{$fatherInfo->father_phone ?? 'N/A'}} </td>
                            <th>Phone No.</th>
-                           <td>{{$motherInfo->mother_phone}} </td>
+                           <td>{{$motherInfo->mother_phone ?? 'N/A'}} </td>
                         </tr>
                      </table></div></div>
                   </div>
@@ -92,14 +93,15 @@
                      <div class="animate-chk">
                         <div class="row">
                            <div class="col">
-                              <label class="d-block" for="edo-ani">
-                              <input class="radio_animated" id="edo-ani" type="radio" name="rdo-ani" checked="" data-original-title="" title="">Online Banking
+                              <label for="file" class="d-block">Payment Receipt</label>
+                              <input type="file" name="file" id="file" class="form-control" required>
                            </div>
                         </div>
                      </div>
-                     <div class="order-place"><button class="btn btn-primary" type="submit">Proceed</button></div></form>
+                     <div class="order-place"><button class="btn btn-primary" type="submit">Submit</button></div>
                   </div>
                </div>
+            </form>
             </div>
          </div>
       </div>

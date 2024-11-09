@@ -24,6 +24,11 @@ class Package extends Model
         'package_normal_price',
         'package_wkday_price',
         'package_wkend_price',
+        'citizenship',
+        'weekly',
+        'filename',
+        'path',
+        'consultation'
     ];
     public function childInfo()
     {

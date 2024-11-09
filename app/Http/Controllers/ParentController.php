@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Chip\ChipApi;
 use Carbon\Carbon;
 use App\Models\Slot;
 use App\Models\Package;
+use App\Models\Payment;
 use App\Models\SlotRTS;
+use Chip\Model\Product;
+use Chip\Model\Purchase;
+use App\Models\ChildInfo;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ChildSchedule;
+use App\Models\ParentAccount;
+use Chip\Model\ClientDetails;
+use Chip\Model\PurchaseDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -82,7 +91,18 @@ class ParentController extends Controller
         $parentPermission = $childInfo->parentPermission;
         $parentAccount = $childInfo->parentAccount;
         $payment = $childInfo->payment;
-        $childSchedule = $childInfo->childSchedule;
+        $currentDateTime = Carbon::now();
+        $latestCreatedAt = $childInfo->childSchedule->max('created_at');
+
+        $childSchedule = $childInfo->childSchedule->filter(function ($schedule) use ($currentDateTime, $latestCreatedAt) {
+            // Combine the date and time fields into a Carbon instance (for 'Y-m-d' and 'H:i' format)
+            $scheduleDateTime = Carbon::createFromFormat('Y-m-d H:i', $schedule->date . ' ' . $schedule->time);
+        
+            // Filter schedules that are in the future, have status 'approved', and have the latest created_at date
+            return $scheduleDateTime->greaterThanOrEqualTo($currentDateTime)
+                && $schedule->status === 'approved'
+                && $schedule->created_at->equalTo($latestCreatedAt);
+        })->all();
         $childSchedules = $childInfo->childSchedule->first();
         $package = $childInfo->package;
 
@@ -262,4 +282,475 @@ class ParentController extends Controller
             return view('paymentList-parent')->with('error', 'No related data found');
         
     }}
+    public function program()
+    {
+        $data = $this->getRelatedData();
+        if ($data) {
+            return view('program-parent')->with($data);
+        }
+        return view('program-parent')->with('error', 'No related data found');
+    }
+
+    public function changeProgram($child_id, $package_id)
+    {
+        $data = $this->getRelatedData();
+        $childInfo = ChildInfo::find($child_id);
+        $package = Package::find($package_id);
+    
+        // Determine consultation filter based on the current package's consultation value
+        $consultationFilter = $package->consultation === 'Yes' ? 'No' : 'Yes';
+    
+        // Filter packages based on child nationality, consultation filter, and excluding package_step "step 1"
+        if ($childInfo->child_nationality === 'Malaysian') {
+            // Retrieve packages for Malaysian children with specified consultation, citizenship set to 'yes', and not "step 1"
+            $packages = Package::where('citizenship', 'yes')
+                ->where('consultation', $consultationFilter)
+                ->where('type', '!=', 'screening')
+                ->where('package_step', '!=', 'step 1')
+                ->orderBy('package_name', 'asc')
+                ->get();
+        } else {
+            // Retrieve packages for non-Malaysian children with specified consultation, citizenship set to 'no', and not "step 1"
+            $packages = Package::where('citizenship', 'no')
+                ->where('consultation', $consultationFilter)
+                ->where('type', '!=', 'screening')
+                ->where('package_step', '!=', 'step 1')
+                ->orderBy('package_name', 'asc')
+                ->get();
+        }
+    
+        return view('changeProgram-parent', compact('packages'))->with($data);
+    }
+
+    public function newScheduleView($child_id, $package_id)
+    {
+        $data = $this->getRelatedData();
+        $childInfo = ChildInfo::find($child_id);
+        $newPackage = Package::find($package_id);
+        
+        if (!$childInfo || !$newPackage) {
+            abort(404);
+        }
+    
+        // Get the package type (either 'individual' or 'grouping')
+        $packageType = $newPackage->type;
+        $isWeekly = $newPackage->is_weekly === 'yes'; // Check if the package is weekly
+    
+        // Fetch all ChildSchedule sessions for the current child where the package type matches
+        $childSchedules = ChildSchedule::where('type', $packageType)->get();
+    
+        $slotsModel = $packageType === 'individual' ? new Slot() : new SlotRTS();
+    
+        // Fetch slots starting from one day ahead until the end of the current month
+        $slots = $slotsModel::where('date', '>=', now()->addDay())
+            ->where('date', '<=', now()->endOfMonth())
+            ->get();
+    
+        // Check if the package is weekly
+        if ($isWeekly) {
+            // Calculate how many slots are needed per week
+            $weeksInMonth = 4;
+            $slotsPerWeek = $newPackage->session_quantity / $weeksInMonth;
+    
+            // Filter slots to only show slots that are grouped by week
+            $slots = $slots->groupBy(function ($slot) {
+                return Carbon::parse($slot->date)->format('W'); // Group by week number
+            });
+    
+            // Remove weeks where the current week has passed
+            $currentWeek = now()->format('W');
+            $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+                return $weekNumber >= $currentWeek;
+            });
+    
+            // Flatten the collection for FullCalendar
+            $slots = $slots->flatten();
+        } else {
+            // Check if the number of available slots is less than the package's session quantity
+            $availableSlots = $slots->count();
+            $requiredSlots = $newPackage->session_quantity;
+    
+            if ($availableSlots < $requiredSlots) {
+                // If there are not enough slots, fetch slots for the next month
+                $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
+                    ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
+                    ->get();
+            }
+        }
+    
+        // Map the slots for FullCalendar
+        $slots = $slots->map(function ($slot) use ($childSchedules, $newPackage) {
+            $bookedSessions = $childSchedules->where('date', $slot->date)
+                ->where('time', $slot->start_time)
+                ->count();
+            $isFull = $bookedSessions >= $newPackage->quota;
+    
+            return [
+                'id' => $slot->id,
+                'title' => $isFull ? 'Slot is Full' : 'Available Slot',
+                'start' => $slot->date . 'T' . $slot->start_time,
+                'end' => $slot->date . 'T' . $slot->end_time,
+                'quota' => $newPackage->quota - $bookedSessions,
+                'isFull' => $isFull
+            ];
+        });
+    
+        return view('newSchedule-parent', [
+            'newPackage' => $newPackage,
+            'childInfo' => $childInfo,
+            'slots' => $slots,
+            'sessionQuantity' => $newPackage->session_quantity,
+            'child_id' => $child_id,
+            'isWeekly' => $newPackage->weekly === 'yes'
+        ])->with($data);
+    }
+    
+    public function newScheduleSubmit(Request $request, $child_id, $package_id)
+    {
+        $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
+        $package = Package::find($package_id);
+        $type = $package->type;
+    
+        if (!$childInfo || !$package) {
+            abort(404);
+        }
+        $consultation = $package->consultation; // Get the consultation value
+    
+        $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
+        $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
+        $totalSessions = $package->session_quantity + $additionalSessions;
+        $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
+    
+        // Validate selected slots
+        if (!$selectedSlots || !is_array($selectedSlots)) {
+            return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+        }
+        $hasWeekendSlot = false;
+        $basePrice = $package->package_wkday_price; // Default to weekday price
+    
+        // Sort the selected slots by date before inserting
+        usort($selectedSlots, function($a, $b) {
+            $dateA = Carbon::createFromFormat('m/d/Y', $a->date)->format('Y-m-d');
+            $dateB = Carbon::createFromFormat('m/d/Y', $b->date)->format('Y-m-d');
+            return strcmp($dateA, $dateB); // Sort in ascending order
+        });
+    
+        $sessionId = (string) Str::uuid(); // Generate a unique session ID
+        $sessionCounter = 1; // Initialize session counter
+    
+        // Loop through the sorted selected slots
+        foreach ($selectedSlots as $index => $slotData) {
+            $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
+            $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
+            $slotDay = $slotData->day;
+    
+            // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
+            $existingBookings = ChildSchedule::where('date', $slotDate)
+                                ->where('time', $slotTime)
+                                ->where('day', $slotDay)
+                                ->count();
+    
+            if ($existingBookings >= 10) {
+                // Skip this slot if the quota is full
+                continue;
+            }
+    
+            // Calculate price based on weekday or weekend
+            if (in_array($slotDay, ['Friday', 'Saturday'])) {
+                $hasWeekendSlot = true; // Set the flag if a weekend slot is found
+                break; // No need to check further, we found a weekend slot
+            }
+        }
+        if ($hasWeekendSlot) {
+            $basePrice = $package->package_wkend_price; // Set to weekend price
+        }
+
+    session([
+        'type' => $type,
+        'childInfo' => $childInfo,
+        'package' => $package,
+        'fatherInfo' => $childInfo->fatherInfo,
+        'motherInfo' => $childInfo->motherInfo,
+        'parentAccount' => $childInfo->parentAccount,
+        'selectedSlots' => $selectedSlots,
+        'basePrice' => $basePrice,
+        'additionalSessions' => $additionalSessions,
+        'additionalPrice' => $additionalPrice,
+        'totalPrice' => $basePrice + $additionalPrice,
+        'child_id' => $child_id,
+        'sessionId' => $sessionId,
+        'sessionCounter' => $sessionCounter
+    ]);
+
+    if ($consultation === 'Yes') {
+        return redirect()->route('newConsultSchedule-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
+    } else {
+        return redirect()->route('newProgPayment-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
+    }
+}
+
+public function newConsultScheduleView($child_id, $package_id)
+    {
+        // Find child and package information
+        $data = $this->getRelatedData();
+        $childInfo = ChildInfo::find($child_id);
+        $package = Package::find($package_id);
+    
+        if (!$childInfo || !$package) {
+            abort(404);
+        }
+    
+        // Get the package type (either 'individual' or 'grouping')
+        $packageType = 'screening';
+        $isWeekly = $package->is_weekly === 'yes'; // Check if the package is weekly
+    
+        // Fetch all ChildSchedule sessions for the current child where the package type matches
+        $childSchedules = ChildSchedule::where('type', $packageType)->get();
+    
+        // Fetch slots starting from one day ahead until the end of the current month
+        $slots = Slot::where('date', '>=', now()->addDay())
+            ->where('date', '<=', now()->endOfMonth())
+            ->get();
+    
+        // Check if the package is weekly
+        if ($isWeekly) {
+            // Calculate how many slots are needed per week
+            $weeksInMonth = 4;
+            $slotsPerWeek = $package->session_quantity / $weeksInMonth;
+    
+            // Filter slots to only show slots that are grouped by week
+            $slots = $slots->groupBy(function ($slot) {
+                return Carbon::parse($slot->date)->format('W'); // Group by week number
+            });
+    
+            // Remove weeks where the current week has passed
+            $currentWeek = now()->format('W');
+            $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+                return $weekNumber >= $currentWeek;
+            });
+    
+            // Flatten the collection for FullCalendar
+            $slots = $slots->flatten();
+        } else {
+            // Check if the number of available slots is less than the package's session quantity
+            $availableSlots = $slots->count();
+            $requiredSlots = 1;
+    
+            if ($availableSlots < $requiredSlots) {
+                // If there are not enough slots, fetch slots for the next month
+                $slots = Slot::where('date', '>=', now()->startOfMonth()->addMonth())
+                    ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
+                    ->get();
+            }
+        }
+    
+        // Map the slots for FullCalendar
+        $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
+            $bookedSessions = $childSchedules->where('date', $slot->date)
+                ->where('time', $slot->start_time)
+                ->count();
+            $isFull = $bookedSessions >= 2;
+    
+            return [
+                'id' => $slot->id,
+                'title' => $isFull ? 'Slot is Full' : 'Available Slot',
+                'start' => $slot->date . 'T' . $slot->start_time,
+                'end' => $slot->date . 'T' . $slot->end_time,
+                'quota' => 2 - $bookedSessions,
+                'isFull' => $isFull
+            ];
+        });
+    
+        return view('newConsultSchedule-parent', [
+            'package' => $package,
+            'childInfo' => $childInfo,
+            'slots' => $slots,
+            'sessionQuantity' => 1,
+            'child_id' => $child_id,
+            'isWeekly' => $package->weekly === 'yes'
+        ])->with($data);
+    }
+
+    public function newConsultSchedule(Request $request, $child_id, $package_id)
+    {
+        $data = $this->getRelatedData();
+        $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
+        $package = Package::find($package_id);
+        $type = 'screening';
+    
+        if (!$childInfo || !$package) {
+            abort(404);
+        }
+        $consultation = $package->consultation; // Get the consultation value
+    
+        $consultSlot = json_decode($request->input('selected_slots'), false); // Array of selected slots
+    
+        // Validate selected slots
+        if (!$consultSlot || !is_array($consultSlot)) {
+            return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+        }
+
+
+        session([
+            'consultSlot' => $consultSlot
+        ]);
+
+        return redirect()->route('newProgPayment-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
+
+}
+
+    public function newProgPayment($child_id, $package_id)
+    {
+        $data = $this->getRelatedData();
+
+        if (!session()->has('childInfo') || !session()->has('package')) {
+            return redirect()->back()->withErrors('Session data not found.');
+        }
+        // Retrieve data from the session
+        $type = session('type');
+        $package_id = session('package_id');
+        $childInfo = session('childInfo');
+        $package = session('package');
+        $fatherInfo = session('fatherInfo');
+        $motherInfo = session('motherInfo');
+        $parentAccount = session('parentAccount');
+        $totalPrice = session('totalPrice');
+        $selectedSlots = session('selectedSlots');
+        $consultSlot = session('consultSlot', []);
+        $additionalSessions = session('additionalSessions');
+        $additionalPrice = session('additionalPrice');
+        $basePrice = session('basePrice');
+        $sessionId = session('sessionId');
+        $sessionCounter = session('sessionCounter');
+
+        return view('newProgPayment-parent', [
+            'type' => $type,
+            'package' => $package,
+            'childInfo' => $childInfo,
+            'fatherInfo' => $fatherInfo,
+            'motherInfo' => $motherInfo,
+            'parentAccount' => $parentAccount,
+            'totalPrice' => $totalPrice,
+            'selectedSlots' => $selectedSlots,
+            'consultSlot' => $consultSlot,
+            'additionalSessions' => $additionalSessions,
+            'additionalPrice' => $additionalPrice,
+            'child_id' => $child_id,
+            'basePrice' => $basePrice,
+            'sessionId' => $sessionId,
+            'sessionCounter' => $sessionCounter
+        ])->with($data);
+    }
+
+    public function submitNewProgPayment(Request $request)
+{
+    $package_id = $request->input('package_id');
+    $child_id = $request->input('child_id');
+    $totalPrice = $request->input('total_price');
+    $parent_id = $request->input('parent_id');
+    $session_id = $request->input('session_id');
+    $selectedSlots = session('selectedSlots'); // Retrieve slots from session
+    $consultSlot = session('consultSlot', []);
+    $sessionCounter = session('sessionCounter'); // Retrieve slots from session
+    $type = session('type');
+    $reference = Str::uuid();
+    $parentAccount = ParentAccount::where('child_id', $child_id)->first();
+    
+    // Insert selected slots into the ChildSchedule table
+    foreach ($selectedSlots as $slotData) {
+        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
+        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
+        $slotDay = $slotData->day;
+        // Insert each selected slot into ChildSchedule
+        ChildSchedule::create([
+            'child_id' => $child_id,
+            'session_id' => $session_id,
+            'day' => $slotDay,
+            'date' => $slotDate,
+            'time' => $slotTime, // Store only the start time
+            'price' => $totalPrice, // Store the total price
+            'status' => 'pending', // Status for the schedule, not related to payment
+            'session' => $sessionCounter, // Store session counter
+            'type' => $type
+        ]);
+        $sessionCounter++;
+    }
+    if ($consultSlot) {
+        foreach ($consultSlot as $slotData) {
+        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
+        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
+        $slotDay = $slotData->day;
+
+        ChildSchedule::create([
+            'child_id' => $child_id,
+            'session_id' => $session_id,
+            'day' => $slotDay,
+            'date' => $slotDate,
+            'time' => $slotTime, 
+            'price' => $totalPrice, // Optionally, set a different price for consultation
+            'status' => 'pending',
+            'session' => $sessionCounter,
+            'type' => 'screening' // Set type as 'screening' for consultSlot
+        ]);
+    }
+    }
+    $childInfo = ChildInfo::find($child_id);
+    $childInfo->update(['package_id' => $package_id]);
+    // Create a new payment record
+    $payment = Payment::create([
+        'child_id' => $child_id,
+        'parent_id' => $parent_id,
+        'reference' => $reference,
+        'total_amount' => $totalPrice,
+        'payment_method' => 'FPX',
+        'status' => 'pending', // Initial status is 'pending'
+        'session_id' => $session_id
+    ]);
+    $parentEmail = $parentAccount->email;
+
+    $paymentData = [
+        'amount' => $totalPrice * 100, // Amount in cents
+        'currency' => 'MYR',
+        'email' => $parentEmail, // Replace with the parent's email
+        'description' => 'Payment for Child ID: ' . $child_id,
+        'reference' => $reference,
+        'payment_method' => 'FPX',
+    ];
+
+    // Your existing code for creating purchase
+    $brandId = config('services.chip.brand_id');
+    $apiKey = config('services.chip.api_key');
+    $endpoint = config('services.chip.endpoint');
+    $chip = new ChipApi($brandId, $apiKey, $endpoint);
+
+    $client = new ClientDetails();
+    $client->email = $parentEmail;
+    
+    $purchase = new Purchase();
+    $purchase->client = $client;
+    
+    $details = new PurchaseDetails();
+    $product = new Product();
+    $product->name = 'Payment for Child ID: ' . $child_id;
+    $product->price = $totalPrice * 100;
+    $details->products = [$product];
+    
+    $purchase->purchase = $details;
+    $purchase->brand_id = $brandId;
+    $purchase->success_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=1';
+    $purchase->failure_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=0';
+    $purchase->success_callback = 'https://system.idzmirkidshub.com/chip/callback/api/callback.php';
+	$purchase->payment_method_whitelist = ['fpx'];
+	
+	$result = $chip->createPurchase($purchase);
+
+        $exploded_url = explode('/', $result->checkout_url, -1);
+        $payment->payment_id = end($exploded_url);
+        $payment->save();
+        if ($result && $result->checkout_url) {
+            // Redirect user to checkout
+            header("Location: " . $result->checkout_url);
+            exit;
+               }
+}
 }

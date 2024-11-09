@@ -5855,8 +5855,8 @@ table.dataTable.display tbody tr.odd > .sorting_1 {
 /*Form Wizard Three ends*/
 /*Form Wizard Four Start*/
 .wizard-4 .action-bar {
-  position: absolute;
-  bottom: 50px;
+  position: fixed;
+  bottom: 25px;
   right: 50px;
   z-index: 10;
 }

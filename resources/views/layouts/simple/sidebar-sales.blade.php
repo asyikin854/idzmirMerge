@@ -1,13 +1,13 @@
 <div class="sidebar-wrapper" sidebar-layout="stroke-svg">
     <div>
-        <div class="logo-wrapper"><a href="{{ route('index') }}"><img class="img-fluid for-light"
+        <div class="logo-wrapper"><a href="{{ route('sales.dashboard') }}"><img class="img-fluid for-light"
                     src="{{ asset('assets/images/logo/logoidzmir.png') }}" style="width: 50px" alt=""><img class="img-fluid for-dark"
                     src="{{ asset('assets/images/logo/logoidzmir.png') }}" style="width: 50px" alt=""></a><b style="color: #ffc526">IdzmirKidsHub</b>
             <div class="back-btn"><i class="fa fa-angle-left"></i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
         </div>
         <div class="logo-icon-wrapper"><a href="{{ route('index') }}"><img class="img-fluid"
-                    src="{{ asset('assets/images/logo/logo-icon.png') }}" alt=""></a></div>
+                    src="{{ asset('assets/images/logo/logoidzmir.png') }}" style="width: 50px" alt=""></a></div>
         <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
@@ -20,7 +20,7 @@
 
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
                         <a class="sidebar-link sidebar-title"
-                            href="{{ route('parent.dashboard')}}">
+                            href="{{ route('sales.dashboard')}}">
                             <svg class="stroke-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
                             </svg>
@@ -28,41 +28,37 @@
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
                             </svg><span class="lan-3">Dashboard</span></a>
                     </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                        class="sidebar-link sidebar-title link-nav" href="{{ route('schedule.view') }}">
-                        <svg class="stroke-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
-                        </svg>
-                        <svg class="fill-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calender') }}"></use>
-                        </svg><span>Schedule</span></a></li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav"
-                            href="{{ route('announcement-parent') }}">
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
+                        <label class="badge badge-light-primary">2</label><a class="sidebar-link sidebar-title"
+                            href="#">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-email') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-email') }}"></use>
-                            </svg><span>Annoucement</span></a>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
+                            </svg><span>Customers</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('newCustomer-sales') }}">New Customers</a></li>
+                            <li><a href="{{ route('registeredCustomer-sales') }}">Registered Customers</a></li>
+                        </ul>
                     </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav"
-                            href="{{ route('program-parent') }}">
+                            href="{{ route('consultationSessions-sales') }}">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-to-do') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-to-do') }}"></use>
-                            </svg><span>Program</span></a>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calendar') }}"></use>
+                            </svg><span>Consultation Schedules</span></a>
                     </li>
-
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="{{ route('paymentList-parent') }}">
+                            class="sidebar-link sidebar-title link-nav" href="{{ route('paymentStatus-sales') }}">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-ecommerce') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-board') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-ecommerce') }}"> </use>
-                            </svg><span>Billing and Payment</span></a></li>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-board') }}"> </use>
+                            </svg><span>Payment Status</span></a></li>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
         </nav>
     </div>

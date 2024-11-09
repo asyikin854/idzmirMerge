@@ -10,6 +10,8 @@ use App\Models\Slot;
 use App\Models\Package;
 use App\Models\Payment;
 use App\Models\SlotRTS;
+use Chip\Model\Product;
+use Chip\Model\Purchase;
 use App\Models\ChildInfo;
 use App\Models\FatherInfo;
 use App\Models\MotherInfo;
@@ -17,6 +19,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ChildSchedule;
 use App\Models\ParentAccount;
+use Chip\Model\ClientDetails;
+use Chip\Model\PurchaseDetails;
 use App\Models\ParentsPermission;
 use Illuminate\Support\Facades\Http;
 
@@ -26,6 +30,31 @@ class RegisterController extends Controller
     {
         return view('register-parent');
     }
+    public function checkChildExists(Request $request)
+    {
+        $ic = $request->input('ic');
+        $passport = $request->input('passport');
+        
+        // Initialize the query to the ChildInfo model
+        $query = ChildInfo::query();
+    
+        // Add condition to check IC if provided
+        if (!empty($ic)) {
+            $query->where('child_ic', $ic);
+        }
+    
+        // Add condition to check passport if provided
+        if (!empty($passport)) {
+            $query->orWhere('child_passport', $passport);
+        }
+    
+        // Execute the query and check if any record exists
+        $exists = $query->exists();
+        
+        // Return JSON response with the result
+        return response()->json(['exists' => $exists]);
+    }
+    
 
     public function registerNew(Request $request)
     {
@@ -33,7 +62,7 @@ class RegisterController extends Controller
         $validatedData = $request->validate([
             // Add validation rules for each input field
             'child_name' => 'required|string',
-            'child_ic' => 'required|string',
+            'child_ic' => 'nullable|string',
             'child_dob' => 'required|date',
             'child_passport' => 'nullable|string', // Assuming it's optional
             'child_nationality' => 'required|string',
@@ -189,8 +218,8 @@ class RegisterController extends Controller
     {
         $childInfo = ChildInfo::find($child_id);
         $packages = $childInfo->child_nationality === 'Malaysian' ?
-            Package::where('citizenship', 'yes')->orderBy('package_name', 'asc')->get() :
-            Package::where('citizenship', 'no')->orderBy('package_name', 'asc')->get();
+            Package::where('citizenship', 'yes')->where('consultation', 'Yes')->orderBy('package_step', 'asc')->get() :
+            Package::where('citizenship', 'no')->where('consultation', 'Yes')->orderBy('package_step', 'asc')->get();
 
         return view('product-parent', compact('packages', 'childInfo'));
     }
@@ -290,90 +319,207 @@ class RegisterController extends Controller
             'isWeekly' => $package->weekly === 'yes'
         ]);
     }
-    public function childSchedule(Request $request, $child_id, $package_id)
-    {
-        $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
-        $package = Package::find($package_id);
-        $type = $package->type;
     
-        if (!$childInfo || !$package) {
-            abort(404);
-        }
-    
-        $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
-        $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
-        $totalSessions = $package->session_quantity + $additionalSessions;
-        $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
-    
-        // Validate selected slots
-        if (!$selectedSlots || !is_array($selectedSlots)) {
-            return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
-        }
-        $hasWeekendSlot = false;
-        $basePrice = $package->package_wkday_price; // Default to weekday price
-    
-        // Sort the selected slots by date before inserting
-        usort($selectedSlots, function($a, $b) {
-            $dateA = Carbon::createFromFormat('m/d/Y', $a->date)->format('Y-m-d');
-            $dateB = Carbon::createFromFormat('m/d/Y', $b->date)->format('Y-m-d');
-            return strcmp($dateA, $dateB); // Sort in ascending order
-        });
-    
-        $sessionId = (string) Str::uuid(); // Generate a unique session ID
-        $sessionCounter = 1; // Initialize session counter
-    
-        // Loop through the sorted selected slots
-        foreach ($selectedSlots as $index => $slotData) {
-            $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
-            $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
-            $slotDay = $slotData->day;
-    
-            // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
-            $existingBookings = ChildSchedule::where('date', $slotDate)
-                                ->where('time', $slotTime)
-                                ->where('day', $slotDay)
-                                ->count();
-    
-            if ($existingBookings >= 10) {
-                // Skip this slot if the quota is full
-                continue;
+        public function childSchedule(Request $request, $child_id, $package_id)
+        {
+            $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
+            $package = Package::find($package_id);
+            $type = $package->type;
+        
+            if (!$childInfo || !$package) {
+                abort(404);
             }
-    
-            // Calculate price based on weekday or weekend
-            if (in_array($slotDay, ['Friday', 'Saturday'])) {
-                $hasWeekendSlot = true; // Set the flag if a weekend slot is found
-                break; // No need to check further, we found a weekend slot
+            $consultation = $package->consultation; // Get the consultation value
+        
+            $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
+            $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
+            $totalSessions = $package->session_quantity + $additionalSessions;
+            $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
+        
+            // Validate selected slots
+            if (!$selectedSlots || !is_array($selectedSlots)) {
+                return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
             }
+            $hasWeekendSlot = false;
+            $basePrice = $package->package_wkday_price; // Default to weekday price
+        
+            // Sort the selected slots by date before inserting
+            usort($selectedSlots, function($a, $b) {
+                $dateA = Carbon::createFromFormat('m/d/Y', $a->date)->format('Y-m-d');
+                $dateB = Carbon::createFromFormat('m/d/Y', $b->date)->format('Y-m-d');
+                return strcmp($dateA, $dateB); // Sort in ascending order
+            });
+        
+            $sessionId = (string) Str::uuid(); // Generate a unique session ID
+            $sessionCounter = 1; // Initialize session counter
+        
+            // Loop through the sorted selected slots
+            foreach ($selectedSlots as $index => $slotData) {
+                $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
+                $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
+                $slotDay = $slotData->day;
+        
+                // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
+                $existingBookings = ChildSchedule::where('date', $slotDate)
+                                    ->where('time', $slotTime)
+                                    ->where('day', $slotDay)
+                                    ->count();
+        
+                if ($existingBookings >= 10) {
+                    // Skip this slot if the quota is full
+                    continue;
+                }
+        
+                // Calculate price based on weekday or weekend
+                if (in_array($slotDay, ['Friday', 'Saturday'])) {
+                    $hasWeekendSlot = true; // Set the flag if a weekend slot is found
+                    break; // No need to check further, we found a weekend slot
+                }
+            }
+            if ($hasWeekendSlot) {
+                $basePrice = $package->package_wkend_price; // Set to weekend price
+            }
+
+        session([
+            'type' => $type,
+            'childInfo' => $childInfo,
+            'package' => $package,
+            'fatherInfo' => $childInfo->fatherInfo,
+            'motherInfo' => $childInfo->motherInfo,
+            'parentAccount' => $childInfo->parentAccount,
+            'selectedSlots' => $selectedSlots,
+            'basePrice' => $basePrice,
+            'additionalSessions' => $additionalSessions,
+            'additionalPrice' => $additionalPrice,
+            'totalPrice' => $basePrice + $additionalPrice,
+            'child_id' => $child_id,
+            'sessionId' => $sessionId,
+            'sessionCounter' => $sessionCounter
+        ]);
+
+        if ($consultation === 'Yes') {
+            return redirect()->route('consultSchedule-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
+        } else {
+            return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
         }
-        if ($hasWeekendSlot) {
-            $basePrice = $package->package_wkend_price; // Set to weekend price
+    }
+
+    public function consultScheduleView($child_id, $package_id)
+        {
+            // Find child and package information
+            $childInfo = ChildInfo::find($child_id);
+            $package = Package::find($package_id);
+        
+            if (!$childInfo || !$package) {
+                abort(404);
+            }
+        
+            // Get the package type (either 'individual' or 'grouping')
+            $packageType = 'screening';
+            $isWeekly = $package->is_weekly === 'yes'; // Check if the package is weekly
+        
+            // Fetch all ChildSchedule sessions for the current child where the package type matches
+            $childSchedules = ChildSchedule::where('type', $packageType)->get();
+        
+            // Fetch slots starting from one day ahead until the end of the current month
+            $slots = Slot::where('date', '>=', now()->addDay())
+                ->where('date', '<=', now()->endOfMonth())
+                ->get();
+        
+            // Check if the package is weekly
+            if ($isWeekly) {
+                // Calculate how many slots are needed per week
+                $weeksInMonth = 4;
+                $slotsPerWeek = $package->session_quantity / $weeksInMonth;
+        
+                // Filter slots to only show slots that are grouped by week
+                $slots = $slots->groupBy(function ($slot) {
+                    return Carbon::parse($slot->date)->format('W'); // Group by week number
+                });
+        
+                // Remove weeks where the current week has passed
+                $currentWeek = now()->format('W');
+                $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+                    return $weekNumber >= $currentWeek;
+                });
+        
+                // Flatten the collection for FullCalendar
+                $slots = $slots->flatten();
+            } else {
+                // Check if the number of available slots is less than the package's session quantity
+                $availableSlots = $slots->count();
+                $requiredSlots = 1;
+        
+                if ($availableSlots < $requiredSlots) {
+                    // If there are not enough slots, fetch slots for the next month
+                    $slots = Slot::where('date', '>=', now()->startOfMonth()->addMonth())
+                        ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
+                        ->get();
+                }
+            }
+        
+            // Map the slots for FullCalendar
+            $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
+                $bookedSessions = $childSchedules->where('date', $slot->date)
+                    ->where('time', $slot->start_time)
+                    ->count();
+                $isFull = $bookedSessions >= 2;
+        
+                return [
+                    'id' => $slot->id,
+                    'title' => $isFull ? 'Slot is Full' : 'Available Slot',
+                    'start' => $slot->date . 'T' . $slot->start_time,
+                    'end' => $slot->date . 'T' . $slot->end_time,
+                    'quota' => 2 - $bookedSessions,
+                    'isFull' => $isFull
+                ];
+            });
+        
+            return view('consultSchedule-parent', [
+                'package' => $package,
+                'childInfo' => $childInfo,
+                'slots' => $slots,
+                'sessionQuantity' => 1,
+                'child_id' => $child_id,
+                'isWeekly' => $package->weekly === 'yes'
+            ]);
         }
 
-    session([
-        'childInfo' => $childInfo,
-        'package' => $package,
-        'fatherInfo' => $childInfo->fatherInfo,
-        'motherInfo' => $childInfo->motherInfo,
-        'parentAccount' => $childInfo->parentAccount,
-        'selectedSlots' => $selectedSlots,
-        'basePrice' => $basePrice,
-        'additionalSessions' => $additionalSessions,
-        'additionalPrice' => $additionalPrice,
-        'totalPrice' => $basePrice + $additionalPrice,
-        'child_id' => $child_id,
-        'sessionId' => $sessionId,
-        'sessionCounter' => $sessionCounter
-    ]);
+        public function consultSchedule(Request $request, $child_id, $package_id)
+        {
+            $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
+            $package = Package::find($package_id);
+            $type = 'screening';
+        
+            if (!$childInfo || !$package) {
+                abort(404);
+            }
+            $consultation = $package->consultation; // Get the consultation value
+        
+            $consultSlot = json_decode($request->input('selected_slots'), false); // Array of selected slots
+        
+            // Validate selected slots
+            if (!$consultSlot || !is_array($consultSlot)) {
+                return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+            }
 
 
-    return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
-}
+            session([
+                'consultSlot' => $consultSlot
+            ]);
+
+            return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
+
+    }
+
+
 public function checkoutParent($child_id, $package_id)
 {
     if (!session()->has('childInfo') || !session()->has('package')) {
         return redirect()->back()->withErrors('Session data not found.');
     }
     // Retrieve data from the session
+    $type = session('type');
     $package_id = session('package_id');
     $childInfo = session('childInfo');
     $package = session('package');
@@ -382,6 +528,7 @@ public function checkoutParent($child_id, $package_id)
     $parentAccount = session('parentAccount');
     $totalPrice = session('totalPrice');
     $selectedSlots = session('selectedSlots');
+    $consultSlot = session('consultSlot', []);
     $additionalSessions = session('additionalSessions');
     $additionalPrice = session('additionalPrice');
     $basePrice = session('basePrice');
@@ -389,6 +536,7 @@ public function checkoutParent($child_id, $package_id)
     $sessionCounter = session('sessionCounter');
 
     return view('checkout-parent', [
+        'type' => $type,
         'package' => $package,
         'childInfo' => $childInfo,
         'fatherInfo' => $fatherInfo,
@@ -396,6 +544,7 @@ public function checkoutParent($child_id, $package_id)
         'parentAccount' => $parentAccount,
         'totalPrice' => $totalPrice,
         'selectedSlots' => $selectedSlots,
+        'consultSlot' => $consultSlot,
         'additionalSessions' => $additionalSessions,
         'additionalPrice' => $additionalPrice,
         'child_id' => $child_id,
@@ -454,66 +603,77 @@ public function submitPayment(Request $request)
         'currency' => 'MYR',
         'email' => $parentEmail, // Replace with the parent's email
         'description' => 'Payment for Child ID: ' . $child_id,
-        'redirect_url' => route('chip.callback'),
         'reference' => $reference,
         'payment_method' => 'FPX',
     ];
 
-    Log::info('Chip Payment Data Prepared', $paymentData);
-    try {
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . config('services.chip.api_key'),
-        ])->post(config('services.chip.endpoint') . 'payments', $paymentData);
+    // Your existing code for creating purchase
+    $brandId = config('services.chip.brand_id');
+    $apiKey = config('services.chip.api_key');
+    $endpoint = config('services.chip.endpoint');
+    $chip = new ChipApi($brandId, $apiKey, $endpoint);
 
-        if ($response->successful() && isset($response['payment_url'])) {
-            Log::info('Payment URL received: ', $response->json());
-            return redirect($response['payment_url']); // Redirect to Chip payment page
-        } else {
-            // Log the failure and update Payment status to 'failed'
-            Log::error('Payment URL not received or API failed: ', $response->json());
-            $payment->update(['status' => 'failed']); // Update the payment status to 'failed'
-            return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id])->withErrors(['error' => 'Payment failed.']);
+    $client = new ClientDetails();
+    $client->email = $parentEmail;
+    
+    $purchase = new Purchase();
+    $purchase->client = $client;
+    
+    $details = new PurchaseDetails();
+    $product = new Product();
+    $product->name = 'Payment for Child ID: ' . $child_id;
+    $product->price = $totalPrice * 100;
+    $details->products = [$product];
+    
+    $purchase->purchase = $details;
+    $purchase->brand_id = $brandId;
+    $purchase->success_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=1';
+    $purchase->failure_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=0';
+    $purchase->success_callback = 'https://system.idzmirkidshub.com/chip/callback/api/callback.php';
+	$purchase->payment_method_whitelist = ['fpx'];
+	
+	$result = $chip->createPurchase($purchase);
+
+        $exploded_url = explode('/', $result->checkout_url, -1);
+        $payment->payment_id = end($exploded_url);
+        $payment->save();
+        if ($result && $result->checkout_url) {
+            // Redirect user to checkout
+            header("Location: " . $result->checkout_url);
+            exit;
         }
-    } catch (Exception $e) {
-        // Handle exception, log error, and update Payment status to 'failed'
-        Log::error('Chip API Error: ' . $e->getMessage());
-        $payment->update(['status' => 'failed']); // Update the payment status to 'failed'
-        return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id])->withErrors(['error' => 'Payment processing error.']);
-    }
+    // Send the request and decode response
+
 }
 
+// public function handleCallback(Request $request)
+// {
+//     $reference = $request->input('reference');
+//     $status = $request->input('status');
 
+//     Log::info('Chip Callback Data: ', $request->all());
 
+//     $payment = Payment::where('reference', $reference)->first();
 
-public function handleCallback(Request $request)
-{
-    $reference = $request->input('reference');
-    $status = $request->input('status');
+//     if ($payment) {
+//         $child_id = $payment->child_id;
+//         $package_id = $payment->package_id;
+//         $payment->update([
+//             'status' => $status,
+//             'payment_date' => now()
+//         ]);
 
-    Log::info('Chip Callback Data: ', $request->all());
+//         if ($status == 'successful') {
+//             ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'confirmed']);
+//             return redirect()->route('payment.success');
+//         } else {
+//             ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'failed']);
+//             return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id]);
+//         }
+//     }
 
-    $payment = Payment::where('reference', $reference)->first();
-
-    if ($payment) {
-        $child_id = $payment->child_id;
-        $package_id = $payment->package_id;
-        $payment->update([
-            'status' => $status,
-            'payment_date' => now()
-        ]);
-
-        // Update ChildSchedule records based on session_id
-        if ($status == 'successful') {
-            ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'confirmed']);
-            return redirect()->route('payment.success');
-        } else {
-            ChildSchedule::where('session_id', $payment->session_id)->update(['status' => 'failed']);
-            return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id]);
-        }
-    }
-
-    return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id])->withErrors(['error' => 'Payment not found']);
-}
+//     return redirect()->route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id])->withErrors(['error' => 'Payment not found']);
+// }
 
 
     public function paymentSuccess()

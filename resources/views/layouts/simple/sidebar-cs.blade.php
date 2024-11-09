@@ -65,14 +65,20 @@
                             <li><a href="{{ route('inbox-cs') }}">View Announcement</a></li>
                         </ul>
                     </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="{{ route('stdReportList-cs') }}">
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
+                        <label class="badge badge-light-primary">2</label><a class="sidebar-link sidebar-title"
+                            href="#">
                             <svg class="stroke-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-form') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-form') }}"> </use>
-                            </svg><span>Report Approval</span></a></li>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-form') }}"></use>
+                            </svg><span>Session Skill Report</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('approvedReportList-cs') }}">Approved Reports</a></li>
+                            <li><a href="{{ route('stdReportList-cs') }}">Pending Approval</a></li>
+                        </ul>
+                    </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="{{ route('allSession-cs') }}">
                             <svg class="stroke-icon">

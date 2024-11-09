@@ -32,6 +32,11 @@ return [
             'driver' => 'session',
             'provider' => 'cs',
         ],
+
+        'sales' => [
+            'driver' => 'session',
+            'provider' => 'sales',
+        ],
     ],
 
     'providers' => [
@@ -58,6 +63,11 @@ return [
         'cs' => [
             'driver' => 'eloquent',
             'model' => App\Models\CsInfo::class,
+        ],
+        
+        'sales' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\SalesLeadInfo::class,
         ],
     ],
 

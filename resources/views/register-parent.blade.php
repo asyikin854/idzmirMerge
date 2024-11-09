@@ -2,7 +2,6 @@
 @section('title', 'Parent Sign-up')
 
 
-
 @section('style')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/css/smart_wizard.min.css" rel="stylesheet" type="text/css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/css/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
@@ -63,29 +62,17 @@
                   <div id="step-1">
                      <div class="wizard-title" style="width: 90%">
                         <h2>Child Information</h2>
-                        <h5 class="text-muted mb-4">Enter all details for your child</h5>
+                        <h5 class="text-muted mb-4">Enter all the required (*) field.</h5>
                      </div>
                      <div class="login-main" style="width: 90%">
                         <div class="theme-form">
                            <h5>Child Information</h5>
                            <div class="form-group mb-3">
-                              <label for="child_name">Full name</label>
+                              <label for="child_name">Full name *</label>
                               <input class="form-control" name="child_name" id="child_name" type="text" placeholder="Johan" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_ic">IC Number</label>
-                              <input class="form-control" name="child_ic" id="child_ic" type="text" maxlength="12" required>
-                           </div>
-                           <div class="form-group mb-3">
-                              <label for="child_dob">Date of Birth</label>
-                              <input class="form-control" name="child_dob" id="child_dob" type="date" required>
-                           </div>
-                           <div class="form-group mb-3">
-                              <label for="child_passport">Passport NO</label>
-                              <input class="form-control" name="child_passport" id="child_passport" type="text">
-                           </div>
-                           <div class="form-group mb-3">
-                              <label for="child_nationality">Nationality</label>
+                              <label for="child_nationality">Nationality *</label>&nbsp;<label style="color:red;">Please select your nationality</label>
                               @php
                 $selectedNationality = '--Select Country--'; // Default value
                 $arr = ['Malaysian', 'Afghan', 'Albanian', 'Algerian', 'American', 'Andorran', 'Angolan', 'Antiguans', 'Argentinean', 'Armenian', 'Australian', 'Austrian', 
@@ -112,15 +99,31 @@
 
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_race">Race</label>
+                              <label id="child_ic_label" style="display:none; color:red;">Please enter the IC number</label>
+                              <label for="child_ic">IC Number</label>
+                              <input class="form-control" name="child_ic" id="child_ic" type="text" maxlength="12">
+                           </div>
+                           <div class="form-group mb-3">
+                              <label id="child_passport_label" style="display:none; color:red;">Please enter the Passport number</label>
+                              <label for="child_passport">Passport NO</label>
+                              <input class="form-control" name="child_passport" id="child_passport" type="text">
+                           </div>
+                           <div class="form-group mb-3">
+                              <label for="child_dob">Date of Birth *</label>
+                              <input class="form-control" name="child_dob" id="child_dob" type="date" required>
+                           </div>
+                           
+                           
+                           <div class="form-group mb-3">
+                              <label for="child_race">Race *</label>
                               <input class="form-control" name="child_race" id="child_race" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_bp">Birth Place</label>
+                              <label for="child_bp">Birth Place *</label>
                               <input class="form-control" name="child_bp" id="child_bp" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_religion">Religion</label>
+                              <label for="child_religion">Religion *</label>
                               <select name="child_religion" id="child_religion" class="form-select" required>
                                  <option value="Islam">Islam</option>
                                  <option value="Hindu">Hindu</option>
@@ -131,26 +134,26 @@
                               </select>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_sex">Sex</label>
+                              <label for="child_sex">Sex *</label>
                               <select name="child_sex" id="child_sex" class="form-select" required>
                                  <option value="Male">Male</option>
                                  <option value="Female">Female</option>
                               </select>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_address">Address</label>
+                              <label for="child_address">Address *</label>
                               <input class="form-control" name="child_address" id="child_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_posscode">Postcode</label>
+                              <label for="child_posscode">Postcode *</label>
                               <input class="form-control" name="child_posscode" id="child_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_city">City</label>
+                              <label for="child_city">City *</label>
                               <input class="form-control" name="child_city" id="child_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="child_address">Country</label>
+                              <label for="child_address">Country *</label>
                               @php
                               $selectedCountry = ''; // Default value
                               $countries = [
@@ -217,110 +220,110 @@
                   <div id="step-3">
                      <div class="wizard-title" style="width: 90%">
                         <h2>Parents / Guardian Information</h2>
-                        <h5 class="text-muted mb-4">Enter all the required information</h5>
+                        <h5 class="text-muted mb-4">Enter all the required (*) information</h5>
                      </div>
                      <div class="login-main" style="width: 90%">
                         <div class="theme-form">
                            <h5>Father's Information</h5>
                            <div class="form-group mb-3">
-                              <label for="father_name">Father's Name</label>
+                              <label for="father_name">Father's Name *</label>
                               <input class="form-control" name="father_name" id="father_name" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_phone">Telephone NO</label>
+                              <label for="father_phone">Telephone NO *</label>
                               <input class="form-control" name="father_phone" id="father_phone" type="number" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_ic">I/C Number</label>
+                              <label for="father_ic">I/C Number *</label>
                               <input class="form-control" maxlength="12" name="father_ic" id="father_ic" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_race">Race</label>
+                              <label for="father_race">Race *</label>
                               <input class="form-control" name="father_race" id="father_race" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_occ">Occupation</label>
+                              <label for="father_occ">Occupation *</label>
                               <input class="form-control" name="father_occ" id="father_occ" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_email">Email</label>
+                              <label for="father_email">Email *</label>
                               <input class="form-control" name="father_email" id="father_email" type="email" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_address">Address</label>
+                              <label for="father_address">Address *</label>
                               <input class="form-control" name="father_address" id="father_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_posscode">Postcode</label>
+                              <label for="father_posscode">Postcode *</label>
                               <input class="form-control" name="father_posscode" id="father_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_city">City</label>
+                              <label for="father_city">City *</label>
                               <input class="form-control" name="father_city" id="father_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_address">Work Address</label>
+                              <label for="father_work_address">Work Address *</label>
                               <input class="form-control" name="father_work_address" id="father_work_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_posscode">Postcode</label>
+                              <label for="father_work_posscode">Postcode *</label>
                               <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_city">City</label>
+                              <label for="father_work_city">City *</label>
                               <input class="form-control" name="father_work_city" id="father_work_city" type="text" required>
                            </div>
                            <h5>Mother's Information</h5>
                            <div class="form-group mb-3">
-                              <label for="mother_name">Mother's Name</label>
+                              <label for="mother_name">Mother's Name *</label>
                               <input class="form-control" name="mother_name" id="mother_name" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_phone">Telephone NO</label>
+                              <label for="mother_phone">Telephone NO *</label>
                               <input class="form-control" name="mother_phone" id="mother_phone" type="number" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_ic">I/C Number</label>
+                              <label for="mother_ic">I/C Number *</label>
                               <input class="form-control" maxlength="12" name="mother_ic" id="mother_ic" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_race">Race</label>
+                              <label for="mother_race">Race *</label>
                               <input class="form-control" name="mother_race" id="mother_race" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_occ">Occupation</label>
+                              <label for="mother_occ">Occupation *</label>
                               <input class="form-control" name="mother_occ" id="mother_occ" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_email">Email</label>
+                              <label for="mother_email">Email *</label>
                               <input class="form-control" name="mother_email" id="mother_email" type="email" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_address">Address</label>
+                              <label for="mother_address">Address *</label>
                               <input class="form-control" name="mother_address" id="mother_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_posscode">Postcode</label>
+                              <label for="mother_posscode">Postcode *</label>
                               <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_city">City</label>
+                              <label for="mother_city">City *</label>
                               <input class="form-control" name="mother_city" id="mother_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_address">Work Address</label>
+                              <label for="mother_work_address">Work Address *</label>
                               <input class="form-control" name="mother_work_address" id="mother_work_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_posscode">Postcode</label>
+                              <label for="mother_work_posscode">Postcode *</label>
                               <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_city">City</label>
+                              <label for="mother_work_city">City *</label>
                               <input class="form-control" name="mother_work_city" id="mother_work_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="house_income">Household Income</label>
+                              <label for="house_income">Household Income *</label>
                               <select name="house_income" id="house_income" class="form-select" required>
                                  <option value="less than RM 5000">less than RM 5000 </option>
                                  <option value="less than RM 10000">less than RM 10,000</option>
@@ -341,29 +344,29 @@
                               purpose of demonstration or promotion of our centres. Promotional materials may include advertisements, 
                               video, websites, collaterals and social media such as Facebook and Instagram. We hereby waive all rights to 
                               this photographs or video and give permission to the photograph or video to be published/ distribute publicly.
-                              I declare that all the information given is accurate, true, and I
+                              I declare that all the information given is accurate, true, and I <br>
                               <label for="agree" style="font-weight: bold; color:#ff6d6d">Agree</label>
                               <input type="radio" name="agree_disagree" id="agree" value="agree" required>
-                              
+                              &nbsp;
                               <label for="disagree" style="font-weight: bold; color:#ff6d6d"">Disagree</label>
-                              <input type="radio" name="agree_disagree" id="disagree" value="disagree">
+                              <input type="radio" name="agree_disagree" id="disagree" value="disagree"><br>
                               
                               to abide by the policies and regulations of Idzmir Kids Hub.</p>
                            <div class="form-group mb-3">
-                              <label for="parent_sign">Parent's Sign (Your name)</label>
+                              <label for="parent_sign">Parent's Sign (Your name) *</label>
                               <input class="form-control" name="parent_sign" id="parent_sign" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="sign_date">Date</label>
-                              <input class="form-control" name="sign_date" id="sign_date" type="text" required>
+                              <input class="form-control" name="sign_date" id="sign_date" type="text" readonly required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="sign_name">Name</label>
+                              <label for="sign_name">Name *</label>
                               <input class="form-control" name="sign_name" id="sign_name" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="sign_time">Time</label>
-                              <input class="form-control" name="sign_time" id="sign_time" type="text" required>
+                              <input class="form-control" name="sign_time" id="sign_time" type="text" readonly required>
                            </div>
                            </div>
                         </div>
@@ -376,19 +379,19 @@
                         <div class="login-main" style="width: 90%">
                            <div class="theme-form">
                               <div class="form-group mb-3 m-t-15">
-                                 <label for="email">Email address</label>
+                                 <label for="email">Email address *</label>
                                  <input class="form-control" id="email" name="email" type="email" placeholder="name@example.com" required>
                               </div>
                               <div class="form-group mb-3">
-                                 <label for="username">Username</label>
+                                 <label for="username">Username *</label>
                                  <input class="form-control" name="username" id="username" type="text" placeholder="" required>
                               </div>
                               <div class="form-group mb-3">
-                                 <label for="password">Password</label>
+                                 <label for="password">Password *</label>
                                  <input class="form-control" id="password" name="password" type="password" placeholder="Password" required>
                               </div>
                               <div class="form-group mb-3">
-                                 <label for="password">Confirm Password</label>
+                                 <label for="password">Confirm Password *</label>
                                  <input class="form-control"  id="confirm_password" type="password" placeholder="Enter again" required>
                                  <br><span id="passwordMatchMessage" style="color: red;"></span>
                               </div>
@@ -414,11 +417,78 @@
 @endsection
 
 @section('script')
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- Include SmartWizard JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/js/jquery.smartWizard.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const icField = document.getElementById('child_ic');
+    const passportField = document.getElementById('child_passport');
+    const icWarning = document.createElement('p');
+    const passportWarning = document.createElement('p');
+    
+    icWarning.style.color = 'red';
+    passportWarning.style.color = 'red';
 
+    // Function to check IC/Passport in the database
+    function checkIfChildExists(type, value) {
+        $.ajax({
+            url: '/check-child-exists',
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                ic: type === 'ic' ? value : null,
+                passport: type === 'passport' ? value : null,
+            },
+            success: function (response) {
+                // Debugging - Check what response is returned
+                console.log(response);
+
+                // Ensure response contains the "exists" field and it's true
+                if (response && response.exists === true) {
+                    if (type === 'ic') {
+                        icWarning.textContent = 'This IC number is already registered.';
+                        icField.parentNode.appendChild(icWarning);
+                    } else if (type === 'passport') {
+                        passportWarning.textContent = 'This passport number is already registered.';
+                        passportField.parentNode.appendChild(passportWarning);
+                    }
+                } else {
+                    // Clear the warning message if the number doesn't exist
+                    if (type === 'ic') {
+                        icWarning.textContent = '';
+                    } else if (type === 'passport') {
+                        passportWarning.textContent = '';
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error occurred: ' + error);
+                // You might want to handle the error here or show a general error message
+            }
+        });
+    }
+
+    // Check IC number when user stops typing
+    icField.addEventListener('input', function () {
+        const icValue = icField.value;
+        if (icValue.length > 0) {
+            checkIfChildExists('ic', icValue);
+        }
+    });
+
+    // Check Passport number when user stops typing
+    passportField.addEventListener('input', function () {
+        const passportValue = passportField.value;
+        if (passportValue.length > 0) {
+            checkIfChildExists('passport', passportValue);
+        }
+    });
+});
+
+</script>
 <script src="{{ asset('assets/js/form-wizard/form-wizard-five.js')}}"></script>
 <script src="{{ asset('assets/js/tooltip-init.js')}}"></script>
 <script src="{{ asset('assets/js/theme-customizer/customizer.js')}}"></script>

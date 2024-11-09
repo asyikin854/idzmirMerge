@@ -21,7 +21,9 @@ class Payment extends Model
         'status',
         'description',
         'payment_date',
-        'session_id'
+        'session_id',
+        'filename',
+        'path'
     ];
 
     public static function boot()

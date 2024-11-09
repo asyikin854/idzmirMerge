@@ -1,7 +1,21 @@
-@extends('layouts.authentication.master')
+@extends('layouts.simple.master-parent')
 @section('title', 'Payment')
 
 @section('css')
+@endsection
+
+@section('style')
+@endsection
+
+@section('breadcrumb-title')
+<h3>Program Details</h3>
+@endsection
+
+@section('breadcrumb-items')
+    <li class="breadcrumb-item">Program</li>
+    <li class="breadcrumb-item">Change Program</li>
+    <li class="breadcrumb-item">New Program Schedule</li>
+    <li class="breadcrumb-item active">Payment Details</li>
 @endsection
 
 @section('content')

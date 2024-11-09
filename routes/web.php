@@ -1,15 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CsController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\CsController;
 
 
 
@@ -39,6 +40,10 @@ Route::middleware(['auth:cs'])->group(function () {
     Route::get('/csDashboard', [CsController::class, 'csDashboard'])->name('cs.dashboard');
 });
 
+Route::middleware(['auth:sales'])->group(function () {
+    Route::get('/salesDashboard', [SalesController::class, 'salesDashboard'])->name('sales.dashboard');
+});
+
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('schedule-parent', [ParentController::class, 'parentScheduleView'])->name('schedule.view');
@@ -46,29 +51,46 @@ Route::get('rescheduleView-parent/{id}', [ParentController::class, 'rescheduleVi
 Route::post('reschedule-parent/{id}', [ParentController::class, 'reschedule'])->name('reschedule-parent');
 Route::get('profile-parent', [ParentController::class, 'parentProfile'])->name('profile-parent');
 Route::get('paymentList', [ParentController::class, 'paymentList'])->name('paymentList-parent');
-Route::get('announcement-parent', [EmailController::class, 'parentInbox'])->name('announcement-parent');
+Route::get('program', [ParentController::class, 'program'])->name('program-parent');
+Route::get('/changeProgram-parent/{child_id}/{package_id}', [ParentController::class, 'changeProgram'])->name('changeProgram-parent');
+Route::get('/newSchedule-parent/{child_id}/{package_id}', [ParentController::class, 'newScheduleView'])->name('newSchedule-parent');
+Route::post('/newScheduleSubmit-parent/{child_id}/{package_id}', [ParentController::class, 'newScheduleSubmit'])->name('newScheduleSubmit-parent');
+Route::get('/newConsultSchedule-parent/{child_id}/{package_id}', [ParentController::class, 'newConsultScheduleView'])->name('newConsultSchedule-parent');
+Route::post('/newConsultSchedule/{child_id}/{package_id}', [ParentController::class, 'newConsultSchedule'])->name('newConsultSchedule.submit');
+Route::get('/announcement-parent', [EmailController::class, 'parentInbox'])->name('announcement-parent');
 Route::get('/messageDetails-parent', [EmailController::class, 'fetchMessage'])->name('fetchMessage-parent');
+Route::get('/newProgPayment-parent/{child_id}/{package_id}', [ParentController::class, 'newProgPayment'])->name('newProgPayment-parent');
+Route::post('/submitNewProgPayment', [ParentController::class, 'submitNewProgPayment'])->name('submitNewProgPayment');
+
 
 Route::get('register-parent', [RegisterController::class, 'registerView'])->name('register-parent');
+Route::post('/check-child-exists', [RegisterController::class, 'checkChildExists'])->name('check.child.exists');
 Route::post('registerNew', [RegisterController::class, 'registerNew'])->name('register.new');
 Route::get('register2-parent/{id}', [RegisterController::class, 'register2'])->name('register2-parent');
 Route::get('product-parent/{child_id}', [RegisterController::class, 'packageView'])->name('product-parent');
 Route::post('/packageProceed/{child_id}/{package_id}', [RegisterController::class, 'packageProceed'])->name('packageProceed-parent');
 // Route to view the child schedule form (GET)
 Route::get('/childScheduleView/{child_id}/{package_id}', [RegisterController::class, 'childScheduleView'])->name('childSchedule.view');
-
 // Route to handle the form submission and save the child schedule (POST)
 Route::post('/childSchedule/{child_id}/{package_id}', [RegisterController::class, 'childSchedule'])->name('childSchedule.submit');
 
+Route::get('/consultSchedule-parent/{child_id}/{package_id}', [RegisterController::class, 'consultScheduleView'])->name('consultSchedule-parent');
+Route::post('/consultSchedule/{child_id}/{package_id}', [RegisterController::class, 'consultSchedule'])->name('consultSchedule.submit');
 // Route to view the checkout page after schedule submission (GET)
 Route::get('/checkout-parent/{child_id}/{package_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
 
 // Route to handle the payment submission (POST)
 Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
 
+Route::get('/chip/callback/api/redirect.php', function (Request $request) {
+    $success = $request->query('success');
+    if ($success == 1) {
+        return redirect()->route('payment.success');
+    } else {
+        return redirect()->route('payment.failure');
+    }
+})->name('chip.redirect');
 // Route for handling payment callback (GET or POST, depending on Chip's method)
-Route::match(['get', 'post'],'/chip/callback', [RegisterController::class, 'handleCallback'])->name('chip.callback');
-
 // Routes for payment success and failure pages
 Route::get('/payment-success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment-failure/{child_id}/{package_id}', [RegisterController::class, 'paymentFailure'])->name('payment.failure');
@@ -99,6 +121,7 @@ Route::post('/csReschedule/{id}', [CsController::class, 'csReschedule'])->name('
 Route::get('/unassignedList-cs', [CsController::class, 'csUnassignedList'])->name('unassignedList-cs');
 Route::get('/assignedSession-cs', [CsController::class, 'csAssignedSession'])->name('assignedSession-cs');
 Route::get('/assignedDetails-cs/{id}', [CsController::class, 'csAssignedDetails'])->name('assignedDetails-cs');
+Route::get('/approvedReportList-cs', [CsController::class, 'csApprovedReportList'])->name('approvedReportList-cs');
 Route::get('/stdReportList-cs', [CsController::class, 'csStdReportList'])->name('stdReportList-cs');
 Route::get('/allSession-cs', [CsController::class, 'csAllSession'])->name('allSession-cs');
 
@@ -107,11 +130,28 @@ Route::post('/assignTherapist', [CsController::class, 'assignTherapist'])->name(
 Route::get('/approveRescheduleList-cs', [CsController::class, 'csApproveRescheduleList'])->name('approveRescheduleList-cs');
 Route::get('/approveReqView-cs/{id}', [CsController::class, 'csApproveReqView'])->name('approveReqView-cs');
 Route::put('/csApproveReq/{id}', [CsController::class, 'csApproveReq'])->name('cs.approveReq');
+Route::get('/approvedReport-cs/{id}', [CsController::class, 'csApprovedReport'])->name('approvedReport-cs');
 Route::get('/reportApproval-cs/{id}', [CsController::class, 'csReportApproval'])->name('reportApproval-cs');
 Route::post('/csReportApproved', [CsController::class, 'csReportApproved'])->name('cs.reportApproved');
 Route::get('sendEmail-cs', [EmailController::class, 'csCompose'])->name('composeEmail-cs');
 Route::post('csSend', [EmailController::class, 'csSend'])->name('sendEmail-cs');
 Route::get('csInbox', [EmailController::class, 'csInbox'])->name('inbox-cs');
+
+
+Route::get('/dashboard-sales', [SalesController::class, 'salesDashboard'])->name('sales.dashboard');
+Route::get('/newCustomer-sales', [SalesController::class, 'newCustomer'])->name('newCustomer-sales');
+Route::get('/custDetails-sales/{id}', [SalesController::class, 'custDetails'])->name('custDetails-sales');
+Route::get('/registeredCustomer-sales', [SalesController::class, 'registeredCustomer'])->name('registeredCustomer-sales');
+Route::get('/custDetails2-sales/{id}', [SalesController::class, 'custDetails2'])->name('custDetails2-sales');
+Route::post('/addCustomer', [SalesController::class, 'addCustomer'])->name('addCustomer');
+Route::get('/regNewCust-sales/{id}', [SalesController::class, 'regNewCust'])->name('regNewCust-sales');
+Route::post('customer/{id}/registerCust', [SalesController::class, 'registerCust'])->name('registerCust-sales');
+Route::get('/scheduleSlotView/{child_id}/{package_id}', [SalesController::class, 'scheduleSlotView'])->name('scheduleSlot-sales');
+Route::post('/scheduleSlot/{child_id}/{package_id}', [SalesController::class, 'scheduleSlot'])->name('scheduleSlot.submit');
+Route::get('/confirmSchedule-sales/{child_id}/{package_id}', [SalesController::class, 'confirmScheduleView'])->name('confirmSchedule-sales');
+Route::post('/confirmSchedule', [SalesController::class, 'confirmSchedule'])->name('confirmSchedule.submit');
+Route::get('/consultationSessions-sales', [SalesController::class, 'consultationSessions'])->name('consultationSessions-sales');
+Route::get('/paymentStatus-sales', [SalesController::class, 'paymentStatus'])->name('paymentStatus-sales');
 
 
 // Admin Dashboard Route

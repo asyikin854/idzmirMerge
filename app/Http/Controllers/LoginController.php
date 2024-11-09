@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\CsInfo;
+use App\Models\AdminInfo;
 use Illuminate\Http\Request;
+use App\Models\ParentAccount;
+use App\Models\SalesLeadInfo;
+use App\Models\TherapistInfo;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\AdminInfo;
-use App\Models\ParentAccount;
-use App\Models\TherapistInfo;
-use App\Models\CsInfo;
 
 class LoginController extends Controller
 {
@@ -45,6 +46,8 @@ class LoginController extends Controller
             'parent' => ParentAccount::class,
             'therapist' => TherapistInfo::class,
             'cs' => CsInfo::class,
+            'sales' => SalesLeadInfo::class,
+            
         ];
 
         foreach ($roles as $guard => $model) {

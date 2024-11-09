@@ -13,7 +13,7 @@
       <div class="card-body">
          <div class="row">
             <div class="col-xl-6 col-sm-12">
-               <form action="{{ route('submitPayment') }}" method="POST">
+               <form action="{{ route('submitNewProgPayment') }}" method="POST">
                   @csrf
                   <!-- Hidden fields to send necessary data -->
                   <input type="hidden" name="child_id" value="{{ $child_id }}">
