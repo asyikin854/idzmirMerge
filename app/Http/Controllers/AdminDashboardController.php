@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\TherapistInfo;
 
 
 class AdminDashboardController extends Controller
@@ -35,6 +36,12 @@ class AdminDashboardController extends Controller
         
         // Pass the parents data to the view
         return view('admin.parents.index', compact('parents'));
+    }
+
+    public function listTherapist()
+    {
+        $therapists = TherapistInfo::all();
+        return view('admin.therapist.therapistList', compact('therapists'));
     }
 
     // Show specific parent details

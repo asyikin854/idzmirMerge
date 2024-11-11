@@ -528,6 +528,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/parents', [AdminDashboardController::class, 'listParents'])->name('admin.parents');
     Route::get('/parents/{id}', [AdminDashboardController::class, 'showParent'])->name('admin.parents.show');
+    Route::get('/therapist/therapistList', [AdminDashboardController::class, 'listTherapist'])->name('admin.therapist.list');
 });
 
 

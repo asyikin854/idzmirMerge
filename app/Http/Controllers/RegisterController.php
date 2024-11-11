@@ -561,28 +561,70 @@ public function submitPayment(Request $request)
     $totalPrice = $request->input('total_price');
     $parent_id = $request->input('parent_id');
     $session_id = $request->input('session_id');
+    $consultSlot = session('consultSlot', []);
     $selectedSlots = session('selectedSlots'); // Retrieve slots from session
     $sessionCounter = session('sessionCounter'); // Retrieve slots from session
+    $type = session('type');
     $reference = Str::uuid();
     $parentAccount = ParentAccount::where('child_id', $child_id)->first();
     
     // Insert selected slots into the ChildSchedule table
     foreach ($selectedSlots as $slotData) {
-        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
-        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
+        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d');
+        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i');
         $slotDay = $slotData->day;
-        // Insert each selected slot into ChildSchedule
-        ChildSchedule::create([
-            'child_id' => $child_id,
-            'session_id' => $session_id,
-            'day' => $slotDay,
-            'date' => $slotDate,
-            'time' => $slotTime, // Store only the start time
-            'price' => $totalPrice, // Store the total price
-            'status' => 'pending', // Status for the schedule, not related to payment
-            'session' => $sessionCounter // Store session counter
-        ]);
-        $sessionCounter++;
+
+        // Check if this schedule already exists
+        $exists = ChildSchedule::where('child_id', $child_id)
+            ->where('session_id', $session_id)
+            ->where('date', $slotDate)
+            ->where('time', $slotTime)
+            ->where('type', $type) // Check the type to avoid duplicating regular session
+            ->exists();
+
+        if (!$exists) {
+            ChildSchedule::create([
+                'child_id' => $child_id,
+                'session_id' => $session_id,
+                'day' => $slotDay,
+                'date' => $slotDate,
+                'time' => $slotTime,
+                'price' => $totalPrice,
+                'status' => 'pending',
+                'session' => $sessionCounter,
+                'type' => $type
+            ]);
+            $sessionCounter++;
+        }
+    }
+
+    // Insert consultation slots if they do not already exist for this session_id and child_id
+    foreach ($consultSlot as $slotData) {
+        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d');
+        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i');
+        $slotDay = $slotData->day;
+
+        // Check if this consultation schedule already exists
+        $exists = ChildSchedule::where('child_id', $child_id)
+            ->where('session_id', $session_id)
+            ->where('date', $slotDate)
+            ->where('time', $slotTime)
+            ->where('type', 'screening') // Check the type to avoid duplicating consultation session
+            ->exists();
+
+        if (!$exists) {
+            ChildSchedule::create([
+                'child_id' => $child_id,
+                'session_id' => $session_id,
+                'day' => $slotDay,
+                'date' => $slotDate,
+                'time' => $slotTime,
+                'price' => $totalPrice,
+                'status' => 'pending',
+                'session' => $sessionCounter,
+                'type' => 'screening'
+            ]);
+        }
     }
 
     // Create a new payment record

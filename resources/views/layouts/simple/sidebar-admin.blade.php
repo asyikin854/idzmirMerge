@@ -31,18 +31,18 @@
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                         class="sidebar-link sidebar-title link-nav" href="{{ route('admin.parents') }}">
                         <svg class="stroke-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
+                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
                         </svg>
                         <svg class="fill-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calender') }}"></use>
+                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
                         </svg><span>Lists Parents</span></a></li>
                         <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="#">
+                            class="sidebar-link sidebar-title link-nav" href="{{route('admin.therapist.list')}}">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calender') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
                             </svg><span>Lists Therapists</span></a></li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav"
                             href="{{ route('admin.email.compose') }}">

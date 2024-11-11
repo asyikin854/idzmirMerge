@@ -1,5 +1,5 @@
-@extends('layouts.simple.master-parent')
-@section('title', 'Payment and Billing')
+@extends('layouts.simple.master-admin')
+@section('title', 'Student List')
 
 @section('css')
     
@@ -10,11 +10,11 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Payment and Billing</h3>
+    <h3>Therapists</h3>
 @endsection
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item active">Payment and Billing</li>
+    <li class="breadcrumb-item active">Lists Therapists</li>
 @endsection
 
 @section('content')
@@ -25,7 +25,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header pb-0 card-no-border">
-                        <h3>Transactions</h3>
+                        <h3>Therapist List</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -33,30 +33,20 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Payment ID</th>
-                                        <th>Total Amount</th>
-                                        <th>Payment Method</th>
-                                        <th>Status</th>
-                                        <th>Payment Date</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Username</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  @forelse($payment as $payments)
+                                  @forelse($therapists as $therapist)
                                     <tr>
                                         <td>{{ $loop->iteration}} </td>
-                                        <td>{{$payments->payment_id}}</td>
-                                        <td>{{$payments->total_amount}}</td>
-                                        <td>{{$payments->payment_method}}</td>
-                                        <td>
-                                          @if ($payments->status === 'success')
-                                              <span class="badge rounded-pill badge-success">Success</span>
-                                          @elseif ($payments->status === 'pending')
-                                              <span class="badge rounded-pill badge-warning">Pending</span>
-                                          @elseif ($payments->status === 'failed')
-                                              <span class="badge rounded-pill badge-danger">Failed</span>
-                                          @endif
-                                      </td>
-                                        <td>{{$payments->created_at}}</td>
+                                        <td>{{$therapist->name}}</td>
+                                        <td>{{$therapist->email}}</td>
+                                        <td>{{$therapist->username}}</td>
+                                        <td><a href="#"><button class="btn btn-info">Edit Credentials</button></a></td>
                                     </tr>
                                   @empty
                                     <tr>

@@ -26,16 +26,6 @@ class Payment extends Model
         'path'
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        // Automatically generate a unique payment ID
-        self::creating(function ($model) {
-            $model->payment_id = 'PAY-' . strtoupper(Str::random(10)); // Custom payment ID format
-        });
-    }
-
     public function childInfo()
     {
         return $this->belongsTo(ChildInfo::class, 'child_id');
