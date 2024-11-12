@@ -81,30 +81,30 @@ class RegisterController extends Controller
             'occ_therapy' => 'nullable|string',
             'sp_therapy' => 'nullable|string',
             'others' => 'nullable|string',
-            'father_name' => 'required|string',
-            'father_phone' => 'required|string',
-            'father_ic' => 'required|string|max:12',
-            'father_race' => 'required|string',
-            'father_occ' => 'required|string',
-            'father_email' => 'required|email',
-            'father_address' => 'required|string',
-            'father_posscode' => 'required|string',
-            'father_city' => 'required|string',
-            'father_work_address' => 'required|string',
-            'father_work_posscode' => 'required|string',
-            'father_work_city' => 'required|string',
-            'mother_name' => 'required|string',
-            'mother_phone' => 'required|string',
-            'mother_ic' => 'required|string|max:12',
-            'mother_race' => 'required|string',
-            'mother_occ' => 'required|string',
-            'mother_email' => 'required|email',
-            'mother_address' => 'required|string',
-            'mother_posscode' => 'required|string',
-            'mother_city' => 'required|string',
-            'mother_work_address' => 'required|string',
-            'mother_work_posscode' => 'required|string',
-            'mother_work_city' => 'required|string',
+            'father_name' => 'nullable|string',
+            'father_phone' => 'nullable|string',
+            'father_ic' => 'nullable|string|max:12',
+            'father_race' => 'nullable|string',
+            'father_occ' => 'nullable|string',
+            'father_email' => 'nullable|email',
+            'father_address' => 'nullable|string',
+            'father_posscode' => 'nullable|string',
+            'father_city' => 'nullable|string',
+            'father_work_address' => 'nullable|string',
+            'father_work_posscode' => 'nullable|string',
+            'father_work_city' => 'nullable|string',
+            'mother_name' => 'nullable|string',
+            'mother_phone' => 'nullable|string',
+            'mother_ic' => 'nullable|string|max:12',
+            'mother_race' => 'nullable|string',
+            'mother_occ' => 'nullable|string',
+            'mother_email' => 'nullable|email',
+            'mother_address' => 'nullable|string',
+            'mother_posscode' => 'nullable|string',
+            'mother_city' => 'nullable|string',
+            'mother_work_address' => 'nullable|string',
+            'mother_work_posscode' => 'nullable|string',
+            'mother_work_city' => 'nullable|string',
             'house_income' => 'required|string',
             'parent_sign' => 'required|string',
             'sign_date' => 'required',
@@ -141,7 +141,7 @@ class RegisterController extends Controller
             'house_income' => $validatedData['house_income'],
         ]);
        
-        // Create a new FatherInfo record linked to ChildInfo
+        if (!empty($validatedData['father_name']) || !empty($validatedData['father_phone']) || !empty($validatedData['father_ic'])) {
         $fatherInfo = FatherInfo::create([
              // Set child_id with the ID of the associated ChildInfo
         // Assign fatherInfo fields
@@ -159,8 +159,10 @@ class RegisterController extends Controller
         'father_work_posscode' => $validatedData['father_work_posscode'],
         'father_work_city' => $validatedData['father_work_city'],
         ]);
+    }
 
         // Create a new MotherInfo record linked to ChildInfo
+        if (!empty($validatedData['mother_name']) || !empty($validatedData['mother_phone']) || !empty($validatedData['mother_ic'])) {
         $motherInfo = MotherInfo::create([
             'child_id' => $childInfo->id,
             'mother_name' => $validatedData['mother_name'],
@@ -177,6 +179,7 @@ class RegisterController extends Controller
             'mother_work_city' => $validatedData['mother_work_city'],
             // Add other fields from MotherInfo table
         ]);
+    }
 
         // Create a new ParentPermission record linked to ChildInfo
         $parentPermission = ParentsPermission::create([

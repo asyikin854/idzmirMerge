@@ -45,6 +45,7 @@
                                   <th>Session</th>
                                   <th>Day</th>
                                   <th>Time</th>
+                                  <th>Type</th>
                                   <th>Assign Therapist</th>
                                   <th>Date</th>
                               </tr>
@@ -55,6 +56,7 @@
                                   <td>{{ $childSchedule->session }}</td>
                                   <td>{{ $childSchedule->day }}</td>
                                   <td>{{ $childSchedule->time }}</td>
+                                  <td>{{ $childSchedule->type }}</td>
                                   <td>
                                       <select name="therapist[{{ $childSchedule->id }}]" class="form-select">
                                           @foreach($availableTherapists[$childSchedule->id] as $therapist)

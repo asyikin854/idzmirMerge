@@ -61,14 +61,14 @@
                      <table class="table table-bordered">
                         <tr>
                            <th>Father's Name</th>
-                           <td>{{$fatherInfo->father_name}} </td>
+                           <td>{{$fatherInfo->father_name ?? 'N/A'}} </td>
                            <th>Mother's Name</th>
-                           <td>{{$motherInfo->mother_name}} </td>
+                           <td>{{$motherInfo->mother_name ?? 'N/A'}} </td>
                         </tr><tr>
                            <th>Phone No.</th>
-                           <td>{{$fatherInfo->father_phone}} </td>
+                           <td>{{$fatherInfo->father_phone ?? 'N/A'}} </td>
                            <th>Phone No.</th>
-                           <td>{{$motherInfo->mother_phone}} </td>
+                           <td>{{$motherInfo->mother_phone ?? 'N/A'}} </td>
                         </tr>
                      </table></div></div>
                   </div>

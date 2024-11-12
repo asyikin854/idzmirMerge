@@ -184,20 +184,20 @@
                                           <tr></tr>
                                           <tr>
                                              <th>Full Name</th>
-                                             <td>{{$fatherInfo->father_name}}</td>
+                                             <td>{{$fatherInfo->father_name ?? 'N/A'}}</td>
                                              <th>IC Number</th>
-                                             <td>{{$fatherInfo->father_ic}}</td>
+                                             <td>{{$fatherInfo->father_ic ?? 'N/A'}}</td>
                                            </tr><tr>
                                              <th>Email</th>
-                                             <td>{{$fatherInfo->father_email}}</td>
+                                             <td>{{$fatherInfo->father_email ?? 'N/A'}}</td>
                                              <th>Phone No.</th>
-                                              <td>{{$fatherInfo->father_phone}}</td>
+                                              <td>{{$fatherInfo->father_phone ?? 'N/A'}}</td>
                                            </tr><tr>
                                               <th>Occupation</th>
-                                              <td>{{$fatherInfo->father_occ}}</td>
+                                              <td>{{$fatherInfo->father_occ ?? 'N/A'}}</td>
                                               <th>Full Address</th>
-                                               <td>{{$fatherInfo->father_address}}, {{$fatherInfo->father_posscode}} <br>
-                                                {{$fatherInfo->father_city}}</td>
+                                               <td>{{$fatherInfo->father_address ?? 'N/A'}}, {{$fatherInfo->father_posscode ?? 'N/A'}} <br>
+                                                {{$fatherInfo->father_city ?? 'N/A'}}</td>
                                            </tr>
                                        </table>
                                     </div>
@@ -217,20 +217,20 @@
                                           <tr></tr>
                                           <tr>
                                              <th>Full Name</th>
-                                             <td>{{$motherInfo->mother_name}}</td>
+                                             <td>{{$motherInfo->mother_name ?? 'N/A'}}</td>
                                              <th>IC Number</th>
-                                             <td>{{$motherInfo->mother_ic}}</td>
+                                             <td>{{$motherInfo->mother_ic ?? 'N/A'}}</td>
                                            </tr><tr>
                                              <th>Email</th>
-                                             <td>{{$motherInfo->mother_email}}</td>
+                                             <td>{{$motherInfo->mother_email ?? 'N/A'}}</td>
                                              <th>Phone No.</th>
-                                              <td>{{$motherInfo->mother_phone}}</td>
+                                              <td>{{$motherInfo->mother_phone ?? 'N/A'}}</td>
                                            </tr><tr>
                                               <th>Occupation</th>
-                                              <td>{{$motherInfo->mother_occ}}</td>
+                                              <td>{{$motherInfo->mother_occ ?? 'N/A'}}</td>
                                               <th>Full Address</th>
-                                               <td>{{$motherInfo->mother_address}}, {{$motherInfo->mother_posscode}} <br>
-                                                {{$motherInfo->mother_city}}</td>
+                                               <td>{{$motherInfo->mother_address ?? 'N/A'}}, {{$motherInfo->mother_posscode ?? 'N/A'}} <br>
+                                                {{$motherInfo->mother_city ?? 'N/A'}}</td>
                                            </tr>
                                        </table>
                                     </div>

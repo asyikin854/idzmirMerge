@@ -99,15 +99,15 @@
 
                            </div>
                            <div class="form-group mb-3">
-                              <label id="child_ic_label" style="display:none; color:red;">Please enter the IC number</label>
-                              <label for="child_ic">IC Number</label>
-                              <input class="form-control" name="child_ic" id="child_ic" type="text" maxlength="12">
-                           </div>
-                           <div class="form-group mb-3">
-                              <label id="child_passport_label" style="display:none; color:red;">Please enter the Passport number</label>
-                              <label for="child_passport">Passport NO</label>
-                              <input class="form-control" name="child_passport" id="child_passport" type="text">
-                           </div>
+										<label id="child_ic_label" style="display:none; color:red;">Please enter the IC number</label>
+										
+										<input class="form-control" name="child_ic" id="child_ic" type="text" placeholder="IC number" maxlength="12">
+									 </div>
+									 <div class="form-group mb-3">
+										<label id="child_passport_label" style="display:none; color:red;">Please enter the Passport number</label>
+										
+										<input class="form-control" name="child_passport" id="child_passport" placeholder="Passport" type="text">
+									 </div>
                            <div class="form-group mb-3">
                               <label for="child_dob">Date of Birth *</label>
                               <input class="form-control" name="child_dob" id="child_dob" type="date" required>
@@ -226,6 +226,10 @@
                         <div class="theme-form">
                            <h5>Father's Information</h5>
                            <div class="form-group mb-3">
+										<input type="checkbox" name="father" id="father_checkbox">There are no father information.
+									</div>
+                           <div id="father_input">
+                           <div class="form-group mb-3">
                               <label for="father_name">Father's Name *</label>
                               <input class="form-control" name="father_name" id="father_name" type="text" required>
                            </div>
@@ -262,18 +266,23 @@
                               <input class="form-control" name="father_city" id="father_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_address">Work Address *</label>
-                              <input class="form-control" name="father_work_address" id="father_work_address" type="text" required>
+                              <label for="father_work_address">Work Address </label>
+                              <input class="form-control" name="father_work_address" id="father_work_address" type="text">
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_posscode">Postcode *</label>
-                              <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" maxlength="5" required>
+                              <label for="father_work_posscode">Postcode </label>
+                              <input class="form-control" name="father_work_posscode" id="father_work_posscode" type="number" maxlength="5">
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_work_city">City *</label>
-                              <input class="form-control" name="father_work_city" id="father_work_city" type="text" required>
+                              <label for="father_work_city">City </label>
+                              <input class="form-control" name="father_work_city" id="father_work_city" type="text">
                            </div>
+                        </div>
                            <h5>Mother's Information</h5>
+                           <div class="form-group mb-3">
+										<input type="checkbox" name="mother" id="mother_checkbox">There are no mother information.
+									</div>
+                           <div id="mother_input">
                            <div class="form-group mb-3">
                               <label for="mother_name">Mother's Name *</label>
                               <input class="form-control" name="mother_name" id="mother_name" type="text" required>
@@ -311,17 +320,18 @@
                               <input class="form-control" name="mother_city" id="mother_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_address">Work Address *</label>
-                              <input class="form-control" name="mother_work_address" id="mother_work_address" type="text" required>
+                              <label for="mother_work_address">Work Address </label>
+                              <input class="form-control" name="mother_work_address" id="mother_work_address" type="text">
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_posscode">Postcode *</label>
-                              <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number" maxlength="5" required>
+                              <label for="mother_work_posscode">Postcode </label>
+                              <input class="form-control" name="mother_work_posscode" id="mother_work_posscode" type="number" maxlength="5">
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_work_city">City *</label>
-                              <input class="form-control" name="mother_work_city" id="mother_work_city" type="text" required>
+                              <label for="mother_work_city">City </label>
+                              <input class="form-control" name="mother_work_city" id="mother_work_city" type="text">
                            </div>
+                        </div>
                            <div class="form-group mb-3">
                               <label for="house_income">Household Income *</label>
                               <select name="house_income" id="house_income" class="form-select" required>
@@ -417,11 +427,12 @@
 @endsection
 
 @section('script')
-
+<script src="{{ asset('assets/js/form-wizard/form-wizard-five.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- Include SmartWizard JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/js/jquery.smartWizard.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const icField = document.getElementById('child_ic');
@@ -486,10 +497,61 @@
             checkIfChildExists('passport', passportValue);
         }
     });
+    
+    function toggleFields(checkboxId, inputDivId, specificFields) {
+        const checkbox = document.getElementById(checkboxId); // Get the checkbox
+        const inputDiv = document.getElementById(inputDivId); // Get the input div
+
+        // Add change event listener to the checkbox
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                inputDiv.style.display = 'none'; // Hide the input div
+                specificFields.forEach(function(field) {
+                    field.required = false; // Remove required attribute
+                    field.value = ''; // Clear field value
+                });
+            } else {
+                inputDiv.style.display = 'block'; // Show the input div
+                specificFields.forEach(function(field) {
+                    field.required = true; // Add required attribute
+                });
+            }
+        });
+    }
+
+    // Initialize toggle for mother fields
+    const specificMotherFields = [
+        document.getElementById('mother_name'), // Replace with actual IDs
+        document.getElementById('mother_ic'),
+        document.getElementById('mother_phone'),
+        document.getElementById('mother_race'),
+        document.getElementById('mother_occ'),
+        document.getElementById('mother_email'),
+        document.getElementById('mother_address'),
+        document.getElementById('mother_posscode'),
+        document.getElementById('mother_city'),
+        // Add other specific mother fields as needed
+    ];
+    toggleFields('mother_checkbox', 'mother_input', specificMotherFields);
+
+    // Initialize toggle for mother fields
+    const specificFatherFields = [
+        document.getElementById('father_name'), // Replace with actual IDs
+        document.getElementById('father_ic'),
+        document.getElementById('father_phone'),
+        document.getElementById('father_race'),
+        document.getElementById('father_occ'),
+        document.getElementById('father_email'),
+        document.getElementById('father_address'),
+        document.getElementById('father_posscode'),
+        document.getElementById('father_city'),
+        // Add other specific father fields as needed
+    ];
+    toggleFields('father_checkbox', 'father_input', specificFatherFields);
 });
 
 </script>
-<script src="{{ asset('assets/js/form-wizard/form-wizard-five.js')}}"></script>
+
 <script src="{{ asset('assets/js/tooltip-init.js')}}"></script>
 <script src="{{ asset('assets/js/theme-customizer/customizer.js')}}"></script>
 

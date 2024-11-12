@@ -123,7 +123,7 @@
                            <input disabled type="text" name="parent_sign" id="parent_sign" value="{{$parentPermission->parent_sign}}" class="form-control sign">
                           </div>
 
-                          Date: <input disabled type="date" name="sign_date" id="date" class="form-control"><br>
+                          Date: <input disabled type="date" name="sign_date" id="sign_date" class="form-control"><br>
                           Time: <input disabled type="time" name="sign_time" id="time" class="form-control">
                         </div>
                      </div>
@@ -174,7 +174,7 @@
                             <tr>
                                 <th><input type="text" name="consent_name2" id="name3" class="form-control"></th>
                                 <th><input type="text" name="consent_sign" id="consent_sign" value="{{ $parentPermission->parent_sign }}" class="form-control sign"></th>
-                                <th><input type="date" name="consent_date" id="date" class="form-control"></th>
+                                <th><input type="date" name="consent_date" id="consent_date" class="form-control"></th>
                             </tr>
                         </tbody>
                     </table>
@@ -274,26 +274,27 @@
 <script src="{{ asset('assets/js/theme-customizer/customizer.js')}}"></script>
 <script>
 
-   const fatherInfo = {
-       name: "{{ $fatherInfo->father_name }}",
-       ic: "{{ $fatherInfo->father_ic }}",
-       email: "{{ $fatherInfo->father_email }}", 
-       phone_no: "{{ $fatherInfo->father_phone }}", 
-       address: "{{ $fatherInfo->father_address }}",
+const fatherInfo = {
+       name: "{{ $fatherInfo->father_name ?? '' }}",
+       ic: "{{ $fatherInfo->father_ic ?? '' }}",
+       email: "{{ $fatherInfo->father_email ?? '' }}", 
+       phone_no: "{{ $fatherInfo->father_phone ?? '' }}", 
+       address: "{{ $fatherInfo->father_address ?? '' }}",
        relation: "Father",
    };
    
    const motherInfo = {
-       name: "{{ $motherInfo->mother_name }}",
-       ic: "{{ $motherInfo->mother_ic }}",
-       email: "{{ $motherInfo->mother_email }}", 
-       phone_no: "{{ $motherInfo->mother_phone }}", 
-       address: "{{ $motherInfo->mother_address }}",
+       name: "{{ $motherInfo->mother_name ?? '' }}",
+       ic: "{{ $motherInfo->mother_ic ?? '' }}",
+       email: "{{ $motherInfo->mother_email ?? '' }}", 
+       phone_no: "{{ $motherInfo->mother_phone ?? '' }}", 
+       address: "{{ $motherInfo->mother_address ?? '' }}",
        relation: "Mother",
    };
    
    // Function to populate input fields based on selected parent
    function populateParentInfo(parentInfo) {
+       // Check if parentInfo is not null and has required properties
        document.getElementById('name').value = parentInfo.name || '';
        document.getElementById('name2').value = parentInfo.name || '';
        document.getElementById('name3').value = parentInfo.name || '';
@@ -340,6 +341,8 @@
    
       // Set the values of the input fields
       document.getElementById('date').value = formattedDate;
+      document.getElementById('sign_date').value = formattedDate;
+      document.getElementById('consent_date').value = formattedDate;
       document.getElementById('time').value = formattedTime;
    };
    </script>

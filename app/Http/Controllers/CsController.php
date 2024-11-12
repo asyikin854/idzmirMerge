@@ -391,6 +391,7 @@ class CsController extends Controller
 
         foreach ($childInfos as $childInfo) {
             $childInfo->age = Carbon::parse($childInfo->child_dob)->age;
+            $childInfo->number = $childInfo->childSchedule->count();
         }
 
         $message = null;
@@ -422,12 +423,38 @@ class CsController extends Controller
         $availableTherapists = [];
     
         foreach ($childInfo->childSchedule as $childSchedule) {
-            $availableTherapists[$childSchedule->id] = $therapists->filter(function($therapist) use ($childSchedule) {
-                return !ChildSchedule::where('therapist', $therapist->name)
+            // Check if schedule type is grouping
+            if ($childSchedule->type === 'grouping') {
+                // Find any therapist assigned to this date and time for a grouping session
+                $assignedTherapist = ChildSchedule::where('type', 'grouping')
                     ->where('date', $childSchedule->date)
                     ->where('time', $childSchedule->time)
-                    ->exists();
-            });
+                    ->whereNotNull('therapist')
+                    ->first();
+    
+                if ($assignedTherapist) {
+                    // If a therapist is already assigned to this grouping session, use that therapist only
+                    $availableTherapists[$childSchedule->id] = $therapists->filter(function($therapist) use ($assignedTherapist) {
+                        return $therapist->name === $assignedTherapist->therapist;
+                    });
+                } else {
+                    // If no therapist is assigned yet, list all therapists who are free at this date and time
+                    $availableTherapists[$childSchedule->id] = $therapists->filter(function($therapist) use ($childSchedule) {
+                        return !ChildSchedule::where('therapist', $therapist->name)
+                            ->where('date', $childSchedule->date)
+                            ->where('time', $childSchedule->time)
+                            ->exists();
+                    });
+                }
+            } else {
+                // For individual or screening type, ensure only one therapist per schedule at a given time and date
+                $availableTherapists[$childSchedule->id] = $therapists->filter(function($therapist) use ($childSchedule) {
+                    return !ChildSchedule::where('therapist', $therapist->name)
+                        ->where('date', $childSchedule->date)
+                        ->where('time', $childSchedule->time)
+                        ->exists();
+                });
+            }
         }
     
         $approvedSchedules = ChildSchedule::where('status', 'approved')
@@ -462,6 +489,7 @@ class CsController extends Controller
             'csName' => $csName
         ]);
     }
+    
 
     public function assignTherapist(Request $request)
     {

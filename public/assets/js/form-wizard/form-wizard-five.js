@@ -223,52 +223,53 @@
         onFinish: onFinishCallback // Attach custom onFinish callback
     });
 
-    // Callback for form submission when the finish button is clicked
     function toggleFieldsBasedOnNationality() {
         const nationalitySelect = document.getElementById('child_nationality');
         const childICInput = document.getElementById('child_ic');
         const childPassportInput = document.getElementById('child_passport');
-        const childICLabel = document.getElementById('child_ic_label'); // Label for IC
-        const childPassportLabel = document.getElementById('child_passport_label'); // Label for Passport
-
-        // Initial state: Disable both fields when the page loads and hide the notifications
-        childICInput.disabled = true;
-        childPassportInput.disabled = true;
+        const childICLabel = document.getElementById('child_ic_label'); 
+        const childPassportLabel = document.getElementById('child_passport_label'); 
+    
+        // Initial state: Hide both fields and labels
+        childICInput.style.display = 'none'; 
+        childPassportInput.style.display = 'none'; 
         childICLabel.style.display = 'none';
         childPassportLabel.style.display = 'none';
-
+    
         nationalitySelect.addEventListener('change', function () {
             const selectedNationality = nationalitySelect.value;
-
+    
             if (selectedNationality === 'Malaysian') {
-                childICInput.disabled = false;  // Enable IC input
-                childPassportInput.disabled = true; // Disable Passport input
+                childICInput.style.display = 'block'; // Show IC input
+                childPassportInput.style.display = 'none'; // Hide Passport input
                 childICInput.required = true;
                 childPassportInput.required = false;
-                childPassportInput.value = '';  // Clear the passport field
-                childICLabel.style.display = 'block'; // Show the IC label
-                childPassportLabel.style.display = 'none'; // Hide the Passport label
-            } else if (selectedNationality && selectedNationality !== 'Malaysian') {
-                childICInput.disabled = true;  // Disable IC input
-                childPassportInput.disabled = false; // Enable Passport input
+                childPassportInput.value = '';
+                childICLabel.style.display = 'block'; // Show IC label
+                childPassportLabel.style.display = 'none'; // Hide Passport label
+
+            } else if (selectedNationality) {
+                childICInput.style.display = 'none'; // Hide IC input
+                childPassportInput.style.display = 'block'; // Show Passport input
                 childICInput.required = false;
                 childPassportInput.required = true;
-                childICInput.value = '';  // Clear the IC field
-                childICLabel.style.display = 'none'; // Hide the IC label
-                childPassportLabel.style.display = 'block'; // Show the Passport label
+                childICInput.value = '';
+                childICLabel.style.display = 'none'; // Hide IC label
+                childPassportLabel.style.display = 'block'; // Show Passport label
+
             } else {
-                // If no nationality selected, disable both inputs and hide labels
-                childICInput.disabled = true;
-                childPassportInput.disabled = true;
+                childICInput.style.display = 'none'; // Hide IC input
+                childPassportInput.style.display = 'none'; // Hide Passport input
                 childICInput.required = false;
                 childPassportInput.required = false;
                 childICInput.value = '';
                 childPassportInput.value = '';
-                childICLabel.style.display = 'none';
-                childPassportLabel.style.display = 'none';
+                childICLabel.style.display = 'none'; // Hide IC label
+                childPassportLabel.style.display = 'none'; // Hide Passport label
             }
         });
     }
+
 
     // Document Ready Event
     document.addEventListener('DOMContentLoaded', function() {

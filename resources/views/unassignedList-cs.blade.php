@@ -36,6 +36,7 @@
                           <th scope="col">Name</th>
                           <th scope="col">Sex</th>
                           <th scope="col">Age</th>
+                          <th scope="col">No. of Session</th>
                           <th scope="col">Package</th>
                         </tr>
                       </thead>
@@ -46,6 +47,7 @@
                             <td>{{ $childInfo->child_name}} </td>
                             <td>{{ $childInfo->child_sex}} </td>
                             <td>{{ $childInfo->age}}</td>
+                            <td>{{ $childInfo->number}}</td>
                             <td>{{ $childInfo->package->package_name}}</td>
                         </tr>
                         @empty
