@@ -115,7 +115,7 @@
                   </svg>
                 </div>
                 <div> 
-                  <h4 class="mb-0">{{ $pendingSession }} </h4><span class="f-light">Pending Approval Sessions </span><a class="btn btn-light f-light" href="{{ route('schedule.view')}}">View Schedule<span class="ms-2"> 
+                  <h4 class="mb-0">{{ $pendingSession }} </h4><span class="f-light">Pending Approval Sessions </span><a class="btn btn-light f-light" href="{{ route('program-parent')}}">View program<span class="ms-2"> 
                       <svg class="fill-icon f-light">
                         <use href="{{ asset('assets/svg/icon-sprite.svg#arrowright') }}"></use>
                       </svg></span></a>

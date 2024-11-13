@@ -88,7 +88,7 @@
                 <th>Therapist</th>
               </tr></thead>
               <tbody>
-              @foreach ($childSchedule as $schedule)
+              @foreach ($pendingSchedules as $schedule)
                   <tr>
                     <td>{{$schedule->session}} </td>
                     <td>@if ($schedule->status === 'approved')

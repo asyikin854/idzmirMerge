@@ -104,6 +104,7 @@ class ParentController extends Controller
                 && $schedule->created_at->equalTo($latestCreatedAt);
         })->all();
         $childSchedules = $childInfo->childSchedule->first();
+        $pendingSchedules = $childInfo->childSchedule->all();
         $package = $childInfo->package;
 
         // Load the related SessionReport data for the child's schedule
@@ -114,6 +115,7 @@ class ParentController extends Controller
             'motherInfo' => $motherInfo,
             'parentPermission' => $parentPermission,
             'parentAccount' => $parentAccount,
+            'pendingSchedules' => $pendingSchedules,
             'payment' => $payment,
             'childSchedule' => $childSchedule,
             'childSchedules' => $childSchedules,
