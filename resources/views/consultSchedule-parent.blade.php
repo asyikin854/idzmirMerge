@@ -18,7 +18,8 @@
                         <a class="btn btn-primary md-sidebar-toggle" href="javascript:void(0)">Program Details</a>
                         <div class="md-sidebar-aside job-left-aside custom-scrollbar">
                             <div id="external-events">
-                                <h4>Session Schedule Selection</h4>
+                                <h4>Consultation Schedule Selection</h4>
+                                <span>You need to select only ONE slot for consultation</span>
                                 <div id="external-events-list"></div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
