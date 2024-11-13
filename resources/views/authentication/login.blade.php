@@ -13,7 +13,7 @@
       <div class="col-12 p-0">
          <div class="login-card">
             <div>
-               <div><a class="logo" href="{{ route('index') }}"><img class="img-fluid for-light" style="width:150px" src="{{asset('assets/images/logo/logoidzmir.png')}}" alt="looginpage">
+               <div><a class="logo" href="#"><img class="img-fluid for-light" style="width:150px" src="{{asset('assets/images/logo/logoidzmir.png')}}" alt="looginpage">
                   <img class="img-fluid for-dark" src="{{asset('assets/images/logo/logo_dark.png')}}" alt="looginpage" ></a></div>
                <div class="login-main">
                   <form action="{{route('login.post')}}" method="POST" class="theme-form">

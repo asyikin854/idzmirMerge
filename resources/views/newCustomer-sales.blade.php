@@ -59,7 +59,15 @@
                                         <td>{{$customer->status}}</td>
                                         <td>{{$customer->progress}}</td>
                                         <td>{{$customer->Remark}}</td>
-                                        <td><a href="{{route('regNewCust-sales', $customer->id)}}"><button class="btn btn-warning">Proceed</button></a></td>
+                                        <td>
+                                            @if($customer->progress === 'registered')
+                                                <button class="btn btn-warning" disabled>Proceed</button>
+                                            @else
+                                                <a href="{{ route('regNewCust-sales', $customer->id) }}">
+                                                    <button class="btn btn-warning">Proceed</button>
+                                                </a>
+                                            @endif
+                                        </td>
                                     </tr>
                                   @empty
                                     <tr>

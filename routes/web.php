@@ -47,6 +47,11 @@ Route::middleware(['auth:sales'])->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
+Route::get('/inquiry-form', [LoginController::class, 'inquiryView'])->name('inquiry-form');
+Route::post('/inquiry-form', [LoginController::class, 'inquirySubmit'])->name('inquiry-submit');
+
+
 Route::get('schedule-parent', [ParentController::class, 'parentScheduleView'])->name('schedule.view');
 Route::get('rescheduleView-parent/{id}', [ParentController::class, 'rescheduleView'])->name('reschedule.view');
 Route::post('reschedule-parent/{id}', [ParentController::class, 'reschedule'])->name('reschedule-parent');

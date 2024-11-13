@@ -208,7 +208,7 @@ class SalesController extends Controller
         // Fetch all ChildSchedule sessions for the current child where the package type matches
         $childSchedules = ChildSchedule::where('type', $packageType)->get();
     
-        $slotsModel = $packageType === 'individual' ? new Slot() : new SlotRTS();
+        $slotsModel = $packageType === 'screening' ? new Slot() : new SlotRTS();
     
         // Fetch slots starting from one day ahead until the end of the current month
         $slots = $slotsModel::where('date', '>=', now()->addDay())

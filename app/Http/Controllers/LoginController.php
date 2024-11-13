@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CsInfo;
 use App\Models\AdminInfo;
+use App\Models\NewCustomer;
 use Illuminate\Http\Request;
 use App\Models\ParentAccount;
 use App\Models\SalesLeadInfo;
@@ -68,6 +69,39 @@ class LoginController extends Controller
 
         return redirect('/');
     }
+
+
+    public function inquiryView()
+    {
+        return view ('/inquiry-form');
+    }
+
+    public function inquirySubmit(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'phone' => 'required|string',
+            'email' => 'nullable|email',
+            'address' => 'nullable|string', // Assuming it's optional
+            'posscode' => 'nullable|string', // Assuming it's optional
+            'city' => 'nullable|string', // Assuming it's optional
+            'country' => 'nullable|string',
+            'remark' => 'nullable|string',
+        ]);
+
+        $addCustomer = NewCustomer::create([
+            'name' => $validatedData['name'],
+            'phone' => $validatedData['phone'],
+            'email' => $validatedData['email'],
+            'address' => $validatedData['address'],
+            'posscode' => $validatedData['posscode'],
+            'city' => $validatedData['city'],
+            'country' => $validatedData['country'],
+            'remark' => $validatedData['remark'],
+        ]);
+        return redirect()->route('inquiry-form')->with('success', 'Thank You! Your inquiry has been submitted successfully.');
+    }
+
 }
 
 

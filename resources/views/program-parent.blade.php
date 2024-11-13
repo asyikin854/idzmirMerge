@@ -66,7 +66,7 @@
     $isPastAllDates = true;
     $currentDate = \Carbon\Carbon::today();
 
-    foreach ($childSchedule as $schedule) {
+    foreach ($pendingSchedules as $schedule) {
         if (\Carbon\Carbon::parse($schedule->date)->gte($currentDate)) {
             $isPastAllDates = false;
             break;
