@@ -292,7 +292,7 @@
                               <input class="form-control" name="mother_phone" id="mother_phone" type="number" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_ic">I/C Number *</label>
+                              <label for="mother_ic">I/C Number / Passport*</label>
                               <input class="form-control" maxlength="12" name="mother_ic" id="mother_ic" type="text" required>
                            </div>
                            <div class="form-group mb-3">

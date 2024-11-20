@@ -18,6 +18,7 @@ use App\Models\ParentAccount;
 use Chip\Model\ClientDetails;
 use Chip\Model\PurchaseDetails;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class ParentController extends Controller
@@ -25,7 +26,15 @@ class ParentController extends Controller
     public function parentDashboard()
     {
         $user = Auth::guard('parent')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
+    
         $childInfo = $user->childInfo;
+    
+        if (!$childInfo) {
+            return Redirect::route('login')->with('error', 'No related data found. Please log back into your account.');
+        }
 
         if ($childInfo) {
             $fatherInfo = $childInfo->fatherInfo;
@@ -79,11 +88,14 @@ class ParentController extends Controller
     private function getRelatedData()
     {
         $user = Auth::guard('parent')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
+    
         $childInfo = $user->childInfo;
-
+    
         if (!$childInfo) {
-            // Redirect to the login page with a flash message
-            return Redirect::route('login')->with('error', 'The session has expired. Please return to the login page to log back into your account.');
+            return Redirect::route('login')->with('error', 'No related data found. Please log back into your account.');
         }
 
         $fatherInfo = $childInfo->fatherInfo;
@@ -125,6 +137,9 @@ class ParentController extends Controller
     public function parentScheduleView()
     {
         $data = $this->getRelatedData();
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
         $user = Auth::guard('parent')->user();
         $childInfo = $user->childInfo;
     
@@ -181,18 +196,28 @@ class ParentController extends Controller
     }
     public function parentProfile()
     {
-        {
-            $data = $this->getRelatedData();
-            if ($data) {
-                return view('profile-parent')->with($data);
-            }
-            return view('profile-parent')->with('error', 'No related data found');
+        $data = $this->getRelatedData();
+    
+        // Handle the case where getRelatedData returns a redirect
+        if ($data instanceof RedirectResponse) {
+            return $data;
         }
-
+    
+        // Check if $data is valid and pass it to the view, or show an error message
+        if (!empty($data)) {
+            return view('profile-parent')->with($data);
+        }
+    
+        // If no data is found, pass an error message to the view
+        return view('profile-parent')->with('error', 'No related data found.');
     }
     public function rescheduleView($id)
     {
         $user = Auth::guard('parent')->user();
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
+
         $childInfo = $user->childInfo;
         $package = $childInfo->package;
         $packageType = $package->type;
@@ -268,34 +293,38 @@ class ParentController extends Controller
     public function announcement()
     {
         $data = $this->getRelatedData();
-            if ($data) {
-                return view('announcement-parent')->with($data);
-            }
-            return view('announcement-parent')->with('error', 'No related data found');
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
+    
+            return view('announcement-parent')->with($data);
     }
 
     public function paymentList()
     {
         {
             $data = $this->getRelatedData();
-            if ($data) {
-                return view('paymentList-parent')->with($data);
+            if ($data instanceof RedirectResponse) {
+                return $data;
             }
-            return view('paymentList-parent')->with('error', 'No related data found');
+            return view('paymentList-parent')->with($data);
         
     }}
     public function program()
     {
         $data = $this->getRelatedData();
-        if ($data) {
-            return view('program-parent')->with($data);
+        if ($data instanceof RedirectResponse) {
+            return $data;
         }
-        return view('program-parent')->with('error', 'No related data found');
+        return view('program-parent')->with($data);
     }
 
     public function changeProgram($child_id, $package_id)
     {
         $data = $this->getRelatedData();
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
         $childInfo = ChildInfo::find($child_id);
         $package = Package::find($package_id);
     
@@ -327,6 +356,9 @@ class ParentController extends Controller
     public function newScheduleView($child_id, $package_id)
     {
         $data = $this->getRelatedData();
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
         $childInfo = ChildInfo::find($child_id);
         $newPackage = Package::find($package_id);
         
@@ -336,7 +368,7 @@ class ParentController extends Controller
     
         // Get the package type (either 'individual' or 'grouping')
         $packageType = $newPackage->type;
-        $isWeekly = $newPackage->is_weekly === 'yes'; // Check if the package is weekly
+        $isWeekly = $newPackage->weekly === 'yes'; // Check if the package is weekly
     
         // Fetch all ChildSchedule sessions for the current child where the package type matches
         $childSchedules = ChildSchedule::where('type', $packageType)->get();
@@ -353,33 +385,42 @@ class ParentController extends Controller
             // Calculate how many slots are needed per week
             $weeksInMonth = 4;
             $slotsPerWeek = $newPackage->session_quantity / $weeksInMonth;
-    
-            // Filter slots to only show slots that are grouped by week
-            $slots = $slots->groupBy(function ($slot) {
-                return Carbon::parse($slot->date)->format('W'); // Group by week number
-            });
-    
-            // Remove weeks where the current week has passed
+        
+            // Get the current week and the first week of the month
             $currentWeek = now()->format('W');
-            $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
-                return $weekNumber >= $currentWeek;
-            });
-    
-            // Flatten the collection for FullCalendar
-            $slots = $slots->flatten();
+            $firstWeekOfMonth = Carbon::now()->startOfMonth()->format('W');
+        
+            // If the first week has passed, load slots for the next month
+            if ($currentWeek > $firstWeekOfMonth) {
+                // Fetch slots for the next month
+                $slots = $slotsModel::where('date', '>=', now()->addMonth()->startOfMonth())
+                    ->where('date', '<=', now()->addMonth()->endOfMonth())
+                    ->get();
+            } else {
+                // Filter slots to only show slots that are grouped by week for the current month
+                $slots = $slots->groupBy(function ($slot) {
+                    return Carbon::parse($slot->date)->format('W'); // Group by week number
+                });
+        
+                // Remove weeks where the current week has passed
+                $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+                    return $weekNumber >= $currentWeek;
+                });
+        
+                // Flatten the collection for FullCalendar
+                $slots = $slots->flatten();
+            }
         } else {
-            // Check if the number of available slots is less than the package's session quantity
+            // Non-weekly package handling remains the same
             $availableSlots = $slots->count();
             $requiredSlots = $newPackage->session_quantity;
-    
+        
             if ($availableSlots < $requiredSlots) {
-                // If there are not enough slots, fetch slots for the next month
                 $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
                     ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
                     ->get();
             }
         }
-    
         // Map the slots for FullCalendar
         $slots = $slots->map(function ($slot) use ($childSchedules, $newPackage) {
             $bookedSessions = $childSchedules->where('date', $slot->date)
@@ -495,6 +536,9 @@ public function newConsultScheduleView($child_id, $package_id)
     {
         // Find child and package information
         $data = $this->getRelatedData();
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
         $childInfo = ChildInfo::find($child_id);
         $package = Package::find($package_id);
     
@@ -604,7 +648,9 @@ public function newConsultScheduleView($child_id, $package_id)
     public function newProgPayment($child_id, $package_id)
     {
         $data = $this->getRelatedData();
-
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
         if (!session()->has('childInfo') || !session()->has('package')) {
             return redirect()->back()->withErrors('Session data not found.');
         }

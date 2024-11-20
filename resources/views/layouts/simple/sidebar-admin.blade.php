@@ -7,7 +7,7 @@
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
         </div>
         <div class="logo-icon-wrapper"><a href="{{ route('index') }}"><img class="img-fluid"
-                    src="{{ asset('assets/images/logo/logoidzmir.png') }}" alt=""></a></div>
+            src="{{ asset('assets/images/logo/logoidzmir.png') }}" style="width: 50px" alt=""></a></div>
         <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
@@ -28,22 +28,22 @@
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
                             </svg><span class="lan-3">Dashboard</span></a>
                     </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                        class="sidebar-link sidebar-title link-nav" href="{{ route('admin.parents') }}">
-                        <svg class="stroke-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
-                        </svg>
-                        <svg class="fill-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
-                        </svg><span>Lists Parents</span></a></li>
-                        <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="{{route('admin.therapist.list')}}">
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
+                        <label class="badge badge-light-primary">4</label><a class="sidebar-link sidebar-title"
+                            href="#">
                             <svg class="stroke-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-user') }}"></use>
                             </svg>
                             <svg class="fill-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
-                            </svg><span>Lists Therapists</span></a></li>
+                            </svg><span>All Users</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('admin.parents') }}">Lists Parent</a></li>
+                            <li><a href="{{ route('admin.cs.list') }}">Lists Customer Service</a></li>
+                            <li><a href="{{ route('admin.therapist.list') }}">Lists Therapist</a></li>
+                            <li><a href="{{ route('admin.sales.list') }}">Lists Sales Lead</a></li>
+                        </ul>
+                    </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav"
                             href="{{ route('admin.email.compose') }}">
                             <svg class="stroke-icon">
@@ -55,20 +55,16 @@
                     </li>
 
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="#">
-                            <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-ecommerce') }}"></use>
-                            </svg>
-                            <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-ecommerce') }}"> </use>
+                            class="sidebar-link sidebar-title link-nav" href="{{route('admin.payment.list')}}">
+                            <i class="fa fa-money">   &nbsp;</i>
                             </svg><span>Billing and Payment</span></a></li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="{{ route('admin.schedules.index')}}">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-to-do') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-to-do') }}"> </use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calendar') }}"> </use>
                             </svg><span>Schedules</span></a></li>
                             <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                                 class="sidebar-link sidebar-title link-nav" href="#">

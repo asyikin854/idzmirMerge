@@ -1,5 +1,5 @@
 @extends('layouts.simple.master-admin')
-@section('title', 'Therapist List')
+@section('title', 'Sales Lead List')
 
 @section('css')
     
@@ -10,11 +10,11 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Therapists</h3>
+    <h3>Sales Leads</h3>
 @endsection
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item active">Lists Therapists</li>
+    <li class="breadcrumb-item active">Lists Sales Lead</li>
 @endsection
 
 @section('content')
@@ -32,10 +32,10 @@
                     </div>
                  @endif
                     <div class="card-header pb-0 card-no-border">
-                        <h3>Therapist List</h3>
+                        <h3>Sales List</h3>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Therapist +</button><p></p>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Sales Lead +</button><p></p>
 
                         <div class="table-responsive">
                             <table class="display" id="basic-6">
@@ -49,24 +49,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  @forelse($therapists as $therapist)
+                                  @forelse($sales as $sale)
                                     <tr>
                                         <td>{{ $loop->iteration}} </td>
-                                        <td>{{$therapist->name}}</td>
-                                        <td>{{$therapist->email}}</td>
-                                        <td>{{$therapist->username}}</td>
-                                        <td>    <button class="btn btn-info edit-therapist-btn" 
-                                            data-id="{{ $therapist->id }}"
-                                            data-name="{{ $therapist->name }}"
-                                            data-username="{{ $therapist->username }}"
-                                            data-email="{{ $therapist->email }}"
-                                            type="button" data-bs-toggle="modal" data-bs-target="#editTherapistModal">
+                                        <td>{{$sale->name}}</td>
+                                        <td>{{$sale->email}}</td>
+                                        <td>{{$sale->username}}</td>
+                                        <td>    <button class="btn btn-info edit-sales-btn" 
+                                            data-id="{{ $sale->id }}"
+                                            data-name="{{ $sale->name }}"
+                                            data-username="{{ $sale->username }}"
+                                            data-email="{{ $sale->email }}"
+                                            type="button" data-bs-toggle="modal" data-bs-target="#editSalesModal">
                                             Edit Credentials
                                         </button></td>
                                     </tr>
                                   @empty
                                     <tr>
-                                      <td colspan="6">There are no therapist</td>
+                                      <td colspan="6">There are no Sales Lead</td>
                                     </tr>
                                   @endforelse
                                 </tbody>
@@ -84,11 +84,11 @@
         <div class="modal-dialog modal-lg" role="document">
            <div class="modal-content">
               <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel">Add New Therapist</h5>
+                 <h5 class="modal-title" id="exampleModalLabel">Add New Sales Lead</h5>
                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form action="{{route('addNewTherapist')}}" method="POST" class="form-bookmark">
+                <form action="{{route('addNewSales')}}" method="POST" class="form-bookmark">
                     @csrf
 
                     <div class="row">
@@ -122,17 +122,17 @@
      </div>
 
 
-     <div class="modal fade modal-bookmark" id="editTherapistModal" tabindex="-1" role="dialog" aria-labelledby="editTherapistModalLabel" aria-hidden="true">
+     <div class="modal fade modal-bookmark" id="editSalesModal" tabindex="-1" role="dialog" aria-labelledby="editSalesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
            <div class="modal-content">
               <div class="modal-header">
-                 <h5 class="modal-title" id="editTherapistModalLabel">Edit Therapist</h5>
+                 <h5 class="modal-title" id="editSalesModalLabel">Edit Sales Lead Details</h5>
                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form id="editTherapistForm" action="{{ route('updateTherapist') }}" method="POST" class="form-bookmark">
+                <form id="editSalesForm" action="{{ route('updateSales') }}" method="POST" class="form-bookmark">
                     @csrf
-                    <input type="hidden" name="therapist_id" id="editTherapistId">
+                    <input type="hidden" name="sales_id" id="editSalesId">
                     <div class="row">
                        <div class="mb-3 mt-0 col-md-12">
                           <label for="edit_name">Name *</label>
@@ -179,16 +179,16 @@
             }
         });
 
-        document.querySelectorAll('.edit-therapist-btn').forEach(button => {
+        document.querySelectorAll('.edit-sales-btn').forEach(button => {
     button.addEventListener('click', function () {
         // Get therapist data from the button
-        const therapistId = this.getAttribute('data-id');
+        const salesId = this.getAttribute('data-id');
         const name = this.getAttribute('data-name');
         const username = this.getAttribute('data-username');
         const email = this.getAttribute('data-email');
 
         // Populate the modal fields
-        document.getElementById('editTherapistId').value = therapistId;
+        document.getElementById('editSalesId').value = salesId;
         document.getElementById('edit_name').value = name;
         document.getElementById('edit_username').value = username;
         document.getElementById('edit_email').value = email;

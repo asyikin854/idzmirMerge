@@ -149,10 +149,12 @@
             </div>
 
             <!-- Add More Sessions Button -->
+            @if ($package->consultation != 'Yes')
             <div class="mt-3">
                 <label for="additionalSessionsInput">Additional Sessions (RM 100/Sessions):</label>
                 <input type="number" id="additionalSessionsInput" value="0" min="0" class="form-control" style="width: 100px;" />
             </div>
+        @endif
 
             <!-- Hidden form inputs -->
             <form action="{{ route('editProgSchedule-cs', ['child_id' => $child_id, 'package_id' => $package->id]) }}" method="POST" onsubmit="return confirmSubmit()">

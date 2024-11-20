@@ -12,7 +12,6 @@ class CsInfo extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable=[
-        'child_id',
         'username',
         'email',
         'password',

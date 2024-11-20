@@ -535,7 +535,28 @@ Route::prefix('admin')->group(function () {
     Route::get('/parents', [AdminDashboardController::class, 'listParents'])->name('admin.parents');
     Route::get('/parents/{id}', [AdminDashboardController::class, 'showParent'])->name('admin.parents.show');
     Route::get('/therapist/therapistList', [AdminDashboardController::class, 'listTherapist'])->name('admin.therapist.list');
+    Route::get('/cs/csList', [AdminDashboardController::class, 'listCs'])->name('admin.cs.list');
+    Route::get('/sales/salesList', [AdminDashboardController::class, 'listSales'])->name('admin.sales.list');
+    Route::get('/payment/paymentList', [AdminDashboardController::class, 'paymentList'])->name('admin.payment.list');
+    Route::get('/payment/paymentDetails{id}', [AdminDashboardController::class, 'paymentDetails'])->name('admin.payment.details');
+    Route::get('/payment/get-child-schedules', [AdminDashboardController::class, 'getChildSchedulesBySessionId'])->name('getChildSchedulesBySessionId');
+
 });
+
+Route::put('/update-mother/{id}', [AdminDashboardController::class, 'updateMotherInfo'])->name('update.motherInfo');
+Route::put('/update-father/{id}', [AdminDashboardController::class, 'updateFatherInfo'])->name('update.fatherInfo');
+Route::put('/update-child/{id}', [AdminDashboardController::class, 'updateChildInfo'])->name('update.childInfo');
+Route::put('/update-account/{id}', [AdminDashboardController::class, 'updateParentAccount'])->name('update.parentAccount');
+
+
+Route::post('/addTherapist', [AdminDashboardController::class, 'addNewTherapist'])->name('addNewTherapist');
+Route::post('/updateTherapist', [AdminDashboardController::class, 'updateTherapist'])->name('updateTherapist');
+
+Route::post('/addCs', [AdminDashboardController::class, 'addNewCs'])->name('addNewCs');
+Route::post('/updateCs', [AdminDashboardController::class, 'updateCs'])->name('updateCs');
+
+Route::post('/addSales', [AdminDashboardController::class, 'addNewSales'])->name('addNewSales');
+Route::post('/updateSales', [AdminDashboardController::class, 'updateSales'])->name('updateSales');
 
 
 Route::prefix('admin')->group(function () {

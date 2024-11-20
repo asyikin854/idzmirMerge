@@ -22,6 +22,12 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
+              @if(session('success'))
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  {{ session('success') }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+           @endif
               <div class="card-header">
                 <span>Click on the name of a student to assign therapist</span>
               </div>

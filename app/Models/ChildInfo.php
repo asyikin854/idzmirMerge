@@ -32,6 +32,7 @@ class ChildInfo extends Model
         'others',
         'house_income',
         'package_id',
+        'status'
     ];
     public function package()
     {

@@ -104,7 +104,7 @@ class TherapistController extends Controller
         $schedule->remark = $request->input('remark');
         $schedule->save();
 
-        return redirect()->back()->with('success', 'Schedule updated successfully.');
+        return redirect()->back()->with('success', 'Attendance updated successfully.');
     }
     private function convertTimeFormat($time)
     {
@@ -126,6 +126,9 @@ class TherapistController extends Controller
         })->with(['childSchedule' => function($query) use ($therapistName) {
             $query->where('therapist', $therapistName);
         }])->get();
+        foreach ($childInfos as $childInfo) {
+            $childInfo->age = Carbon::parse($childInfo->child_dob)->age;
+        }
 
         return view('stdList-therapist', compact('childInfos', 'therapistName'));
     }

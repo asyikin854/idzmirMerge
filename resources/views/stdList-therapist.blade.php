@@ -45,7 +45,7 @@
                             <td scope="row">{{ $loop->iteration}} </td>
                             <td>{{ $childInfo->child_name}} </td>
                             <td>{{ $childInfo->child_sex}} </td>
-                            <td>{{ $childInfo->child_age}}</td>
+                            <td>{{ $childInfo->age}}</td>
                             <td>{{ $childInfo->package->package_name}}</td>
                         </tr>
                         @empty

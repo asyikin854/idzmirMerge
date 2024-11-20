@@ -6,6 +6,8 @@
 @endsection
 
 @section('style')
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/datatables.css') }}">
+
 @endsection
 
 @section('css')
@@ -21,38 +23,44 @@
 
 
 @section('content')
-
+<div class="container-fluid">
+  <div class="row">
 <div class="col-sm-12">
                 <div class="card">
                   <div class="card-header">
-                    <span>A <code>&lt;caption&gt;</code> functions like a heading for a table. It helps users with screen readers to find a table and understand what it’s about and decide if they want to read it.</span>
+                    <h3>Parent List</h3>
                   </div>
-                  <div class="card-block row">
-                    <div class="col-sm-12 col-lg-12 col-xl-12">
+                  <div class="card-body">
                       <div class="table-responsive">
-                        <table class="table">
-                          <caption>List of users</caption>
+                        <table class="display" id="basic-6">
                           <thead>
                             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Contact Number</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($parents as $parent)
-            <tr>
-                <td>{{ $parent->username }}</td>
-                <td>{{ $parent->email }}</td>
-                <td>{{ $parent->created_at }}</td>
-                <td>
-                    <!-- Example of an action -->
-                    <a href="{{ route('admin.parents.show', $parent->id) }}" class="btn btn-info">View Profile</a>
-                </td>
-            </tr>
-            @endforeach
-            
+                               <th>No.</th>
+                               <th>Std Name</th>
+                               <th>Father Name</th>
+                               <th>Mother Name</th>
+                               <th>Username</th>
+                               <th>Email</th>
+                               <th>Program | Sessions</th>
+                               <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($childInfos as $childInfo)
+                            <tr>
+                                <td>{{$loop->iteration}} </td>
+                                <td>{{ $childInfo->child_name }}</td>
+                                <td>{{ $childInfo->fatherInfo->father_name ?? 'N/A' }}</td>
+                                <td>{{ $childInfo->motherInfo->mother_name ?? 'N/A' }}</td>
+                                <td>{{ $childInfo->parentAccount->username ?? 'N/A'}}</td>
+                                <td>{{ $childInfo->parentAccount->email ?? 'N/A'}}</td>
+                                <td>{{ $childInfo->package->package_name ?? 'N/A'}} | {{ $childInfo->package->session_quantity ?? 'N/A'}}</td>
+                                <td>
+                                    <!-- Example of an action -->
+                                    <a href="{{ route('admin.parents.show', $childInfo->id) }}" class="btn btn-info">View Profile</a>
+                                </td>
+                            </tr>
+                            @endforeach      
                           </tbody>
                         </table>
                       </div>
@@ -60,4 +68,10 @@
                   </div>
                 </div>
               </div>
+</div>
+@endsection
+
+@section('script')
+<script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
 @endsection

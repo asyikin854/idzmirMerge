@@ -126,80 +126,90 @@ class CsController extends Controller
         if (!$childInfo || !$package) {
             abort(404);
         }
-    
-        // Get the package type (either 'individual' or 'grouping')
-        $packageType = $package->type;
-        $isWeekly = $package->is_weekly === 'yes'; // Check if the package is weekly
-    
-        // Fetch all ChildSchedule sessions for the current child where the package type matches
-        $childSchedules = ChildSchedule::where('type', $packageType)->get();
-    
-        $slotsModel = $packageType === 'individual' ? new Slot() : new SlotRTS();
-    
-        // Fetch slots starting from one day ahead until the end of the current month
-        $slots = $slotsModel::where('date', '>=', now()->addDay())
-            ->where('date', '<=', now()->endOfMonth())
-            ->get();
-    
-        // Check if the package is weekly
-        if ($isWeekly) {
-            // Calculate how many slots are needed per week
-            $weeksInMonth = 4;
-            $slotsPerWeek = $package->session_quantity / $weeksInMonth;
-    
-            // Filter slots to only show slots that are grouped by week
-            $slots = $slots->groupBy(function ($slot) {
-                return Carbon::parse($slot->date)->format('W'); // Group by week number
-            });
-    
-            // Remove weeks where the current week has passed
-            $currentWeek = now()->format('W');
-            $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
-                return $weekNumber >= $currentWeek;
-            });
-    
-            // Flatten the collection for FullCalendar
-            $slots = $slots->flatten();
-        } else {
-            // Check if the number of available slots is less than the package's session quantity
-            $availableSlots = $slots->count();
-            $requiredSlots = $package->session_quantity;
-    
-            if ($availableSlots < $requiredSlots) {
-                // If there are not enough slots, fetch slots for the next month
-                $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
-                    ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
-                    ->get();
-            }
-        }
-    
-        // Map the slots for FullCalendar
-        $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
-            $bookedSessions = $childSchedules->where('date', $slot->date)
-                ->where('time', $slot->start_time)
-                ->count();
-            $isFull = $bookedSessions >= $package->quota;
-    
-            return [
-                'id' => $slot->id,
-                'title' => $isFull ? 'Slot is Full' : 'Available Slot',
-                'start' => $slot->date . 'T' . $slot->start_time,
-                'end' => $slot->date . 'T' . $slot->end_time,
-                'quota' => $package->quota - $bookedSessions,
-                'isFull' => $isFull
-            ];
-        });
-    
-        return view('editProgSchedule-cs', [
-            'csName' => $csName,
-            'package' => $package,
-            'childInfo' => $childInfo,
-            'slots' => $slots,
-            'sessionQuantity' => $package->session_quantity,
-            'child_id' => $child_id,
-            'isWeekly' => $package->weekly === 'yes'
-        ]);
-    }
+
+     $packageType = $package->type;
+     $isWeekly = $package->weekly === 'yes'; // Check if the package is weekly
+        
+     // Fetch all ChildSchedule sessions for the current child where the package type matches
+     $childSchedules = ChildSchedule::where('type', $packageType)->get();
+        
+     $slotsModel = $packageType === 'individual' ? new Slot() : new SlotRTS();
+        
+     // Fetch slots starting from one day ahead until the end of the current month
+     $slots = $slotsModel::where('date', '>=', now()->addDay())
+         ->where('date', '<=', now()->endOfMonth())
+         ->get();
+        
+     // Check if the package is weekly
+     if ($isWeekly) {
+         // Calculate how many slots are needed per week
+         $weeksInMonth = 4;
+         $slotsPerWeek = $package->session_quantity / $weeksInMonth;
+        
+         // Get the current week and the first week of the month
+         $currentWeek = now()->format('W');
+         $firstWeekOfMonth = Carbon::now()->startOfMonth()->format('W');
+        
+         // If the first week has passed, load slots for the next month
+         if ($currentWeek > $firstWeekOfMonth) {
+             // Fetch slots for the next month
+             $slots = $slotsModel::where('date', '>=', now()->addMonth()->startOfMonth())
+                 ->where('date', '<=', now()->addMonth()->endOfMonth())
+                 ->get();
+         } else {
+             // Filter slots to only show slots that are grouped by week for the current month
+             $slots = $slots->groupBy(function ($slot) {
+                 return Carbon::parse($slot->date)->format('W'); // Group by week number
+             });
+        
+             // Remove weeks where the current week has passed
+             $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+                 return $weekNumber >= $currentWeek;
+             });
+        
+             // Flatten the collection for FullCalendar
+             $slots = $slots->flatten();
+         }
+     } else {
+         // Check if the number of available slots is less than the package's session quantity
+         $availableSlots = $slots->count();
+         $requiredSlots = $package->session_quantity;
+        
+         if ($availableSlots < $requiredSlots) {
+             // If there are not enough slots, fetch slots for the next month
+             $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
+                 ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
+                 ->get();
+         }
+     }
+        
+     // Map the slots for FullCalendar
+     $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
+         $bookedSessions = $childSchedules->where('date', $slot->date)
+             ->where('time', $slot->start_time)
+             ->count();
+         $isFull = $bookedSessions >= $package->quota;
+        
+         return [
+             'id' => $slot->id,
+             'title' => $isFull ? 'Slot is Full' : 'Available Slot',
+             'start' => $slot->date . 'T' . $slot->start_time,
+             'end' => $slot->date . 'T' . $slot->end_time,
+             'quota' => $package->quota - $bookedSessions,
+             'isFull' => $isFull
+         ];
+     });
+        
+     return view('editProgSchedule-cs', [
+         'package' => $package,
+         'childInfo' => $childInfo,
+         'slots' => $slots,
+         'csName' => $csName,
+         'sessionQuantity' => $package->session_quantity,
+         'child_id' => $child_id,
+         'isWeekly' => $package->weekly === 'yes']);
+ }
+        
 
     public function csEditProgSchedule(Request $request, $child_id, $package_id)
     {
@@ -583,7 +593,7 @@ class CsController extends Controller
             $report->save();
     
             // Redirect or return response as needed
-            return redirect()->route('stdReportList-cs')->with('success', 'Schedule updated successfully.');
+            return redirect()->route('stdReportList-cs')->with('success', 'Report updated successfully.');
         }
     }
     public function csApprovedReportList()
