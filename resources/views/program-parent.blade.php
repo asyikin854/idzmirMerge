@@ -57,7 +57,7 @@
               <tr>
                 <th>Monthly Price</th>
               </tr><tr>
-                <td>RM {{ $childSchedules->price }}</td>
+                <td>RM {{ $childSchedules->price ?? 'N/A' }}</td>
               </tr>
             </table>
           </div>      

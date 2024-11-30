@@ -25,6 +25,17 @@
     <div class="container-fluid">
         <div class="email-wrap">
             <div class="row">
+                @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
                 <div class="col-xl-3 box-col-12">
                     <div class="md-sidebar"><a class="btn btn-primary md-sidebar-toggle" href="javascript:void(0)">email
                             filter</a>
@@ -47,23 +58,10 @@
                                                         role="tab" aria-controls="pills-darkhome"
                                                         aria-selected="true"><i class="icofont icofont-envelope me-2"></i>
                                                         NEW MAIL</a></li>
-                                                <li class="nav-item"><a id="pills-darkprofile-tab" data-bs-toggle="pill"
-                                                        href="#pills-darkprofile" role="tab"
-                                                        aria-controls="pills-darkprofile" aria-selected="false"><span
-                                                            class="title"><i class="icon-import"></i> Inbox</span><span
-                                                            class="badge pull-right">(236)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-folder"></i> All
-                                                            Announcement</span></a></li>
+                                                <li><a href="#"><span class="title"><i class="icon-folder"></i> Inbox
+                                                            </span></a></li>
                                                 <li><a href="#"><span class="title"><i class="icon-new-window"></i>
                                                             Sent</span><span class="badge pull-right">(69)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-pencil-alt"></i>
-                                                            DRAFT</span><span class="badge pull-right">(59)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-trash"></i>
-                                                            TRASH</span><span class="badge pull-right">(99)</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-info-alt"></i>
-                                                            IMPORTANT</span></a></li>
-                                                <li><a href="#"><span class="title"><i class="icon-star"></i>
-                                                            Starred</span></a></li>
                                                 <li>
                                                     <hr>
                                                 </li>
@@ -88,16 +86,6 @@
                                                 <h5>Inbox</h5>
                                             </div>
                                             <div class="col text-end">
-                                                <div class="dropdown">
-                                                    <button class="btn dropdown-toggle" id="dropdownMenuButton"
-                                                        type="button" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">More</button>
-                                                    <div class="dropdown-menu dropdown-menu-end"
-                                                        aria-labelledby="dropdownMenuButton"><a class="dropdown-item"
-                                                            href="#">Action</a><a class="dropdown-item"
-                                                            href="#">Another action</a><a class="dropdown-item"
-                                                            href="#">Something else here</a></div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -310,17 +298,7 @@
         </div>
     </div>
     </div>
-    @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
 
 @endsection
 

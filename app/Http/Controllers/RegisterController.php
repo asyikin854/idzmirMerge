@@ -672,9 +672,9 @@ public function submitPayment(Request $request)
     
     $purchase->purchase = $details;
     $purchase->brand_id = $brandId;
-    $purchase->success_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=1';
-    $purchase->failure_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=0';
-    $purchase->success_callback = 'https://system.idzmirkidshub.com/chip/callback/api/callback.php';
+    $purchase->success_redirect = 'https://system.idzmirkidshub.com/payment-success';
+	$purchase->failure_redirect = route('payment.failure', ['child_id' => $child_id, 'package_id' => $package_id]);
+    $purchase->success_callback = "https://system.idzmirkidshub.com/chip/callback";
 	$purchase->payment_method_whitelist = ['fpx'];
 	
 	$result = $chip->createPurchase($purchase);

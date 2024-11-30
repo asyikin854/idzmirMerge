@@ -27,48 +27,110 @@ class EmailController extends Controller
 public function send(Request $request)
 {
     $request->validate([
-        'to' => 'required|array',
+        'to' => 'nullable|array',
+        'to.*' => 'email',
         'subject' => 'required|string|max:255',
         'message' => 'required|string',
+        'attachment.*' => 'file|max:10240', // Max 10MB per file
     ]);
 
-    $emails = $request->input('to');
-    $subject = $request->input('subject');
-    $messageBody = $request->input('message');
+    // Determine recipients
+    $recipients = $request->to ?? ParentAccount::pluck('email')->toArray(); // Use provided emails or fetch from ParentAccount model
 
-   try {
-    // Use Laravel's Queueable Mailable class to send emails
-    foreach ($emails as $email) {
-        Mail::to($email)->queue(new YourEmailMailable($subject, $messageBody));
-
-        // Log success
-        DB::table('email_logs')->insert([
-            'recipient' => $email,
-            'subject' => $subject,
-            'message' => $messageBody,
-            'status' => 'success',
-            'error' => '',  // Add an empty string for the error field
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+    if (empty($recipients)) {
+        return redirect()->back()->with('error', 'No recipients found.');
     }
-} catch (\Exception $e) {
-    // Log failure
-    DB::table('email_logs')->insert([
-        'recipient' => $email,
-        'subject' => $subject,
-        'message' => $messageBody,
-        'status' => 'failed',
-        'error' => $e->getMessage(),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
 
-    \Log::error("Failed to send email: " . $e->getMessage());
-}
-return redirect()->back()->with('success', 'Email sent successfully.');
+    // Prepare attachments
+    $attachments = [];
+    if ($request->hasFile('attachment')) {
+        foreach ($request->file('attachment') as $file) {
+            $attachments[] = [
+                'filePath' => $file->getRealPath(),
+                'filename' => $file->getClientOriginalName(),
+            ];
+        }
+    }
 
+    // Send email to each recipient
+    $mg = Mailgun::create(env('MAILGUN_API_KEY')); // Mailgun instance
+    $domain = env('MAILGUN_DOMAIN');
+
+    foreach ($recipients as $recipient) {
+        $messageData = [
+            'from' => 'admin@example.com',
+            'to' => $recipient,
+            'subject' => $request->subject,
+            'text' => $request->message,
+        ];
+
+        // Include attachments if present
+        if (!empty($attachments)) {
+            $messageData['attachment'] = array_map(function ($attachment) {
+                return [
+                    'filePath' => $attachment['filePath'],
+                    'filename' => $attachment['filename'],
+                ];
+            }, $attachments);
+        }
+
+        // Send email via Mailgun
+        try {
+            $mg->messages()->send($domain, $messageData);
+        } catch (\Exception $e) {
+            // Log or handle errors appropriately
+            return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+    return redirect()->back()->with('success', 'Email(s) sent successfully.');
 }
+
+
+// {
+//     $request->validate([
+//         'to' => 'required|array',
+//         'subject' => 'required|string|max:255',
+//         'message' => 'required|string',
+//     ]);
+
+//     $emails = $request->input('to');
+//     $subject = $request->input('subject');
+//     $messageBody = $request->input('message');
+
+//    try {
+//     // Use Laravel's Queueable Mailable class to send emails
+//     foreach ($emails as $email) {
+//         Mail::to($email)->queue(new YourEmailMailable($subject, $messageBody));
+
+//         // Log success
+//         DB::table('email_logs')->insert([
+//             'recipient' => $email,
+//             'subject' => $subject,
+//             'message' => $messageBody,
+//             'status' => 'success',
+//             'error' => '',  // Add an empty string for the error field
+//             'created_at' => now(),
+//             'updated_at' => now(),
+//         ]);
+//     }
+// } catch (\Exception $e) {
+//     // Log failure
+//     DB::table('email_logs')->insert([
+//         'recipient' => $email,
+//         'subject' => $subject,
+//         'message' => $messageBody,
+//         'status' => 'failed',
+//         'error' => $e->getMessage(),
+//         'created_at' => now(),
+//         'updated_at' => now(),
+//     ]);
+
+//     \Log::error("Failed to send email: " . $e->getMessage());
+// }
+// return redirect()->back()->with('success', 'Email sent successfully.');
+
+// }
 
 
 

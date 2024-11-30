@@ -88,14 +88,75 @@ Route::get('/checkout-parent/{child_id}/{package_id}', [RegisterController::clas
 // Route to handle the payment submission (POST)
 Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
 
-Route::get('/chip/callback/api/redirect.php', function (Request $request) {
-    $success = $request->query('success');
-    if ($success == 1) {
-        return redirect()->route('payment.success');
-    } else {
-        return redirect()->route('payment.failure');
+Route::post('chip/callback/', function (Request $request) {
+    $signature = $request->header('X-Signature');
+    $content = $request->getContent();
+	
+    $response = Http::withHeaders([
+        'Authorization' => "Bearer " . env('CHIP_API_KEY')
+    ])->get("https://gate.chip-in.asia/api/v1/public_key/");
+    $response_body = strval($response->body());
+
+    $response_arr = explode('\n', $response_body, -1);
+    array_shift($response_arr);
+    array_pop($response_arr);
+    $response_arr_flat = "";
+    foreach ($response_arr as $string) {
+        $response_arr_flat .= $string . "\n";
     }
-})->name('chip.redirect');
+    $pub_key = "-----BEGIN PUBLIC KEY-----\n" . $response_arr_flat . "-----END PUBLIC KEY-----\n";
+
+    $is_verified = \Chip\ChipApi::verify($content, $signature, $pub_key);
+
+    if (!$is_verified) {
+        Log::warning("CALLBACK: X-Signature Mismatch");
+        return response()->json([
+            'error' => 'X-Signature Mismatch'
+        ], 400);
+    }
+
+    // Update order status
+    Log::info("CALLBACK: Transaction ID $request->id verification successful");
+    $payment = Payment::where('payment_id', $request->id)->first();
+    if ($payment) {
+        $payment->status = $request->status;
+        $payment->save();
+    }
+
+    Log::info("CALLBACK: X-Signature Verified!");
+    return response()->json(['status' => 'CALLBACK: OK']);
+});
+
+Route::post('/webhook/payment', function (Request $request) {
+    $signature = $request->header('X-Signature');
+    $content = $request->getContent();
+    $event = $request->input('event_type');
+    $pub_key = env('CHIP_WEBHOOK_PUBLIC_KEY');
+
+    $is_verified = \Chip\ChipApi::verify($content, $signature, $pub_key);
+
+    if (!$is_verified) {
+        Log::warning("WEBHOOK: X-Signature Mismatch");
+
+        return response()->json([
+            'error' => 'X-Signature Mismatch'
+        ], 400);
+    }
+
+    // Upon successfull verification, update transaction status in database if necessary
+    // Update order & transaction status to whatever the $event is
+    Log::info("WEBHOOK: $request->id");
+    $payment = Payment::where('payment_id', $request->id)->first();
+    if ($payment) {
+        $payment->status = $event;
+        $payment->save();
+    }
+
+    Log::info("WEBHOOK: X-Signature Ok!");
+    return response()->json([
+        'status' => 'WEBHOOK: OK',
+    ]);
+});
 // Route for handling payment callback (GET or POST, depending on Chip's method)
 // Routes for payment success and failure pages
 Route::get('/payment-success', [RegisterController::class, 'paymentSuccess'])->name('payment.success');
