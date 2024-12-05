@@ -160,7 +160,7 @@
                                                                 <div class="row">
                                                                     <div class="col-sm-8 xl-50">
                                                                         <h4 class="mb-0">New Message</h4>
-                                                                        <form action="{{ route('admin.email.send') }}" method="POST">
+                                                                        <form action="{{ route('admin.email.send') }}" method="POST" enctype="multipart/form-data">
                                                                             @csrf
                                                                     </div>
                                                                     <div class="col-sm-4 btn-middle xl-50">
@@ -186,9 +186,13 @@
                                                                         <label for="exampleInputPassword1">Subject</label>
                                                                         <input type="text" name="subject" class="form-control" required>
                                                                     </div>
-                                                                    <div>
+                                                                    <div class="mb-3">
                                                                         <label class="text-muted">Message</label>
                                                                         <textarea name="message" class="form-control" rows="10" required></textarea>                                                        </textarea>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="attachments">Attachments</label>
+                                                                        <input type="file" name="attachments[]" class="form-control" multiple>
                                                                     </div>
                                                                 </form>
                                                             </div>

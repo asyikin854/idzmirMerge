@@ -5,27 +5,37 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CsEmailMailable extends Mailable
 {
-    use Queueable, SerializesModels;
-
+	use Queueable, SerializesModels;
+	
     public $subject;
     public $messageBody;
+    public $uploadedFiles;
 
-    public function __construct($subject, $messageBody)
+    public function __construct($subject, $messageBody, $uploadedFiles)
     {
         $this->subject = $subject;
         $this->messageBody = $messageBody;
+        $this->uploadedFiles = $uploadedFiles;
     }
 
-    public function build()
-    {
-        return $this->view('csEmailTemplate')
-                    ->subject($this->subject)
-                    ->with([
-                        'subject' => $this->subject,
-                        'messageBody' => $this->messageBody,
-                    ]);
-    }
+public function build()
+{
+    $email = $this->view('csEmailTemplate')
+                  ->subject($this->subject)
+                  ->with([
+                      'subject' => $this->subject,
+                      'messageBody' => $this->messageBody,
+                  ]);
+
+    // Safely handle attachments
+        foreach ($this->uploadedFiles as $file) {
+            $email->attach($file);
+        }
+	
+    return $email;
+}
 }

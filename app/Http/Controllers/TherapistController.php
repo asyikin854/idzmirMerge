@@ -16,6 +16,9 @@ class TherapistController extends Controller
     public function therapistDashboard()
     {
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $therapistInfo = $user;
         $therapistName = $user->name;
 
@@ -52,6 +55,9 @@ class TherapistController extends Controller
     public function therapistSessions()
     {
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $therapistName = $user->name;
     
         $schedules = ChildSchedule::where('therapist', $therapistName)
@@ -87,6 +93,9 @@ class TherapistController extends Controller
     public function therapistSessionDetails($date, $time)
     {
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $therapistName = $user->name;
 
         $schedules = ChildSchedule::where('therapist', $therapistName)
@@ -119,6 +128,9 @@ class TherapistController extends Controller
     public function therapistStudents()
     {
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $therapistName = $user->name;
 
         $childInfos = ChildInfo::whereHas('childSchedule', function($query) use ($therapistName) {
@@ -136,6 +148,9 @@ class TherapistController extends Controller
     {
     // Get the logged-in therapist
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
 
         if (!$user) {
             return redirect()->back()->with('error', 'Therapist information not found.');
@@ -163,6 +178,9 @@ class TherapistController extends Controller
     public function therapistStdReportList()
     {
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $therapistName = $user->name;
 
         $schedules = ChildSchedule::where('therapist', $therapistName)
@@ -179,6 +197,9 @@ class TherapistController extends Controller
     {
     // Get the logged-in therapist
         $user = Auth::guard('therapist')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
 
         // Check if the user has a related therapistInfo
         if (!$user) {

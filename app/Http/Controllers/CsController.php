@@ -35,6 +35,9 @@ class CsController extends Controller
     public function csDashboard()
     {    
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
 
@@ -73,6 +76,9 @@ class CsController extends Controller
     public function csStudentList()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
 
@@ -90,6 +96,9 @@ class CsController extends Controller
     public function csStdDetails($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfo = ChildInfo::find($id);
@@ -102,6 +111,9 @@ class CsController extends Controller
     public function csEditProgramView($child_id, $package_id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfo = ChildInfo::find($child_id);
@@ -118,6 +130,9 @@ class CsController extends Controller
     public function csEditProgScheduleView($child_id, $package_id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfo = ChildInfo::find($child_id);
@@ -214,6 +229,9 @@ class CsController extends Controller
     public function csEditProgSchedule(Request $request, $child_id, $package_id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
@@ -297,6 +315,9 @@ class CsController extends Controller
     public function csRescheduleView($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $schedule = ChildSchedule::find($id);
@@ -391,6 +412,9 @@ class CsController extends Controller
     public function csUnassignedList()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfos = ChildInfo::whereHas('childSchedule', function ($query) {
@@ -419,6 +443,9 @@ class CsController extends Controller
     public function csAssignTherapist($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfo = ChildInfo::with(['package', 'childSchedule' => function($query) {
@@ -520,6 +547,9 @@ class CsController extends Controller
     public function csAssignedSession()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $childInfos = ChildInfo::whereHas('childSchedule', function ($query) {
@@ -541,6 +571,9 @@ class CsController extends Controller
     public function csAssignedDetails($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $schedules = ChildSchedule::where('child_id', $id)
@@ -557,6 +590,9 @@ class CsController extends Controller
     public function csStdReportList()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $schedules = ChildSchedule::where('attendance', 'present')
@@ -570,6 +606,9 @@ class CsController extends Controller
     public function csReportApproval($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $report = SessionReport::where('schedules_id', $id)
@@ -599,6 +638,9 @@ class CsController extends Controller
     public function csApprovedReportList()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $schedules = ChildSchedule::where('attendance', 'present')
@@ -612,6 +654,9 @@ class CsController extends Controller
     public function csApprovedReport($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $report = SessionReport::where('schedules_id', $id)
@@ -623,6 +668,9 @@ class CsController extends Controller
     public function csApproveRescheduleList()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $therapist = TherapistInfo::all();
@@ -641,6 +689,9 @@ class CsController extends Controller
     public function csApproveReqView($id)
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $schedule = ChildSchedule::findOrFail($id);
@@ -717,6 +768,9 @@ class CsController extends Controller
     public function csAllSession()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csName = $user->name;
     
         $schedules = ChildSchedule::all();

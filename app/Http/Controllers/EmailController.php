@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Log;
 use App\Models\EmailLog;
-
 use Illuminate\Http\Request;
 use App\Mail\CsEmailMailable;
+use App\Models\ParentAccount;
 use App\Mail\YourEmailMailable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-
 
 
 class EmailController extends Controller
@@ -23,118 +23,126 @@ class EmailController extends Controller
         return view('admin.email.send', compact('parents')); // Pointing to the send.blade.php view
     }
 
-    // Handle sending of email
-public function send(Request $request)
-{
-    $request->validate([
-        'to' => 'nullable|array',
-        'to.*' => 'email',
-        'subject' => 'required|string|max:255',
-        'message' => 'required|string',
-        'attachment.*' => 'file|max:10240', // Max 10MB per file
-    ]);
-
-    // Determine recipients
-    $recipients = $request->to ?? ParentAccount::pluck('email')->toArray(); // Use provided emails or fetch from ParentAccount model
-
-    if (empty($recipients)) {
-        return redirect()->back()->with('error', 'No recipients found.');
-    }
-
-    // Prepare attachments
-    $attachments = [];
-    if ($request->hasFile('attachment')) {
-        foreach ($request->file('attachment') as $file) {
-            $attachments[] = [
-                'filePath' => $file->getRealPath(),
-                'filename' => $file->getClientOriginalName(),
-            ];
+    public function send(Request $request)
+    {
+        $request->validate([
+            'to' => 'required|array',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+        ]);
+    
+        $emails = $request->input('to');
+        $subject = $request->input('subject');
+        $messageBody = $request->input('message');
+        $uploadedFiles = []; // Renamed variable
+    
+        // Handle file uploads
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('attachments', 'public'); // Store files in `storage/app/public/attachments`
+                $uploadedFiles[] = storage_path('app/public/' . $path);// Adjust path for accessibility
+            }
         }
-    }
-
-    // Send email to each recipient
-    $mg = Mailgun::create(env('MAILGUN_API_KEY')); // Mailgun instance
-    $domain = env('MAILGUN_DOMAIN');
-
-    foreach ($recipients as $recipient) {
-        $messageData = [
-            'from' => 'admin@example.com',
-            'to' => $recipient,
-            'subject' => $request->subject,
-            'text' => $request->message,
-        ];
-
-        // Include attachments if present
-        if (!empty($attachments)) {
-            $messageData['attachment'] = array_map(function ($attachment) {
-                return [
-                    'filePath' => $attachment['filePath'],
-                    'filename' => $attachment['filename'],
-                ];
-            }, $attachments);
-        }
-
-        // Send email via Mailgun
+    
         try {
-            $mg->messages()->send($domain, $messageData);
+            foreach ($emails as $email) {
+                // Send email with attachments
+                Mail::to($email)->send(new YourEmailMailable($subject, $messageBody, $uploadedFiles));
+    
+                // Log success
+                DB::table('email_logs')->insert([
+                    'recipient' => $email,
+                    'subject' => $subject,
+                    'message' => $messageBody,
+                    'status' => 'success',
+                    'error' => '',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         } catch (\Exception $e) {
-            // Log or handle errors appropriately
-            return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
+            // Log failure
+            DB::table('email_logs')->insert([
+                'recipient' => $email ?? 'N/A',
+                'subject' => $subject,
+                'message' => $messageBody,
+                'status' => 'failed',
+                'error' => $e->getMessage(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            \Log::error("Failed to send email: " . $e->getMessage());
         }
+    
+        return redirect()->back()->with('success', 'Email sent successfully.');
     }
-
-    return redirect()->back()->with('success', 'Email(s) sent successfully.');
-}
-
+    
 
 // {
 //     $request->validate([
-//         'to' => 'required|array',
+//         'to' => 'nullable|array',
+//         'to.*' => 'email',
 //         'subject' => 'required|string|max:255',
 //         'message' => 'required|string',
+//         'attachment.*' => 'file|max:10240', // Max 10MB per file
 //     ]);
 
-//     $emails = $request->input('to');
-//     $subject = $request->input('subject');
-//     $messageBody = $request->input('message');
+//     // Determine recipients
+//     $recipients = $request->to ?? ParentAccount::pluck('email')->toArray(); // Use provided emails or fetch from ParentAccount model
 
-//    try {
-//     // Use Laravel's Queueable Mailable class to send emails
-//     foreach ($emails as $email) {
-//         Mail::to($email)->queue(new YourEmailMailable($subject, $messageBody));
-
-//         // Log success
-//         DB::table('email_logs')->insert([
-//             'recipient' => $email,
-//             'subject' => $subject,
-//             'message' => $messageBody,
-//             'status' => 'success',
-//             'error' => '',  // Add an empty string for the error field
-//             'created_at' => now(),
-//             'updated_at' => now(),
-//         ]);
+//     if (empty($recipients)) {
+//         return redirect()->back()->with('error', 'No recipients found.');
 //     }
-// } catch (\Exception $e) {
-//     // Log failure
-//     DB::table('email_logs')->insert([
-//         'recipient' => $email,
-//         'subject' => $subject,
-//         'message' => $messageBody,
-//         'status' => 'failed',
-//         'error' => $e->getMessage(),
-//         'created_at' => now(),
-//         'updated_at' => now(),
-//     ]);
 
-//     \Log::error("Failed to send email: " . $e->getMessage());
+//     // Prepare attachments
+//     $attachments = [];
+//     if ($request->hasFile('attachment')) {
+//         foreach ($request->file('attachment') as $file) {
+//             $attachments[] = [
+//                 'filePath' => $file->getRealPath(),
+//                 'filename' => $file->getClientOriginalName(),
+//             ];
+//         }
+//     }
+
+//     // Send email to each recipient
+//     $mg = Mail::create(env('MAILGUN_API_KEY')); // Mailgun instance
+//     $domain = env('MAILGUN_DOMAIN');
+
+//     foreach ($recipients as $recipient) {
+//         $messageData = [
+//             'from' => 'admin@example.com',
+//             'to' => $recipient,
+//             'subject' => $request->subject,
+//             'text' => $request->message,
+//         ];
+
+//         // Include attachments if present
+//         if (!empty($attachments)) {
+//             $messageData['attachment'] = array_map(function ($attachment) {
+//                 return [
+//                     'filePath' => $attachment['filePath'],
+//                     'filename' => $attachment['filename'],
+//                 ];
+//             }, $attachments);
+//         }
+
+//         // Send email via Mailgun
+//         try {
+//             $mg->messages()->send($domain, $messageData);
+//         } catch (\Exception $e) {
+//             // Log or handle errors appropriately
+//             return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
+//         }
+//     }
+
+//     return redirect()->back()->with('success', 'Email(s) sent successfully.');
 // }
-// return redirect()->back()->with('success', 'Email sent successfully.');
-
-// }
 
 
-
-    // Display inbox with all notifications/messages sent to the user
+// Display inbox with all notifications/messages sent to the user
     public function inbox()
     {
         // Assume logged-in user is a parent
@@ -149,6 +157,9 @@ public function send(Request $request)
     public function csCompose()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         $csEmail = $user->email;
@@ -162,16 +173,25 @@ public function send(Request $request)
             'to' => 'required|array',
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+
         ]);
     
         $emails = $request->input('to');
         $subject = $request->input('subject');
-        $messageBody = $request->input('message');
+        $uploadedFiles = []; // Renamed variable
     
+        // Handle file uploads
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('attachments', 'public'); // Store files in `storage/app/public/attachments`
+                $uploadedFiles[] = storage_path('app/public/' . $path);// Adjust path for accessibility
+            }
+        }
        try {
         // Use Laravel's Queueable Mailable class to send emails
         foreach ($emails as $email) {
-            Mail::to($email)->queue(new CsEmailMailable($subject, $messageBody));
+            Mail::to($email)->queue(new CsEmailMailable($subject, $messageBody, $uploadedFiles));
     
             // Log success
             DB::table('email_logs')->insert([
@@ -204,6 +224,9 @@ public function send(Request $request)
     public function csInbox()
     {
         $user = Auth::guard('cs')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $csInfo = $user;
         $csName = $user->name;
         // Assume logged-in user is a parent
@@ -219,6 +242,9 @@ public function send(Request $request)
     {
         // Get the logged-in parent account
         $user = Auth::guard('parent')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
     $parentAccount = $user->childInfo->parentAccount;
 
     // Fetch only the email logs (or announcements) for the parentAccount's email

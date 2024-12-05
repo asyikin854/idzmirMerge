@@ -22,6 +22,9 @@ class SalesController extends Controller
     public function salesDashboard()
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $totalCustomer = NewCustomer::all()->count();
@@ -34,6 +37,9 @@ class SalesController extends Controller
     public function newCustomer()
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $customers = NewCustomer::all();
@@ -70,6 +76,9 @@ class SalesController extends Controller
     public function regNewCust($id)
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $customer = NewCustomer::findOrFail($id);
@@ -191,6 +200,9 @@ class SalesController extends Controller
     public function scheduleSlotView($child_id, $package_id)
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         // Find child and package information
@@ -459,6 +471,9 @@ public function confirmSchedule(Request $request)
     public function custDetails($id)
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $customer = NewCustomer::find($id);
@@ -469,6 +484,9 @@ public function confirmSchedule(Request $request)
     public function registeredCustomer()
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $childInfos = ChildInfo::with(['fatherInfo', 'motherInfo'])->get();
@@ -478,6 +496,9 @@ public function confirmSchedule(Request $request)
     public function custDetails2($id)
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $childInfo = ChildInfo::with(['fatherInfo', 'motherInfo'])->findOrFail($id);
@@ -489,6 +510,9 @@ public function confirmSchedule(Request $request)
     public function consultationSessions()
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
     
@@ -523,6 +547,9 @@ public function confirmSchedule(Request $request)
     public function paymentStatus()
     {
         $user = Auth::guard('sales')->user();
+        if (!$user) {
+            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        }
         $salesInfo = $user;
         $salesName = $user->name;
         $payment = Payment::all();

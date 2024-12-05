@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Mail\PaymentSuccessMail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CsController;
 use Illuminate\Support\Facades\Artisan;
@@ -12,7 +17,6 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\AdminDashboardController;
-
 
 
 Route::get('/', function () {
@@ -121,6 +125,18 @@ Route::post('chip/callback/', function (Request $request) {
     if ($payment) {
         $payment->status = $request->status;
         $payment->save();
+
+        if ($request->status === 'success') {
+            $parentAccount = ParentAccount::where('child_id', $payment->child_id)->first();
+            if ($parentAccount && $parentAccount->email) {
+                try {
+                    Mail::to($parentAccount->email)->send(new PaymentSuccessMail($payment));
+                    Log::info("CALLBACK: Payment success email sent to " . $parentAccount->email);
+                } catch (\Exception $e) {
+                    Log::error("CALLBACK: Failed to send payment success email: " . $e->getMessage());
+                }
+            }
+        }
     }
 
     Log::info("CALLBACK: X-Signature Verified!");

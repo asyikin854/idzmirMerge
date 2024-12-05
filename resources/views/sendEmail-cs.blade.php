@@ -69,7 +69,7 @@
                                                                 <div class="row">
                                                                     <div class="col-sm-8 xl-50">
                                                                         <h4 class="mb-0">New Message</h4>
-                                                                        <form action="{{ route('sendEmail-cs') }}" method="POST">
+                                                                        <form action="{{ route('sendEmail-cs') }}" method="POST" enctype="multipart/form-data">
                                                                             @csrf
                                                                     </div>
                                                                     <div class="col-sm-4 btn-middle xl-50">
@@ -98,6 +98,10 @@
                                                                     <div>
                                                                         <label class="text-muted">Message</label>
                                                                         <textarea name="message" class="form-control" rows="10" required></textarea>                                                        </textarea>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="attachments">Attachments</label>
+                                                                        <input type="file" name="attachments[]" class="form-control" multiple>
                                                                     </div>
                                                                 </form>
                                                             </div>
