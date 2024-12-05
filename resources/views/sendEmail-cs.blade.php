@@ -22,7 +22,19 @@
 
 @section('content')
     <div class="container-fluid">
+        
         <div class="email-wrap">
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="row">
                 <div class="col-xl-3 box-col-12">
                     <div class="md-sidebar"><a class="btn btn-primary md-sidebar-toggle" href="javascript:void(0)">email
@@ -211,17 +223,7 @@
         </div>
     </div>
     </div>
-    @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
 
 @endsection
 

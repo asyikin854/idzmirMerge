@@ -11,6 +11,7 @@ use App\Models\ParentAccount;
 use App\Mail\YourEmailMailable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 
 
 class EmailController extends Controller
@@ -179,6 +180,7 @@ class EmailController extends Controller
     
         $emails = $request->input('to');
         $subject = $request->input('subject');
+        $messageBody = $request->input('message');
         $uploadedFiles = []; // Renamed variable
     
         // Handle file uploads
@@ -191,7 +193,7 @@ class EmailController extends Controller
        try {
         // Use Laravel's Queueable Mailable class to send emails
         foreach ($emails as $email) {
-            Mail::to($email)->queue(new CsEmailMailable($subject, $messageBody, $uploadedFiles));
+            Mail::to($email)->send(new CsEmailMailable($subject, $messageBody, $uploadedFiles));
     
             // Log success
             DB::table('email_logs')->insert([

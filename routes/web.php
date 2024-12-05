@@ -1,7 +1,9 @@
 <?php
 
+use Chip\ChipApi;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\ParentAccount;
 use App\Mail\PaymentSuccessMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -71,6 +73,8 @@ Route::get('/announcement-parent', [EmailController::class, 'parentInbox'])->nam
 Route::get('/messageDetails-parent', [EmailController::class, 'fetchMessage'])->name('fetchMessage-parent');
 Route::get('/newProgPayment-parent/{child_id}/{package_id}', [ParentController::class, 'newProgPayment'])->name('newProgPayment-parent');
 Route::post('/submitNewProgPayment', [ParentController::class, 'submitNewProgPayment'])->name('submitNewProgPayment');
+Route::get('/payment-success2', [ParentController::class, 'paymentSuccess2'])->name('payment.success2');
+Route::get('/payment-failure2/{child_id}/{package_id}', [ParentController::class, 'paymentFailure2'])->name('payment.failure2');
 
 
 Route::get('register-parent', [RegisterController::class, 'registerView'])->name('register-parent');
@@ -126,7 +130,7 @@ Route::post('chip/callback/', function (Request $request) {
         $payment->status = $request->status;
         $payment->save();
 
-        if ($request->status === 'success') {
+        if ($request->status === 'paid') {
             $parentAccount = ParentAccount::where('child_id', $payment->child_id)->first();
             if ($parentAccount && $parentAccount->email) {
                 try {

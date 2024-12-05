@@ -804,9 +804,9 @@ public function newConsultScheduleView($child_id, $package_id)
     
     $purchase->purchase = $details;
     $purchase->brand_id = $brandId;
-    $purchase->success_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=1';
-    $purchase->failure_redirect = 'https://system.idzmirkidshub.com/chip/callback/api/redirect.php?success=0';
-    $purchase->success_callback = 'https://system.idzmirkidshub.com/chip/callback/api/callback.php';
+    $purchase->success_redirect = route('payment.success2');
+	$purchase->failure_redirect = route('payment.failure2', ['child_id' => $child_id, 'package_id' => $package_id]);
+    $purchase->success_callback = 'https://system.idzmirkidshub.com/chip/callback/api/callback';
 	$purchase->payment_method_whitelist = ['fpx'];
 	
 	$result = $chip->createPurchase($purchase);
@@ -819,5 +819,23 @@ public function newConsultScheduleView($child_id, $package_id)
             header("Location: " . $result->checkout_url);
             exit;
                }
+}
+
+public function paymentSuccess2()
+{
+    $data = $this->getRelatedData();
+    if ($data instanceof RedirectResponse) {
+        return $data;
+    }
+    return view('payment-success2')->with($data);
+}
+
+public function paymentFailure2($child_id, $package_id)
+{
+    $data = $this->getRelatedData();
+    if ($data instanceof RedirectResponse) {
+        return $data;
+    }
+    return view('payment-failure2', ['child_id' => $child_id, 'package_id' => $package_id])->with($data);
 }
 }

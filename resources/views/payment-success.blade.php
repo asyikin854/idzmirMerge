@@ -9,7 +9,7 @@
     <div class="alert alert-success">
         <h1>Payment Successful!</h1>
         <p>Your payment has been processed successfully. Thank you for your transaction.</p>
-        <a href="{{ route('/') }}" class="btn btn-primary">Go Back to Home</a>
+        <a href="{{ route('/') }}" class="btn btn-primary">Go Back to Home and log in to your account.</a>
     </div>
 </div>
 @endsection
