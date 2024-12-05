@@ -5,7 +5,7 @@
           <img class="me-3 rounded-circle" src="{{ asset('assets/images/logo/logoidzmir.png') }}" style="width: 50px" alt="">
           <div class="media-body">
             <h6>Admin <small><span>{{ \Carbon\Carbon::parse($message->created_at)->format('d F') }}</span> <span>{{ \Carbon\Carbon::parse($message->created_at)->format('h:i A') }}</span></small></h6>
-            <p>{{ $message->subject }}</p>
+            <p>{{ $message->subject }} | ( {{$message->status}} ) </p>
           </div>
         </div>
       </div>

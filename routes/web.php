@@ -664,7 +664,8 @@ Route::get('/inbox', [EmailController::class, 'inbox'])->name('inbox');
 
 Route::get('/admin/email/compose', [EmailController::class, 'compose'])->name('admin.email.compose');
 Route::post('/admin/email/send', [EmailController::class, 'send'])->name('admin.email.send');
-Route::get('/inbox', [EmailController::class, 'inbox'])->name('inbox');
+Route::get('/admin/email/sent', [EmailController::class, 'sentAdmin'])->name('admin.email.sent');
+Route::get('/admin/email/fetch', [EmailController::class, 'fetchEmailAdmin'])->name('admin.email.fetch');
 
 
 

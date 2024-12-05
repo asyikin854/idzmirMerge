@@ -16,6 +16,7 @@ class EmailLog extends Model
         'subject',
         'message',
         'status',
-        'error'
+        'error',
+        'attachments'
     ];
 }

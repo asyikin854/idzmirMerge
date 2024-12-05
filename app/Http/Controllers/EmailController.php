@@ -27,13 +27,13 @@ class EmailController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'to' => 'required|array',
+            'to' => 'nullable|array',
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
     
-        $emails = $request->input('to');
+        $emails = $request->input('to') ?? $this->getAllParentEmails();
         $subject = $request->input('subject');
         $messageBody = $request->input('message');
         $uploadedFiles = []; // Renamed variable
@@ -56,6 +56,7 @@ class EmailController extends Controller
                     'recipient' => $email,
                     'subject' => $subject,
                     'message' => $messageBody,
+                    'attachments' => json_encode($uploadedFiles),
                     'status' => 'success',
                     'error' => '',
                     'created_at' => now(),
@@ -68,6 +69,7 @@ class EmailController extends Controller
                 'recipient' => $email ?? 'N/A',
                 'subject' => $subject,
                 'message' => $messageBody,
+                'attachments' => json_encode($uploadedFiles),
                 'status' => 'failed',
                 'error' => $e->getMessage(),
                 'created_at' => now(),
@@ -144,6 +146,12 @@ class EmailController extends Controller
 
 
 // Display inbox with all notifications/messages sent to the user
+private function getAllParentEmails()
+{
+    return ParentAccount::pluck('email')->toArray();
+}
+
+
     public function inbox()
     {
         // Assume logged-in user is a parent
@@ -171,14 +179,14 @@ class EmailController extends Controller
     public function csSend(Request $request)
     {
         $request->validate([
-            'to' => 'required|array',
+            'to' => 'nullable|array',
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
 
         ]);
     
-        $emails = $request->input('to');
+        $emails = $request->input('to') ?? $this->getAllParentEmails();
         $subject = $request->input('subject');
         $messageBody = $request->input('message');
         $uploadedFiles = []; // Renamed variable
@@ -200,6 +208,7 @@ class EmailController extends Controller
                 'recipient' => $email,
                 'subject' => $subject,
                 'message' => $messageBody,
+                'attachments' => json_encode($uploadedFiles),
                 'status' => 'success',
                 'error' => '',  // Add an empty string for the error field
                 'created_at' => now(),
@@ -212,6 +221,7 @@ class EmailController extends Controller
             'recipient' => $email,
             'subject' => $subject,
             'message' => $messageBody,
+            'attachments' => json_encode($uploadedFiles),
             'status' => 'failed',
             'error' => $e->getMessage(),
             'created_at' => now(),
@@ -250,7 +260,7 @@ class EmailController extends Controller
     $parentAccount = $user->childInfo->parentAccount;
 
     // Fetch only the email logs (or announcements) for the parentAccount's email
-    $messages = EmailLog::where('recipient', $parentAccount->email)->get();
+    $messages = EmailLog::where('recipient', $parentAccount->email)->orderBy('created_at', 'desc')->get();
 
     // Select the first message by default if no specific message is selected
     $selectedMessage = $messages->first();
@@ -270,6 +280,29 @@ class EmailController extends Controller
     // Return a partial view with message details
     return view('messageDetails-parent', compact('message'))->render();
 }
+
+
+public function sentAdmin()
+{
+    $messages = EmailLog::orderBy('created_at', 'desc')->get();
+
+    return view('admin.email.sent', ['messages' => $messages]);
+}
+
+
+public function fetchEmailAdmin(Request $request)
+{
+    // Fetch the message by ID
+    $message = EmailLog::find($request->id);
+
+    if (!$message) {
+        return response()->json(['error' => 'Message not found'], 404);
+    }
+
+    // Return a partial view with message details
+    return view('admin.email.fetch', compact('message'))->render();
+}
+
 
     
 }

@@ -96,7 +96,7 @@
                                                             <div class="email-wrapper">
                                                                 <form class="theme-form">
                                                                     <div class="mb-3">
-                                                                        <label for="to">To</label>
+                                                                        <label for="to">To (Hold CTRL to select multiple email or leave it empty to send to all)</label>
             <select name="to[]" class="form-control" multiple>
                 @foreach($parents as $parent)
                     <option value="{{ $parent->email }}">{{ $parent->username }} ({{ $parent->email }})</option>
