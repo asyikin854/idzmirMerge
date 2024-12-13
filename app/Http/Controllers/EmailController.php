@@ -41,8 +41,10 @@ class EmailController extends Controller
         // Handle file uploads
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('attachments', 'public'); // Store files in `storage/app/public/attachments`
-                $uploadedFiles[] = storage_path('app/public/' . $path);// Adjust path for accessibility
+                $fileName = time() . '.' . $file->extension(); // Generate a unique file name
+                $path = public_path('attachments'); // Define the path to `public/attachments`
+                $file->move($path, $fileName); // Move the file to `public/attachments`
+                $uploadedFiles[] = asset('attachments/' . $fileName); // Store the accessible URL
             }
         }
     
@@ -194,8 +196,10 @@ private function getAllParentEmails()
         // Handle file uploads
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('attachments', 'public'); // Store files in `storage/app/public/attachments`
-                $uploadedFiles[] = storage_path('app/public/' . $path);// Adjust path for accessibility
+                $fileName = time() . '.' . $file->extension(); // Generate a unique file name
+                $path = public_path('attachments'); // Define the path to `public/attachments`
+                $file->move($path, $fileName); // Move the file to `public/attachments`
+                $uploadedFiles[] = asset('attachments/' . $fileName); // Store the accessible URL
             }
         }
        try {

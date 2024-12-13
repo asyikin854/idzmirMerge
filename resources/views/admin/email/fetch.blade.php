@@ -24,7 +24,7 @@
       <div class="d-inline-block">
         <h6 class="text-muted"><i class="icofont icofont-clip"></i> ATTACHMENTS</h6>
         @foreach ($attachments as $attachment)
-        <a class="text-muted text-end right-download" href="{{ asset('storage/' . str_replace(storage_path('app/public/'), '', $attachment)) }}" target="_blank">
+        <a class="text-muted text-end right-download" href="{{ asset('attachments/' . basename($attachment)) }}" target="_blank">
             {{ basename($attachment) }}">
           <i class="fa fa-long-arrow-down me-2"></i>Download Attachment
         </a>
