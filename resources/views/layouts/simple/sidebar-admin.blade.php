@@ -63,22 +63,23 @@
                             class="sidebar-link sidebar-title link-nav" href="{{route('admin.payment.list')}}">
                             <i class="fa fa-money">   &nbsp;</i>
                             </svg><span>Billing and Payment</span></a></li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                            class="sidebar-link sidebar-title link-nav" href="{{ route('admin.schedules.index')}}">
+
+
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
+                        <label class="badge badge-light-primary">3</label><a class="sidebar-link sidebar-title"
+                            href="#">
                             <svg class="stroke-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
                             </svg>
                             <svg class="fill-icon">
-                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calendar') }}"> </use>
-                            </svg><span>Schedules</span></a></li>
-                            <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                                class="sidebar-link sidebar-title link-nav" href="#">
-                                <svg class="stroke-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-charts') }}"></use>
-                                </svg>
-                                <svg class="fill-icon">
-                                    <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
-                                </svg><span>Report and Full Analytic</span></a></li>
+                                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
+                            </svg><span>Full Analytic</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('admin.child.fa') }}">Full Assesment</a></li>
+                            <li><a href="{{ route('admin.child.intervention') }}">Intervention</a></li>
+                            <li><a href="{{ route('admin.child.rts') }}">RTS</a></li>
+                        </ul>
+                    </li>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
         </nav>
     </div>

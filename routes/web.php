@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CsController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\ChildController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SalesController;
@@ -31,9 +32,9 @@ Route::middleware(['auth:parent'])->group(function () {
         Route::get('/dashboard-parent', [ParentController::class, 'parentDashboard'])->name('parent.dashboard');
     });
 });
-Route::middleware(['auth:parent'])->group(function () {
-    Route::prefix('dashboard')->group(function () {
-        Route::get('/dashboard-admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth:admin'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
     });
 });
 
@@ -609,9 +610,8 @@ Route::get('/clear-cache', function () {
 
 
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
+
 
     Route::get('/parents', [AdminDashboardController::class, 'listParents'])->name('admin.parents');
     Route::get('/parents/{id}', [AdminDashboardController::class, 'showParent'])->name('admin.parents.show');
@@ -656,6 +656,9 @@ Route::get('/schedules', [AdminDashboardController::class, 'showSchedules'])->na
 
 Route::get('/inbox', [EmailController::class, 'inbox'])->name('inbox');
 
+// dashboard analytics
+Route::get('/get-monthly-data', [AdminDashboardController::class, 'getMonthlyData']);
+Route::get('/get-program-data', [AdminDashboardController::class, 'getProgramData']);
 
 
 
@@ -667,5 +670,8 @@ Route::post('/admin/email/send', [EmailController::class, 'send'])->name('admin.
 Route::get('/admin/email/sent', [EmailController::class, 'sentAdmin'])->name('admin.email.sent');
 Route::get('/admin/email/fetch', [EmailController::class, 'fetchEmailAdmin'])->name('admin.email.fetch');
 
-
+Route::get('/children/ready-to-school', [ChildController::class, 'showReadyToSchoolSchedules'])->name('admin.child.rts');
+Route::get('/children/full-assessment', [ChildController::class, 'showFullAssessmentSchedules'])->name(name: 'admin.child.fa');
+// Route for Intervention with Consistency
+Route::get('/children/intervention-with-consistency', [ChildController::class, 'showInterventionWithConsistencySchedules'])->name('admin.child.intervention');
 

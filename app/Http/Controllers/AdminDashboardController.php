@@ -18,6 +18,123 @@ use App\Models\TherapistInfo;
 
 class AdminDashboardController extends Controller
 {
+
+    public function dashboard()
+    {
+        $totalStudent = ChildInfo::all()->count();
+        $payment = Payment::all();
+
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $monthlySales = Payment::where('status', 'paid')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->sum('total_amount');
+
+        $totalSales = Payment::where('status', 'paid')->sum('total_amount');
+
+        $previousMonth = now()->subMonth();
+        $previousMonthSales = Payment::where('status', 'paid')
+            ->whereMonth('created_at', $previousMonth->month)
+            ->whereYear('created_at', $previousMonth->year)
+            ->sum('total_amount');
+
+        // Calculate percentage change
+        if ($previousMonthSales > 0) {
+            $salesPercentage = (($monthlySales - $previousMonthSales) / $previousMonthSales) * 100;
+        } else {
+            $salesPercentage = $monthlySales > 0 ? 100 : 0; // 100% increase if no sales in the previous month
+        }
+
+        return view ('admin.dashboard', compact('totalSales', 'monthlySales', 'totalStudent', 'salesPercentage'));
+    }
+
+    public function getMonthlyData()
+    {
+        $salesData = [];
+        $studentData = [];
+        $months = [];
+        $allTimeMonths = [];
+        $allTimeSalesData = [];
+    
+        // Fetch the last 6 months data for monthly sales
+        $currentMonth = Carbon::now();
+        $startMonth = Carbon::now()->subMonths(1); // Start from 5 months ago to include current month
+    
+        for ($i = 0; $i < 2; $i++) {
+            $currentMonthLabel = $startMonth->format('F Y'); // Label for the current month
+    
+            // Fetch total sales for the month
+            $sales = Payment::where('status', 'paid')
+                ->whereMonth('created_at', $startMonth->month)
+                ->whereYear('created_at', $startMonth->year)
+                ->sum('total_amount');
+    
+            // Append data
+            $salesData[] = $sales;
+            $months[] = $currentMonthLabel;
+    
+            // Move to the next month
+            $startMonth->addMonthNoOverflow(); // Avoid potential overflow issues
+        }
+    
+        // Fetch all-time sales data grouped by month and year
+        $allTimeData = Payment::where('status', 'paid')
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as total_sales')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+    
+        foreach ($allTimeData as $data) {
+            // Format month and year
+            $monthName = Carbon::create($data->year, $data->month)->format('F Y');
+            $allTimeMonths[] = $monthName;
+    
+            // Sales data
+            $allTimeSalesData[] = $data->total_sales;
+    
+            // Student data for the same month and year
+            $studentCount = ChildInfo::whereYear('created_at', $data->year)
+                ->whereMonth('created_at', $data->month)
+                ->count();
+            $studentData[] = $studentCount;
+        }
+    
+        return response()->json([
+            'salesData' => $salesData,
+            'months' => $months,
+            'allTimeSalesData' => $allTimeSalesData,
+            'studentData' => $studentData,
+            'allTimeMonths' => $allTimeMonths,
+        ]);
+    }
+    
+
+    public function getProgramData()
+{
+    // Group ChildInfo by package_id and count children for each package
+    $data = ChildInfo::join('packages', 'child_infos.package_id', '=', 'packages.id')
+        ->select('packages.package_name', DB::raw('COUNT(child_infos.id) as child_count'))
+        ->groupBy('packages.package_name')
+        ->orderBy('packages.package_name', 'asc')
+        ->get();
+
+    // Format response
+    $packageNames = $data->pluck('package_name');
+    $childCounts = $data->pluck('child_count');
+
+    return response()->json([
+        'categories' => $packageNames,
+        'seriesData' => $childCounts,
+    ]);
+}
+
+    
+
+
+
     // List of Students (from child_infos table)
     public function listStudents()
     {
