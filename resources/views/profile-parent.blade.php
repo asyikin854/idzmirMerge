@@ -251,9 +251,9 @@
                                           <tr></tr>
                                           <tr>
                                              <th>Program</th>
-                                             <td>{{$package->package_step}} | {{$package->package_name}}</td>
+                                             <td>{{$package->package_step ?? 'N/A' }} | {{$package->package_name ?? 'N/A' }}</td>
                                              <th>Monthly</th>
-                                             <td>RM {{$childSchedules->price}}</td>
+                                             <td>RM {{$childSchedules->price ?? 'N/A'}}</td>
                                            </tr>
                                        </table>
                                     </div>

@@ -248,6 +248,9 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 });
 
+Route::prefix('authentication')->group(function () {
+    Route::view('login', 'authentication.login')->name('login');
+});
 
 //Language Change
 Route::get('lang/{locale}', function ($locale) {
