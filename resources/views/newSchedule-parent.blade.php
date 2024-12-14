@@ -1,4 +1,4 @@
-@extends('layouts.simple.master-Parent')
+@extends('layouts.simple.master-parent')
 @section('title', 'New Program Schedules')
 
 @section('css')
