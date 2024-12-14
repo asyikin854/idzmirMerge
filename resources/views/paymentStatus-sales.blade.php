@@ -64,7 +64,7 @@
                                         <td>{{$payments->created_at}}</td>
                                         <td>
                                             @if($payments->path)
-                                            <a href="{{ asset('storage/' . $payments->path) }}" target="_blank">View Receipt</a>
+                                            <a href="{{ asset($payments->path) }}" target="_blank">View Receipt</a>
                                         @else
                                             <p>-</p>
                                         @endif

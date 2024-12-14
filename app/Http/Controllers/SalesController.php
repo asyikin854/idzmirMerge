@@ -447,8 +447,8 @@ public function confirmSchedule(Request $request)
     ]);
     if ($request->hasFile('file')) {
         $file = $request->file('file');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs('receipts', $filename, 'public');
+        $filename = time() . '.' . $file->extension();
+        $path = $file->move('receipts', $filename, 'public');
     } else {
         $filename = null;
         $path = null;
