@@ -94,61 +94,66 @@
                         </div>
                             </div>
                         </div>
+   </div>
 
 
-                <div class="row">
-                    <div class="card">
-                                <div class="card-body">
-                    <div class="dt-ext table-responsive">
-                        <p>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Parent List</h3>
+                  </div>
+                  <div class="card-body">
+                      <div class="dt-ext table-responsive">
                         <table class="display" id="export-button">
-                                <thead>
-                        <tr>
-                            <th>Child ID</th>
-                            <th>Child Name</th>
-                            <th>Package</th>
-                            <th>Session</th>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Price</th>
-                            <th>Therapist</th>
-                            <th>Attendance</th>
-                            <th>Remark</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>Std ID</th>
+                                <th>Std Name</th>
+                                <th>Package</th>
+                                <th>Session</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Date</th>
+                                <th>Price</th>
+                                <th>Therapist</th>
+                                <th>Attendance</th>
+                                <th>Remark</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
                     <tbody>
                         @foreach ($children as $child)
                             <tr>
-                                <td>{{ $child->child_id }}</td>
+                                <td>{{ $child->id }}</td>
                                 <td>{{ $child->child_name }}</td>
                                 <td>{{ $child->package_name }}</td>
                                 <td>{{ $child->session }}</td>
                                 <td>{{ $child->day }}</td>
                                 <td>{{ \Carbon\Carbon::parse($child->time)->format('H:i:s') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($child->date)->format('Y-m-d') }}</td>
                                 <td>{{ $child->price }}</td>
                                 <td>{{ $child->therapist }}</td>
                                 <td>{{ $child->attendance }}</td>
                                 <td>{{ $child->remark }}</td>
                                 <td>{{ $child->status }}</td>
-                                <td>{{ \Carbon\Carbon::parse($child->date)->format('Y-m-d') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
     </div>
+                </div>
         
             </div>
          </div>
-      </div>
-   </div>
 </div>
+
 @endsection
 
 @section('script')
+<script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+<script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatable/datatable-extension/jszip.min.js') }}"></script>

@@ -46,6 +46,7 @@ class AdminDashboardController extends Controller
         } else {
             $salesPercentage = $monthlySales > 0 ? 100 : 0; // 100% increase if no sales in the previous month
         }
+        $salesPercentage = number_format($salesPercentage, 2);
 
         return view ('admin.dashboard', compact('totalSales', 'monthlySales', 'totalStudent', 'salesPercentage'));
     }

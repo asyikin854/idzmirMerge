@@ -80,7 +80,7 @@
                               </svg>
                               <svg class="fill-icon">
                                   <use href="{{ asset('assets/svg/icon-sprite.svg#fill-charts') }}"></use>
-                              </svg><span>Report and Full Analytic</span></a>
+                              </svg><span>Data Analytics</span></a>
                           <ul class="sidebar-submenu">
                               <li><a href="{{ route('admin.child.fa') }}">Full Assesment</a></li>
                               <li><a href="{{ route('admin.child.intervention') }}">Intervention</a></li>

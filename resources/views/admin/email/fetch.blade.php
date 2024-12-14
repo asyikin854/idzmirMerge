@@ -13,6 +13,8 @@
   </div>
   
   <div class="email-wrapper">
+    <h5>{{$message->subject}} </h5>
+
     <p>{{ $message->message }}</p> 
   
     @if ($message->attachments)
@@ -25,12 +27,12 @@
         <h6 class="text-muted"><i class="icofont icofont-clip"></i> ATTACHMENTS</h6>
         @foreach ($attachments as $attachment)
         <a class="text-muted text-end right-download" href="{{ asset('attachments/' . basename($attachment)) }}" target="_blank">
-            {{ basename($attachment) }}">
-          <i class="fa fa-long-arrow-down me-2"></i>Download Attachment
+            {{ basename($attachment) }}
+          <i class="fa fa-long-arrow-down me-2"></i>View File
         </a>
         @endforeach
         @else
-                                <p class="text-muted">No attachments</p>
+        <p class="text-muted">No attachments</p>
 @endif
       </div>
     <hr>
