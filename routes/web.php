@@ -346,7 +346,7 @@ Route::put('/update-mother/{id}', [AdminDashboardController::class, 'updateMothe
 Route::put('/update-father/{id}', [AdminDashboardController::class, 'updateFatherInfo'])->name('update.fatherInfo');
 Route::put('/update-child/{id}', [AdminDashboardController::class, 'updateChildInfo'])->name('update.childInfo');
 Route::put('/update-account/{id}', [AdminDashboardController::class, 'updateParentAccount'])->name('update.parentAccount');
-
+Route::delete('/admin/parents/{id}', [AdminDashboardController::class, 'destroyParent'])->name('admin.parents.destroy');
 
 Route::post('/addTherapist', [AdminDashboardController::class, 'addNewTherapist'])->name('addNewTherapist');
 Route::post('/updateTherapist', [AdminDashboardController::class, 'updateTherapist'])->name('updateTherapist');

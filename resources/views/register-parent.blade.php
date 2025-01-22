@@ -5,6 +5,10 @@
 @section('style')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/css/smart_wizard.min.css" rel="stylesheet" type="text/css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/css/smart_wizard_theme_dots.min.css" rel="stylesheet" type="text/css" />
+<script>
+   window.oldInputs = @json(old());
+   window.validationErrors = @json($errors->toArray());
+</script>
 @endsection
 
 
@@ -434,123 +438,136 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartwizard/5.2.0/js/jquery.smartWizard.min.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const icField = document.getElementById('child_ic');
-    const passportField = document.getElementById('child_passport');
-    const icWarning = document.createElement('p');
-    const passportWarning = document.createElement('p');
-    
-    icWarning.style.color = 'red';
-    passportWarning.style.color = 'red';
-
-    // Function to check IC/Passport in the database
-    function checkIfChildExists(type, value) {
-        $.ajax({
-            url: '/check-child-exists',
-            type: 'POST',
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                ic: type === 'ic' ? value : null,
-                passport: type === 'passport' ? value : null,
-            },
-            success: function (response) {
-                // Debugging - Check what response is returned
-                console.log(response);
-
-                // Ensure response contains the "exists" field and it's true
-                if (response && response.exists === true) {
-                    if (type === 'ic') {
-                        icWarning.textContent = 'This IC number is already registered.';
-                        icField.parentNode.appendChild(icWarning);
-                    } else if (type === 'passport') {
-                        passportWarning.textContent = 'This passport number is already registered.';
-                        passportField.parentNode.appendChild(passportWarning);
-                    }
-                } else {
-                    // Clear the warning message if the number doesn't exist
-                    if (type === 'ic') {
-                        icWarning.textContent = '';
-                    } else if (type === 'passport') {
-                        passportWarning.textContent = '';
-                    }
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log('Error occurred: ' + error);
-                // You might want to handle the error here or show a general error message
-            }
-        });
-    }
-
-    // Check IC number when user stops typing
-    icField.addEventListener('input', function () {
-        const icValue = icField.value;
-        if (icValue.length > 0) {
-            checkIfChildExists('ic', icValue);
-        }
-    });
-
-    // Check Passport number when user stops typing
-    passportField.addEventListener('input', function () {
-        const passportValue = passportField.value;
-        if (passportValue.length > 0) {
-            checkIfChildExists('passport', passportValue);
-        }
-    });
-    
-    function toggleFields(checkboxId, inputDivId, specificFields) {
-        const checkbox = document.getElementById(checkboxId); // Get the checkbox
-        const inputDiv = document.getElementById(inputDivId); // Get the input div
-
-        // Add change event listener to the checkbox
-        checkbox.addEventListener('change', function() {
-            if (checkbox.checked) {
-                inputDiv.style.display = 'none'; // Hide the input div
-                specificFields.forEach(function(field) {
-                    field.required = false; // Remove required attribute
-                    field.value = ''; // Clear field value
-                });
-            } else {
-                inputDiv.style.display = 'block'; // Show the input div
-                specificFields.forEach(function(field) {
-                    field.required = true; // Add required attribute
-                });
-            }
-        });
-    }
-
-    // Initialize toggle for mother fields
-    const specificMotherFields = [
-        document.getElementById('mother_name'), // Replace with actual IDs
-        document.getElementById('mother_ic'),
-        document.getElementById('mother_phone'),
-        document.getElementById('mother_race'),
-        document.getElementById('mother_occ'),
-        document.getElementById('mother_email'),
-        document.getElementById('mother_address'),
-        document.getElementById('mother_posscode'),
-        document.getElementById('mother_city'),
-        // Add other specific mother fields as needed
-    ];
-    toggleFields('mother_checkbox', 'mother_input', specificMotherFields);
-
-    // Initialize toggle for mother fields
-    const specificFatherFields = [
-        document.getElementById('father_name'), // Replace with actual IDs
-        document.getElementById('father_ic'),
-        document.getElementById('father_phone'),
-        document.getElementById('father_race'),
-        document.getElementById('father_occ'),
-        document.getElementById('father_email'),
-        document.getElementById('father_address'),
-        document.getElementById('father_posscode'),
-        document.getElementById('father_city'),
-        // Add other specific father fields as needed
-    ];
-    toggleFields('father_checkbox', 'father_input', specificFatherFields);
-});
-
-</script>
+   document.addEventListener('DOMContentLoaded', function () {
+     // === Existing Script ===
+     const icField = document.getElementById('child_ic');
+     const passportField = document.getElementById('child_passport');
+     const icWarning = document.createElement('p');
+     const passportWarning = document.createElement('p');
+ 
+     icWarning.style.color = 'red';
+     passportWarning.style.color = 'red';
+ 
+     // Function to check IC/Passport in the database
+     function checkIfChildExists(type, value) {
+         $.ajax({
+             url: '/check-child-exists',
+             type: 'POST',
+             data: {
+                 _token: $('meta[name="csrf-token"]').attr('content'),
+                 ic: type === 'ic' ? value : null,
+                 passport: type === 'passport' ? value : null,
+             },
+             success: function (response) {
+                 if (response && response.exists === true) {
+                     if (type === 'ic') {
+                         icWarning.textContent = 'This IC number is already registered.';
+                         icField.parentNode.appendChild(icWarning);
+                     } else if (type === 'passport') {
+                         passportWarning.textContent = 'This passport number is already registered.';
+                         passportField.parentNode.appendChild(passportWarning);
+                     }
+                 } else {
+                     if (type === 'ic') icWarning.textContent = '';
+                     else if (type === 'passport') passportWarning.textContent = '';
+                 }
+             },
+             error: function (xhr, status, error) {
+                 console.log('Error occurred: ' + error);
+             }
+         });
+     }
+ 
+     icField.addEventListener('input', function () {
+         const icValue = icField.value;
+         if (icValue.length > 0) checkIfChildExists('ic', icValue);
+     });
+ 
+     passportField.addEventListener('input', function () {
+         const passportValue = passportField.value;
+         if (passportValue.length > 0) checkIfChildExists('passport', passportValue);
+     });
+ 
+     function toggleFields(checkboxId, inputDivId, specificFields) {
+         const checkbox = document.getElementById(checkboxId);
+         const inputDiv = document.getElementById(inputDivId);
+ 
+         checkbox.addEventListener('change', function () {
+             if (checkbox.checked) {
+                 inputDiv.style.display = 'none';
+                 specificFields.forEach(function (field) {
+                     field.required = false;
+                     field.value = '';
+                 });
+             } else {
+                 inputDiv.style.display = 'block';
+                 specificFields.forEach(function (field) {
+                     field.required = true;
+                 });
+             }
+         });
+     }
+ 
+     const specificMotherFields = [
+         document.getElementById('mother_name'),
+         document.getElementById('mother_ic'),
+         document.getElementById('mother_phone'),
+         document.getElementById('mother_race'),
+         document.getElementById('mother_occ'),
+         document.getElementById('mother_email'),
+         document.getElementById('mother_address'),
+         document.getElementById('mother_posscode'),
+         document.getElementById('mother_city'),
+     ];
+     toggleFields('mother_checkbox', 'mother_input', specificMotherFields);
+ 
+     const specificFatherFields = [
+         document.getElementById('father_name'),
+         document.getElementById('father_ic'),
+         document.getElementById('father_phone'),
+         document.getElementById('father_race'),
+         document.getElementById('father_occ'),
+         document.getElementById('father_email'),
+         document.getElementById('father_address'),
+         document.getElementById('father_posscode'),
+         document.getElementById('father_city'),
+     ];
+     toggleFields('father_checkbox', 'father_input', specificFatherFields);
+ 
+     // === New Functionality: Handle Old Inputs and Validation Errors ===
+     function handleOldInputsAndErrors() {
+         const oldInputs = window.oldInputs || {};
+         const errors = window.validationErrors || {};
+ 
+         // Populate old values
+         Object.keys(oldInputs).forEach(name => {
+             const input = document.querySelector(`[name="${name}"]`);
+             if (input) input.value = oldInputs[name];
+         });
+ 
+         // Highlight validation errors
+         Object.keys(errors).forEach(name => {
+             const input = document.querySelector(`[name="${name}"]`);
+             if (input) {
+                 input.classList.add("is-invalid");
+ 
+                 // Add error message below the field if not already added
+                 let errorFeedback = input.parentNode.querySelector('.invalid-feedback');
+                 if (!errorFeedback) {
+                     errorFeedback = document.createElement("div");
+                     errorFeedback.classList.add("invalid-feedback");
+                     input.parentNode.appendChild(errorFeedback);
+                 }
+                 errorFeedback.textContent = errors[name][0];
+             }
+         });
+     }
+ 
+     // Call the function to handle old inputs and errors
+     handleOldInputsAndErrors();
+   });
+ </script>
+ 
 
 <script src="{{ asset('assets/js/tooltip-init.js')}}"></script>
 <script src="{{ asset('assets/js/theme-customizer/customizer.js')}}"></script>

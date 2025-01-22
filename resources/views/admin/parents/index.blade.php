@@ -30,6 +30,11 @@
                   <div class="card-header">
                     <h3>Parent List</h3>
                   </div>
+                  @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
                   <div class="card-body">
                       <div class="dt-ext table-responsive">
                         <table class="display" id="export-button">
@@ -42,7 +47,8 @@
                                <th>Username</th>
                                <th>Email</th>
                                <th>Program | Sessions</th>
-                               <th>Actions</th>
+                               <th>Edit</th>
+                               <th>Delete</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -58,7 +64,11 @@
                                 <td>
                                     <!-- Example of an action -->
                                     <a href="{{ route('admin.parents.show', $childInfo->id) }}" class="btn btn-info">View Profile</a>
+                                    
                                 </td>
+                                <td><button type="button" class="btn btn-danger" onclick="confirmDelete('{{ route('admin.parents.destroy', $childInfo->id) }}')">
+                                  Delete
+                              </button></td>
                             </tr>
                             @endforeach      
                           </tbody>
@@ -68,6 +78,27 @@
                   </div>
                 </div>
               </div>
+</div>
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              Are you sure you want to delete this student data including all other relatede record? This action cannot be undone.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form id="deleteForm" method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+          </div>
+      </div>
+  </div>
 </div>
 @endsection
 
@@ -94,4 +125,14 @@
 <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.rowReorder.min.js') }}"></script>
 <script src="{{ asset('assets/js/datatable/datatable-extension/dataTables.scroller.min.js') }}"></script>
 <script src="{{ asset('assets/js/datatable/datatable-extension/custom.js') }}"></script>
+
+<script>
+  function confirmDelete(actionUrl) {
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = actionUrl; // Set the form action dynamically
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+    deleteModal.show(); // Show the modal
+}
+
+</script>
 @endsection

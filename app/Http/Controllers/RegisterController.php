@@ -112,7 +112,7 @@ class RegisterController extends Controller
             'sign_time' => 'required|string',
             'agree_disagree' => 'required|string',
             'username' => 'required|string',
-            'email' => 'required|string',
+            'email' => 'required|email|unique:parent_accounts,email',
             'password' => 'required|string',
 
         ]);

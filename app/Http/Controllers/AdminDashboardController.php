@@ -154,6 +154,27 @@ class AdminDashboardController extends Controller
         return view('admin.parents.index', compact('childInfos'));
     }
 
+
+    public function destroyParent($id)
+    {
+        // Find the child info by ID
+        $childInfo = ChildInfo::findOrFail($id);
+    
+        // Delete related data
+        $childInfo->fatherInfo()->delete();
+        $childInfo->motherInfo()->delete();
+        $childInfo->parentPermission()->delete();
+        $childInfo->parentAccount()->delete();
+        $childInfo->childSchedule()->delete();
+        $childInfo->payment()->delete();
+    
+        // Delete the child info record
+        $childInfo->delete();
+    
+        // Redirect back with a success message
+        return redirect()->route('admin.parents')->with('success', 'Parent and related data deleted successfully.');
+    }
+    
     // List of Parents (from parent_accounts table
 
 
