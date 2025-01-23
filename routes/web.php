@@ -350,12 +350,17 @@ Route::delete('/admin/parents/{id}', [AdminDashboardController::class, 'destroyP
 
 Route::post('/addTherapist', [AdminDashboardController::class, 'addNewTherapist'])->name('addNewTherapist');
 Route::post('/updateTherapist', [AdminDashboardController::class, 'updateTherapist'])->name('updateTherapist');
+Route::delete('/admin/therapist/{id}', [AdminDashboardController::class, 'deleteTherapist'])->name('admin.therapist.destroy');
+
 
 Route::post('/addCs', [AdminDashboardController::class, 'addNewCs'])->name('addNewCs');
 Route::post('/updateCs', [AdminDashboardController::class, 'updateCs'])->name('updateCs');
+Route::delete('/admin/cs/{id}', [AdminDashboardController::class, 'deleteCs'])->name('admin.cs.destroy');
+
 
 Route::post('/addSales', [AdminDashboardController::class, 'addNewSales'])->name('addNewSales');
 Route::post('/updateSales', [AdminDashboardController::class, 'updateSales'])->name('updateSales');
+Route::delete('/admin/sales/{id}', [AdminDashboardController::class, 'deleteSales'])->name('admin.sales.destroy');
 
 
 Route::prefix('admin')->group(function () {

@@ -336,6 +336,18 @@ public function updateCs(Request $request)
 
     return redirect()->route('admin.cs.list')->with('success', 'Customer Service details updated successfully.');
 }
+public function deleteCs($id)
+{
+    $cs = CsInfo::find($id);
+
+    if ($cs) {
+        $cs->delete();
+        return redirect()->route('admin.cs.list')->with('success', 'CS record deleted successfully.');
+    }
+
+    return redirect()->route('admin.cs.list')->with('error', 'CS record not found.');
+}
+
 
 
 public function listSales()
@@ -384,6 +396,18 @@ public function updateSales(Request $request)
 
     return redirect()->route('admin.sales.list')->with('success', 'Sales Lead details updated successfully.');
 }
+public function deleteSales($id)
+{
+    $sales = SalesLeadInfo::find($id);
+
+    if ($sales) {
+        $sales->delete();
+        return redirect()->route('admin.sales.list')->with('success', 'Sales record deleted successfully.');
+    }
+
+    return redirect()->route('admin.sales.list')->with('error', 'Sales record not found.');
+}
+
 
 public function listTherapist()
 {
@@ -430,6 +454,27 @@ public function updateTherapist(Request $request)
 
     return redirect()->route('admin.therapist.list')->with('success', 'Therapist updated successfully.');
 }
+public function deleteTherapist($id)
+{
+    $therapist = TherapistInfo::find($id);
+
+    if (!$therapist) {
+        return redirect()->route('admin.therapist.list')->with('error', 'Therapist not found.');
+    }
+
+    // Check if the therapist's name exists in ChildSchedule->therapist column
+    $existsInSchedule = ChildSchedule::where('therapist', $therapist->name)->exists();
+
+    if ($existsInSchedule) {
+        return redirect()->route('admin.therapist.list')->with('error', 'This therapist cannot be deleted because they are assigned to a schedule.');
+    }
+
+    // Proceed with deletion
+    $therapist->delete();
+
+    return redirect()->route('admin.therapist.list')->with('success', 'Therapist deleted successfully.');
+}
+
 
 public function paymentList()
 {
