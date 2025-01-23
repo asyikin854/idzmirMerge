@@ -603,10 +603,11 @@ public function updatePackage(Request $request, $id)
     // Handle file upload
     if ($request->hasFile('file')) {
         $file = $request->file('file');
-        $filename = time() . '.' . $file->extension();
-        $path = $file->storeAs('packages', $filename, 'public'); // Save to the "packages" directory
-        $validated['filename'] = $filename;
-        $validated['path'] = $path;
+        $filename = time() . '.' . $file->extension(); // Generate a unique file name
+        $path = public_path('packages'); // Define the path to `public/packages`
+        $file->move($path, $filename); // Move the file to `public/packages`
+        $validated['filename'] = $filename; // Store the file name
+        $validated['path'] = 'packages/' . $filename; // Store the relative path
     } else {
         $validated['filename'] = null;
         $validated['path'] = null;

@@ -110,7 +110,7 @@
         <label for="filename">Upload Image/Poster</label>
         <input type="file" id="file" name="file" class="form-control">
         @if (!empty($package->path))
-        <p>Current File: <a href="{{ asset('storage/' . $package->path) }}" target="_blank">View File</a></p>
+        <p>Current File: <a href="{{ asset($package->path) }}" target="_blank">View File</a></p>
     @endif
     </div>
 

@@ -40,7 +40,7 @@
               @if($package->path && Str::endsWith($package->path, ['jpg', 'jpeg', 'png', 'gif'])) 
               {{-- Display the image if it's an image file --}}
               <div class="product-img">
-                  <img class="img-fluid" src="{{ asset('storage/' . $package->path) }}" alt="{{ $package->package_name }}">
+                  <img class="img-fluid" src="{{ asset($package->path) }}" alt="{{ $package->package_name }}">
                   <div class="product-hover">
                       <ul>
                           <li>
@@ -57,11 +57,11 @@
                   <img class="img-fluid" src="{{ asset('assets/images/logo/logo1.png') }}" alt="File">
                   <div class="product-hover">
                       <ul>
-                          <li>
-                              <a href="{{ asset('storage/' . $package->path) }}" target="_blank" class="btn">
-                                  <i class="icon-download"></i> Download File
-                              </a>
-                          </li>
+                        <li>
+                          <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#modal_{{$package->id}}">
+                              <i class="icon-eye"></i>
+                          </button>
+                      </li>
                       </ul>
                   </div>
               </div>
