@@ -7,9 +7,9 @@
     <meta name="description" content="Idzmir Kids Hub Parent Portal">
     <meta name="keywords" content="Idzmir Kids Hub">
     <meta name="author">
-    <link rel="icon" href="{{secure_asset('assets/images/logo/logoidzmir.png')}}"
+    <link rel="icon" href="{{secure_asset('assets/images/logo/logo1.png')}}"
      type="image/x-icon">
-    <link rel="shortcut icon" href="{{secure_asset('assets/images/logo/logoidzmir.png')}}"
+    <link rel="shortcut icon" href="{{secure_asset('assets/images/logo/logo1.png')}}"
      type="image/x-icon">
     <title>Parent</title>
     <!-- Google font-->

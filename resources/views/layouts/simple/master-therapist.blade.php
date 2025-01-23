@@ -7,8 +7,8 @@
     <meta name="description" content="Idzmir Kids Hub Therapist Portal">
     <meta name="keywords" content="Idzmir Kids Hub">
     <meta name="author" content="pixelstrap">
-    <link rel="icon" href="{{asset('assets/images/logo/logoidzmir.png')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('assets/images/logo/logoidzmir.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{asset('assets/images/logo/logo1.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo/logo1.png')}}" type="image/x-icon">
     <title>Therapist</title>
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
