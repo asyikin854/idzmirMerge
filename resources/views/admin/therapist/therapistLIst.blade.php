@@ -31,6 +31,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                  @endif
+                    @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                 @endif
                     <div class="card-header pb-0 card-no-border">
                         <h3>Therapist List</h3>
                     </div>
@@ -45,7 +51,8 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Username</th>
-                                        <th>Action</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,6 +70,11 @@
                                             type="button" data-bs-toggle="modal" data-bs-target="#editTherapistModal">
                                             Edit Credentials
                                         </button></td>
+                                        <td><form action="{{ route('admin.therapist.destroy', $therapist->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this therapist?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form></td>
                                     </tr>
                                   @empty
                                     <tr>

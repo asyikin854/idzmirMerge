@@ -45,13 +45,13 @@
                         </ul>
                     </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
-                        class="sidebar-link sidebar-title link-nav" href="{{ route('admin.schedules.index')}}">
+                        class="sidebar-link sidebar-title link-nav" href="{{ route('admin.package.index')}}">
                         <svg class="stroke-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-checkboard') }}"></use>
+                            <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-to-do') }}"></use>
                         </svg>
                         <svg class="fill-icon">
-                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-checkboard') }}"> </use>
-                        </svg><span>Service Management</span></a></li>
+                            <use href="{{ asset('assets/svg/icon-sprite.svg#fill-to-do') }}"> </use>
+                        </svg><span>Product & Services</span></a></li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                         class="sidebar-link sidebar-title link-nav" href="{{ route('admin.schedules.index')}}">
                         <svg class="stroke-icon">

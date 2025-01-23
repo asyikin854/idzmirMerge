@@ -261,13 +261,20 @@ private function getAllParentEmails()
         if (!$user) {
             return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
         }
-    $parentAccount = $user->childInfo->parentAccount;
+        $parentAccount = $user->childInfo->parentAccount;
 
-    // Fetch only the email logs (or announcements) for the parentAccount's email
-    $messages = EmailLog::where('recipient', $parentAccount->email)->orderBy('created_at', 'desc')->get();
-
-    // Select the first message by default if no specific message is selected
-    $selectedMessage = $messages->first();
+        if (!$parentAccount) {
+            return back()->with('error', 'Parent account not found.');
+        }
+    
+        // Fetch only the email logs created after the ParentAccount's created_at timestamp
+        $messages = EmailLog::where('recipient', $parentAccount->email)
+            ->where('created_at', '>', $parentAccount->created_at) // Filter messages
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Select the first message by default if no specific message is selected
+        $selectedMessage = $messages->first();
     
         return view('announcement-parent', compact('messages', 'parentAccount', 'selectedMessage'));
     }

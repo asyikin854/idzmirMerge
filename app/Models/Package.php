@@ -12,6 +12,8 @@ class Package extends Model
     protected $fillable = [
         'package_name',
         'package_step',
+        'type',
+        'quota',
         'package_long_desc1',
         'package_long_desc2',
         'package_long_desc3',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Carbon\Carbon;
 use App\Models\CsInfo;
+use App\Models\Package;
 use App\Models\Payment;
 use App\Models\ChildInfo;
 use App\Models\FatherInfo;
@@ -513,6 +514,114 @@ public function getChildSchedulesBySessionId(Request $request)
         'success' => true,
         'childSchedules' => $childSchedules,
     ]);
+}
+
+
+//package/service
+public function indexPackage()
+{
+    $packages = Package::all();
+    return view('admin.package.index', compact('packages'));
+}
+public function createPackage()
+{
+    return view('admin.package.create');
+}
+public function storePackage(Request $request)
+{
+    $validated = $request->validate([
+        'package_name' => 'required|string|max:255',
+        'package_step' => 'required|string|max:255',
+        'session_quantity' => 'required|integer',
+        'type' => 'required|string',
+        'quota' => 'required|integer',
+        'package_normal_price' => 'required|numeric',
+        'package_wkday_price' => 'required|numeric',
+        'package_wkend_price' => 'required|numeric',
+        'package_long_desc1' => 'nullable|string',
+        'package_long_desc2' => 'nullable|string',
+        'package_long_desc3' => 'nullable|string',
+        'package_short_desc1' => 'nullable|string',
+        'package_short_desc2' => 'nullable|string',
+        'package_short_desc3' => 'nullable|string',
+        'package_short_desc4' => 'nullable|string',
+        'package_short_desc5' => 'nullable|string',
+        'citizenship' => 'required|in:yes,no',
+        'weekly' => 'required|in:yes,no',
+        'consultation' => 'required|in:yes,no',
+        'file' => 'nullable|file|mimes:jpg,png,pdf',
+    ]);
+
+    // Handle file upload
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        $filename = time() . '.' . $file->extension();
+        $path = $file->storeAs('packages', $filename, 'public'); // Save to the "packages" directory
+        $validated['filename'] = $filename;
+        $validated['path'] = $path;
+    } else {
+        $validated['filename'] = null;
+        $validated['path'] = null;
+    }
+
+    Package::create($validated);
+
+    return redirect()->route('admin.package.index')->with('success', 'Package created successfully.');
+}
+public function editPackage($id)
+{
+    $package = Package::findOrFail($id);
+    return view('admin.package.edit', compact('package'));
+}
+public function updatePackage(Request $request, $id)
+{
+    $package = Package::findOrFail($id);
+
+    $validated = $request->validate([
+        'package_name' => 'required|string|max:255',
+        'package_step' => 'required|string|max:255',
+        'session_quantity' => 'required|integer',
+        'type' => 'required|string',
+        'quota' => 'required|integer',
+        'package_normal_price' => 'required|numeric',
+        'package_wkday_price' => 'required|numeric',
+        'package_wkend_price' => 'required|numeric',
+        'package_long_desc1' => 'nullable|string',
+        'package_long_desc2' => 'nullable|string',
+        'package_long_desc3' => 'nullable|string',
+        'package_short_desc1' => 'nullable|string',
+        'package_short_desc2' => 'nullable|string',
+        'package_short_desc3' => 'nullable|string',
+        'package_short_desc4' => 'nullable|string',
+        'package_short_desc5' => 'nullable|string',
+        'citizenship' => 'required|in:yes,no',
+        'weekly' => 'required|in:yes,no',
+        'consultation' => 'required|in:yes,no',
+        'file' => 'nullable|file|mimes:jpg,png,pdf',
+    ]);
+
+    // Handle file upload
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        $filename = time() . '.' . $file->extension();
+        $path = $file->storeAs('packages', $filename, 'public'); // Save to the "packages" directory
+        $validated['filename'] = $filename;
+        $validated['path'] = $path;
+    } else {
+        $validated['filename'] = null;
+        $validated['path'] = null;
+    }
+
+    $package->update($validated);
+
+    return redirect()->route('admin.package.index')->with('success', 'Package updated successfully.');
+}
+public function destroyPackage($id)
+{
+    $package = Package::findOrFail($id);
+    $package->delete();
+
+    return redirect()->route('admin.package.index')->with('success', 'Package deleted successfully.');
 }
 
 }

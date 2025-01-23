@@ -37,15 +37,35 @@
          <div class="col-xl-3 col-sm-6 xl-4">
            <div class="card">
              <div class="product-box">
-               <div class="product-img"><img class="img-fluid" src="{{ asset('assets/images/ecommerce/01.jpg') }}" alt="">
-                 <div class="product-hover">
-                   <ul>
-                     <li>
-                       <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#modal_{{$package->id}}"><i class="icon-eye"></i></button>
-                     </li>
-                   </ul>
-                 </div>
-               </div>
+              @if($package->path && Str::endsWith($package->path, ['jpg', 'jpeg', 'png', 'gif'])) 
+              {{-- Display the image if it's an image file --}}
+              <div class="product-img">
+                  <img class="img-fluid" src="{{ asset('storage/' . $package->path) }}" alt="{{ $package->package_name }}">
+                  <div class="product-hover">
+                      <ul>
+                          <li>
+                              <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#modal_{{$package->id}}">
+                                  <i class="icon-eye"></i>
+                              </button>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          @else
+              {{-- Display a default icon or link for non-image files --}}
+              <div class="product-img">
+                  <img class="img-fluid" src="{{ asset('assets/images/logo/logo1.png') }}" alt="File">
+                  <div class="product-hover">
+                      <ul>
+                          <li>
+                              <a href="{{ asset('storage/' . $package->path) }}" target="_blank" class="btn">
+                                  <i class="icon-download"></i> Download File
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          @endif
                
                <!-- Modal for each product -->
                <div class="modal fade" id="modal_{{$package->id}}" tabindex="-1" role="dialog" aria-labelledby="modalLabel{{$package->id}}" aria-hidden="true">
@@ -92,7 +112,7 @@
                            </div>
                            <div class="product-size">
                              <div class="table-responsive">
-                               <table class="table table-bordered">
+                               <table class="table table-bordered" style="background-color: #cfcece !important">
                                  <tr>
                                    <th>Normal Price</th>
                                    <td>RM {{$package->package_normal_price}}</td>

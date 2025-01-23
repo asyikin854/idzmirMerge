@@ -341,6 +341,15 @@ Route::prefix('admin')->group(function () {
     Route::get('/payment/get-child-schedules', [AdminDashboardController::class, 'getChildSchedulesBySessionId'])->name('getChildSchedulesBySessionId');
 
 });
+Route::prefix('admin/package')->group(function () {
+    Route::get('/allpackage', [AdminDashboardController::class, 'indexPackage'])->name('admin.package.index');
+    Route::get('/create', [AdminDashboardController::class, 'createPackage'])->name('admin.package.create');
+    Route::post('/', [AdminDashboardController::class, 'storePackage'])->name('admin.package.store');
+    Route::get('/{id}/edit', [AdminDashboardController::class, 'editPackage'])->name('admin.package.edit');
+    Route::put('/{id}', [AdminDashboardController::class, 'updatePackage'])->name('admin.package.update');
+    Route::delete('/{id}', [AdminDashboardController::class, 'destroyPackage'])->name('admin.package.destroy');
+});
+
 
 Route::put('/update-mother/{id}', [AdminDashboardController::class, 'updateMotherInfo'])->name('update.motherInfo');
 Route::put('/update-father/{id}', [AdminDashboardController::class, 'updateFatherInfo'])->name('update.fatherInfo');
