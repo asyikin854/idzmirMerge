@@ -584,7 +584,6 @@ public function submitPayment(Request $request)
             ->where('time', $slotTime)
             ->where('type', $type) // Check the type to avoid duplicating regular session
             ->exists();
-
         if (!$exists) {
             ChildSchedule::create([
                 'child_id' => $child_id,

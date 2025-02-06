@@ -16,7 +16,7 @@
             <div class="theme-form">
                <div class="wizard-4" id="wizard">
                   <ul>
-                     <li><a class="logo text-start ps-0" href="#"><img class="img-fluid for-light" src="{{asset('assets/images/logo/logoidzmir.png')}}" style="width: 150px" alt="looginpage"><span style="color: #5c5c5c; font-weight:500; font-size:25px">Agreements</span></a></li>
+                     <li><a class="logo text-start ps-0" href="#"><img class="img-fluid for-light" src="{{asset('assets/images/logo/logo1.png')}}" style="width: 150px" alt="looginpage"><span style="color: #5c5c5c; font-weight:500; font-size:25px">Agreements</span></a></li>
                      <li>
                         <a href="#step-1">
                            <h4>1</h4>

@@ -8,8 +8,8 @@
     <meta name="description" content="Idzmir Kids Hub Registration">
     <meta name="keywords" content="Idzmir Kids Hub">
     <meta name="author" content="pixelstrap">
-    <link rel="icon" href="{{asset('assets/images/logo/logoidzmir.png')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('assets/images/logo/logoidzmir.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{asset('assets/images/logo/logo1.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo/logo1.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
      <title>Registration - @yield('title')</title>
     <!-- Google font-->

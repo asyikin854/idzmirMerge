@@ -103,11 +103,17 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('You already selected this slot.');
             return;
         }
-
+        function formatDate(date) {
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
+            const day = String(d.getDate()).padStart(2, '0'); // Add leading zero if necessary
+            return `${year}-${month}-${day}`; // Format as YYYY-MM-DD
+        }
         // Add the slot to the selected slots array
         selectedSlots.push({
             id: slotData.id,
-            date: slotData.date,
+            date: formatDate(slotData.date),
             start_time: slotData.start_time,
             end_time: slotData.end_time,
             day: slotData.day // Store day as word form (Sunday, Monday, etc.)
@@ -115,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Sort the selectedSlots array by date
         selectedSlots.sort(function (a, b) {
-            var dateA = new Date(a.date), dateB = new Date(b.date);
+            var dateA = new Date(formatDate(a.date)), dateB = new Date(formatDate(b.date));
             return dateA - dateB; // Sort in ascending order
         });
 

@@ -73,7 +73,7 @@
                    <div class="modal-content">
                      <div class="modal-header">
                        <div class="product-box row">
-                         <div class="product-img col-lg-6"><img class="img-fluid" src="{{ asset('assets/images/ecommerce/01.jpg') }}" alt=""></div>
+                         <div class="product-img col-lg-6"><img class="img-fluid" src="{{ asset($package->path) }}" alt=""></div>
                          <div class="product-details col-lg-6 text-start">
                            <h4>{{$package->package_name}}</h4>
                            <div class="product-price">RM {{$package->package_wkday_price}}
