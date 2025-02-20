@@ -94,7 +94,7 @@
                 $id = 'child_nationality';
                 $class = 'form-select';
 
-                $html = "<select name='$name' id='$id' class='$class'>";
+                $html = "<select name='$name' id='$id' class='$class' required>";
                 $html .= "<option value=''>--- Select Nationality ---</option>";
                 foreach ($arr as $nationality) {
                     $isSelected = ($nationality == $selectedNationality) ? "selected='selected'" : "";

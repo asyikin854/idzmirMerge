@@ -38,18 +38,24 @@
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-user') }}"></use>
                             </svg><span>Customers</span></a>
                         <ul class="sidebar-submenu">
-                            <li><a href="{{ route('newCustomer-sales') }}">New Customers</a></li>
+                            <li><a href="{{ route('newCustomer-sales') }}">New Leads</a></li>
+                            <li><a href="{{ route('onBoarding-sales') }}">On Boarding Customers</a></li>
                             <li><a href="{{ route('registeredCustomer-sales') }}">Registered Customers</a></li>
                         </ul>
                     </li>
-                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav"
-                            href="{{ route('consultationSessions-sales') }}">
+                    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
+                        <label class="badge badge-light-primary">2</label><a class="sidebar-link sidebar-title"
+                            href="#">
                             <svg class="stroke-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
                             </svg>
                             <svg class="fill-icon">
                                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-calendar') }}"></use>
-                            </svg><span>Consultation Schedules</span></a>
+                            </svg><span>Schedules</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('consultationSessions-sales') }}">Consultation Schedules</a></li>
+                            <li><a href="{{ route('allSession-sales') }}">All Session</a></li>
+                        </ul>
                     </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
                             class="sidebar-link sidebar-title link-nav" href="{{ route('paymentStatus-sales') }}">

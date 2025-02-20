@@ -127,6 +127,7 @@ class CsController extends Controller
         }
         return view ('editProgram-cs', compact('packages', 'child_id', 'csName'));
     }
+    
     public function csEditProgScheduleView($child_id, $package_id)
     {
         $user = Auth::guard('cs')->user();

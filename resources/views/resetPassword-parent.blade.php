@@ -1,5 +1,5 @@
 @extends('layouts.authentication.master')
-@section('title', 'Login')
+@section('title', 'Reset Password')
 
 @section('css')
 @endsection
@@ -16,10 +16,11 @@
                <div><a class="logo" href="#"><img class="img-fluid for-light" style="width:150px" src="{{asset('assets/images/logo/logo1.png')}}" alt="looginpage">
                   <img class="img-fluid for-dark" src="{{asset('assets/images/logo/logo1.png')}}" style="width: 150px" alt="looginpage" ></a></div>
                <div class="login-main">
-                  <form action="{{route('login.post')}}" method="POST" class="theme-form">
+                  <form action="{{route('resetPassSubmit-parent')}}" method="POST" class="theme-form">
                      @csrf
-                     <h4>Sign in to account</h4>
-                     <p>Enter your Username & password to login</p>
+                     <input type="hidden" name="parent_id" value="{{ $parentAccount->id }}">
+                     <h4>Change Account Credentials</h4>
+                     <p>Please set up your new password. </p>
 
                      <!-- Error message display -->
                      @if ($errors->any())
@@ -42,35 +43,52 @@
 </div>
 @endif
 
-
                      <div class="form-group">
                         <label class="col-form-label">Username</label>
-                        <input class="form-control" type="text" name="username" value="{{ old('username') }}" required placeholder="Enter your username">
-                        <!-- Display validation error for username -->
+                        <input class="form-control" type="text" name="username" value="{{ old('username', $parentAccount->username ?? '') }}" required placeholder="Enter your username">
                         @error('username')
                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                      </div>
 
                      <div class="form-group">
-                        <label class="col-form-label">Password</label>
-                        <input class="form-control" type="password" id="password" name="password" required placeholder="*********">
-                        <!-- Display validation error for password -->
+                        <label class="col-form-label">Email</label>
+                        <input class="form-control" type="email" name="email" required placeholder="Enter your email">
+                        <!-- Display validation error for email -->
+                        @error('email')
+                           <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                     </div>
+
+                     <div class="form-group">
+                        <label class="col-form-label">New Password</label>
+                        <div class="input-group">
+                           <input class="form-control" type="password" id="password" name="password" required placeholder="*********">
+                           <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                              <i class="fa fa-eye"></i> <!-- Eye icon -->
+                           </button>
+                        </div>
                         @error('password')
                            <span class="text-danger">{{ $message }}</span>
                         @enderror
-                        <div class="show-hide">
+                     </div>
+
+                     <div class="form-group">
+                        <label class="col-form-label">Confirm Password</label>
+                        <input class="form-control" type="password" name="password_confirmation" required placeholder="*********">
+                     </div>
+                        {{-- <div class="show-hide">
                            <span class="show" id="togglePassword" style="cursor: pointer;"></span>
-                        </div>
+                        </div> --}}
                      </div>
 
                      <div class="form-group mb-0">
                         <br>
                         
-                        <button class="btn btn-primary" type="submit" style="background-color: #1a1a2e">Sign in</button>
+                        <button class="btn btn-primary" type="submit" style="background-color: #1a1a2e">Submit</button>
                      </div>
 
-                     <p class="mt-4 mb-0">For new customer please register<a class="ms-2" href="{{  route('register-parent') }}">Register</a></p>
+                     {{-- <p class="mt-4 mb-0">For new customer please register<a class="ms-2" href="{{  route('register-parent') }}">Register</a></p> --}}
                   </form>
                </div>
             </div>

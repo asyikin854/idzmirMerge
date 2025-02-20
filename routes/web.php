@@ -58,6 +58,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/inquiry-form', [LoginController::class, 'inquiryView'])->name('inquiry-form');
 Route::post('/inquiry-form', [LoginController::class, 'inquirySubmit'])->name('inquiry-submit');
 
+//new register account and payment
+Route::get('FApaymentDetails-parent/{child_id}', [ParentController::class, 'FApaymentDetails'])->name('FApaymentDetails-parent');
+Route::post('FApaymentSubmit-parent', [ParentController::class, 'FApaymentSubmit'])->name('FApaymentSubmit-parent');
+Route::get('resetPassword-parent/{child_id}', [ParentController::class, 'resetPassword'])->name('resetPassword-parent');
+Route::post('resetPassSubmit-parent', [ParentController::class, 'resetPassSubmit'])->name('resetPassSubmit-parent');
+
+
 
 Route::get('schedule-parent', [ParentController::class, 'parentScheduleView'])->name('schedule.view');
 Route::get('rescheduleView-parent/{id}', [ParentController::class, 'rescheduleView'])->name('reschedule.view');
@@ -229,6 +236,13 @@ Route::get('csInbox', [EmailController::class, 'csInbox'])->name('inbox-cs');
 Route::get('/dashboard-sales', [SalesController::class, 'salesDashboard'])->name('sales.dashboard');
 Route::get('/newCustomer-sales', [SalesController::class, 'newCustomer'])->name('newCustomer-sales');
 Route::get('/custDetails-sales/{id}', [SalesController::class, 'custDetails'])->name('custDetails-sales');
+Route::get('/onBoarding-sales', [SalesController::class, 'onBoarding'])->name('onBoarding-sales');
+Route::get('/regOnBoarding-sales/{id}', [SalesController::class, 'regOnBoarding'])->name('regOnBoarding-sales');
+Route::put('/submitRegOnBoard-sales/{id}', [SalesController::class, 'submitRegOnBoard'])->name('submitRegOnBoard-sales');
+Route::get('/slotBookingView-sales/{child_id}', [SalesController::class, 'slotBookingView'])->name('slotBooking-sales');
+Route::post('/slotBooking-sales/{child_id}', [SalesController::class, 'slotBooking'])->name('submitBooking-sales');
+Route::get('/bookingSummary-sales/{child_id}', [SalesController::class, 'bookingSummary'])->name('bookingSummary-sales');
+Route::post('/confirmBookSlot-sales/{child_id}', [SalesController::class, 'confirmBookSlot'])->name('confirmBookSlot-sales');
 Route::get('/registeredCustomer-sales', [SalesController::class, 'registeredCustomer'])->name('registeredCustomer-sales');
 Route::get('/custDetails2-sales/{id}', [SalesController::class, 'custDetails2'])->name('custDetails2-sales');
 Route::post('/addCustomer', [SalesController::class, 'addCustomer'])->name('addCustomer');
@@ -239,6 +253,7 @@ Route::post('/scheduleSlot/{child_id}/{package_id}', [SalesController::class, 's
 Route::get('/confirmSchedule-sales/{child_id}/{package_id}', [SalesController::class, 'confirmScheduleView'])->name('confirmSchedule-sales');
 Route::post('/confirmSchedule', [SalesController::class, 'confirmSchedule'])->name('confirmSchedule.submit');
 Route::get('/consultationSessions-sales', [SalesController::class, 'consultationSessions'])->name('consultationSessions-sales');
+Route::get('/allSession-sales', [SalesController::class, 'allSession'])->name('allSession-sales');
 Route::get('/paymentStatus-sales', [SalesController::class, 'paymentStatus'])->name('paymentStatus-sales');
 
 

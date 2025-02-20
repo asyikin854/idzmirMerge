@@ -4,12 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cuba admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, Cuba admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
-    <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
-    <title>Cuba - Premium Admin Template</title>
+    <link rel="icon" href="{{ asset('assets/images/logo/logo1.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo/logo1.png') }}" type="image/x-icon">
+    <title>IdzmirKidsHub</title>
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -49,8 +47,8 @@
                     <table style="width: 650px; margin: 0 auto; margin-bottom: 30px">
                       <tbody>
                         <tr>
-                          <td><img src="{{ asset('assets/images/other-images/logo-login.png') }}" alt=""></td>
-                          <td style="text-align: right; color:#999"><span>Some Description</span></td>
+                          <td><img src="{{ asset('assets/images/logo/logo1.png') }}" alt=""></td>
+                          <td style="text-align: right; color:#999"><span>Your account has been created and registered to Full Assessment</span></td>
                         </tr>
                       </tbody>
                     </table>
@@ -58,22 +56,13 @@
                       <tbody>
                         <tr>
                           <td style="padding: 30px"> 
-                            <p>Hi There,</p>
-                            <p>Sometimes you just want to send a simple HTML email with a simple design and clear call to action.</p>
-                            <div class="text-center"><a href="#" style="padding: 10px; background-color: #7366ff; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px">Call To Action </a></div>
-                            <p>This is a really simple email template. It's sole purpose is to get the recipient to click the button with no distractions.</p>
-                            <p style="margin-bottom: 0">Good luck! Hope it works.</p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <table style="width: 650px; margin: 0 auto; margin-top: 30px">
-                      <tbody>       
-                        <tr style="text-align: center">
-                          <td> 
-                            <p style="color: #999; margin-bottom: 0">333 Woodland Rd. Baldwinsville, NY 13027</p>
-                            <p style="color: #999; margin-bottom: 0">Don't Like These Emails?<a href="#" style="color: #7366ff">Unsubscribe</a></p>
-                            <p style="color: #999; margin-bottom: 0">Powered By Cuba Admin</p>
+                            <h4>Hi There,</h4>
+                            <p>Your parent account has been created. You can view your account and your schedule for Full Assessment.</p>
+                             <p>  Below are your login credentials:</p>
+                            <p><strong>Username:</strong> {{ $parent_username }}</p>
+                            <p><strong>Temporary Password:</strong> {{ $parent_password }}</p>
+                            <p style="margin-bottom: 0">You can login to your account by clicking below button</p>
+                            <div class="text-center"><a href="https://system.idzmirkidshub.com/authentication/login" style="padding: 10px; background-color: #7366ff; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px">LOGIN NOW </a></div>
                           </td>
                         </tr>
                       </tbody>

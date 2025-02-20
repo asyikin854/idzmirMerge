@@ -18,73 +18,211 @@ use App\Models\ParentAccount;
 use Chip\Model\ClientDetails;
 use Chip\Model\PurchaseDetails;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class ParentController extends Controller
 {
     public function parentDashboard()
+{
+    $user = Auth::guard('parent')->user();
+    if (!$user) {
+        return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+    }
+
+    $childInfo = $user->childInfo;
+
+    if (!$childInfo) {
+        return Redirect::route('login')->with('error', 'No related data found. Please log back into your account.');
+    }
+
+    // Check if parentAccount email is null
+    if (!$childInfo->parentAccount || !$childInfo->parentAccount->email) {
+        return Redirect::route('FApaymentDetails-parent', ['child_id' => $childInfo->id]);
+    }
+
+    // Proceed to display the dashboard if email is set
+    $fatherInfo = $childInfo->fatherInfo;
+    $motherInfo = $childInfo->motherInfo;
+    $parentPermission = $childInfo->parentPermission;
+    $parentAccount = $childInfo->parentAccount;
+    $currentDateTime = Carbon::now();
+
+    // Filter child schedules where the combined date and time haven't passed
+    $childSchedule = $childInfo->childSchedule->filter(function ($schedule) use ($currentDateTime) {
+        // Combine the date and time fields into a Carbon instance (for 'Y-m-d' and 'H:i' format)
+        $scheduleDateTime = Carbon::createFromFormat('Y-m-d H:i', $schedule->date . ' ' . $schedule->time);
+
+        // Filter schedules that are in the future and have status 'approved'
+        return $scheduleDateTime->greaterThanOrEqualTo($currentDateTime) && $schedule->status === 'approved';
+    })->all();
+
+    $package = $childInfo->package;
+    $pendingSession = ChildSchedule::where('child_id', $childInfo->id)
+        ->whereNull('attendance')->where('status', 'pending')
+        ->count();
+    $sessionLeft = ChildSchedule::where('child_id', $childInfo->id)
+        ->whereNull('attendance')->where('status', 'approved')
+        ->count();
+    $sessionQuantity = ChildSchedule::where('child_id', $childInfo->id)
+        ->count();
+    $sessionPresent = ChildSchedule::where('child_id', $childInfo->id)
+        ->where('attendance', 'present')
+        ->count();
+    $reportCount = $childInfo->childSchedule->filter(function ($schedule) {
+        return $schedule->sessionReport !== null;
+    })->count();
+
+    return view('/dashboard/dashboard-parent')
+        ->with('childInfo', $childInfo)
+        ->with('fatherInfo', $fatherInfo)
+        ->with('motherInfo', $motherInfo)
+        ->with('parentPermission', $parentPermission)
+        ->with('parentAccount', $parentAccount)
+        ->with('childSchedule', $childSchedule)
+        ->with('package', $package)
+        ->with('sessionLeft', $sessionLeft)
+        ->with('sessionQuantity', $sessionQuantity)
+        ->with('sessionPresent', $sessionPresent)
+        ->with('reportCount', $reportCount)
+        ->with('pendingSession', $pendingSession);
+}
+
+    //new account payment and login
+    public function FApaymentDetails(Request $request, $child_id)
     {
-        $user = Auth::guard('parent')->user();
-        if (!$user) {
-            return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+        if ($request->has('error')) {
+            session()->flash('error', $request->get('error'));
         }
-    
-        $childInfo = $user->childInfo;
-    
+        $childInfo = ChildInfo::find($child_id);
+        
         if (!$childInfo) {
             return Redirect::route('login')->with('error', 'No related data found. Please log back into your account.');
         }
 
-        if ($childInfo) {
-            $fatherInfo = $childInfo->fatherInfo;
-            $motherInfo = $childInfo->motherInfo;
-            $parentPermission = $childInfo->parentPermission;
-            $parentAccount = $childInfo->parentAccount;
-            $currentDateTime = Carbon::now();
-
-            // Filter child schedules where the combined date and time haven't passed
-            $childSchedule = $childInfo->childSchedule->filter(function ($schedule) use ($currentDateTime) {
-                // Combine the date and time fields into a Carbon instance (for 'Y-m-d' and 'H:i' format)
-                $scheduleDateTime = Carbon::createFromFormat('Y-m-d H:i', $schedule->date . ' ' . $schedule->time);
-            
-                // Filter schedules that are in the future and have status 'approved'
-                return $scheduleDateTime->greaterThanOrEqualTo($currentDateTime) && $schedule->status === 'approved';
-            })->all();
-            
-            $package = $childInfo->package;
-            $pendingSession = ChildSchedule::where('child_id', $childInfo->id)
-            ->whereNull('attendance')->where('status', 'pending')
-            ->count();
-            $sessionLeft = ChildSchedule::where('child_id', $childInfo->id)
-            ->whereNull('attendance')->where('status', 'approved')
-            ->count();
-            $sessionQuantity = ChildSchedule::where('child_id', $childInfo->id)
-            ->count();
-            $sessionPresent = ChildSchedule::where('child_id', $childInfo->id)
-            ->where('attendance', 'present')
-            ->count();
-            $reportCount = $childInfo->childSchedule->filter(function ($schedule) {
-                return $schedule->sessionReport !== null; 
-            })->count();
-            
-            return view('/dashboard/dashboard-parent')
-                ->with('childInfo', $childInfo)
-                ->with('fatherInfo', $fatherInfo)
-                ->with('motherInfo', $motherInfo)
-                ->with('parentPermission', $parentPermission)
-                ->with('parentAccount', $parentAccount)
-                ->with('childSchedule', $childSchedule)
-                ->with('package', $package)
-                ->with('sessionLeft', $sessionLeft)
-                ->with('sessionQuantity', $sessionQuantity)
-                ->with('sessionPresent', $sessionPresent)
-                ->with('reportCount', $reportCount)
-                ->with('pendingSession', $pendingSession);
+        $fatherInfo = $childInfo->fatherInfo;
+        $motherInfo = $childInfo->motherInfo;
+        $parentAccount = $childInfo->parentAccount;
+        $package = $childInfo->package;
+        $childSchedules = $childInfo->childSchedule;
+        $childSchedule = $childInfo->childSchedule()->latest('created_at')->first();
+        if ($childSchedule) {
+            $totalPrice = $childSchedule->price;
+            $sessionId = $childSchedule->session_id;
+        } else {
+            $totalPrice = null;
+            $sessionId = null;
         }
 
-         return Redirect::route('login')->with('error', 'The session has expired. Please return to the login page to log back into your account.');
+        return view('FApaymentDetails-parent', compact('childInfo', 'fatherInfo', 'motherInfo', 'parentAccount', 'package', 'childSchedules', 'totalPrice', 'sessionId'));
     }
+
+    public function FApaymentSubmit(Request $request)
+    {
+        $child_id = $request->input('child_id');
+        $parent_id = $request->input('parent_id');
+        $totalPrice = $request->input('totalPrice');
+        $session_id = $request->input('session_id');
+
+        $childInfo = ChildInfo::findOrFail($request->input('child_id'));
+        $motherInfo = $childInfo->motherInfo;
+        $fatherInfo = $childInfo->fatherInfo;
+        
+        $payment = Payment::create([
+            'child_id' => $child_id,
+            'parent_id' => $parent_id,
+            'total_amount' => $totalPrice,
+            'payment_method' => 'FPX',
+            'status' => 'pending', // Initial status is 'pending'
+            'session_id' => $session_id
+        ]);
+        $parentEmail = null;
+
+            // Check and assign email in priority order
+            if (!empty($motherInfo) && !empty($motherInfo->mother_email)) {
+                $parentEmail = $motherInfo->mother_email;
+            } elseif (!empty($fatherInfo) && !empty($fatherInfo->father_email)) {
+                $parentEmail = $fatherInfo->father_email;
+            }
+    
+        // Payment request data for Chip
+        $paymentData = [
+            'amount' => $totalPrice * 100, // Amount in cents
+            'currency' => 'MYR',
+            'email' => $parentEmail, // Replace with the parent's email
+            'description' => 'Payment for Child ID: ' . $child_id,
+            'payment_method' => 'FPX',
+        ];
+    
+        // Your existing code for creating purchase
+        $brandId = config('services.chip.brand_id');
+        $apiKey = config('services.chip.api_key');
+        $endpoint = config('services.chip.endpoint');
+        $chip = new ChipApi($brandId, $apiKey, $endpoint);
+    
+        $client = new ClientDetails();
+        $client->email = $parentEmail;
+        
+        $purchase = new Purchase();
+        $purchase->client = $client;
+        
+        $details = new PurchaseDetails();
+        $product = new Product();
+        $product->name = 'Payment for Child ID: ' . $child_id;
+        $product->price = $totalPrice * 100;
+        $details->products = [$product];
+        
+        $purchase->purchase = $details;
+        $purchase->brand_id = $brandId;
+        $purchase->success_redirect = route('resetPassword-parent', ['child_id' => $child_id, 'success' => 'Your payment was successful! Please reset your password before login to your account']);
+        $purchase->failure_redirect = route('FApaymentDetails-parent', [
+                                        'child_id' => $child_id,
+                                        'error' => 'Payment failed. Please try again.'
+                                    ]);
+        $purchase->success_callback = "https://system.idzmirkidshub.com/chip/callback";
+        $purchase->payment_method_whitelist = ['fpx'];
+        
+        $result = $chip->createPurchase($purchase);
+    
+            $exploded_url = explode('/', $result->checkout_url, -1);
+            $payment->payment_id = end($exploded_url);
+            $payment->save();
+            if ($result && $result->checkout_url) {
+                // Redirect user to checkout
+                header("Location: " . $result->checkout_url);
+                exit;
+            }
+    }
+    public function resetPassword(Request $request, $child_id)
+    {
+        if ($request->has('success')) {
+            session()->flash('success', $request->get('success'));
+        }
+        $childInfo = ChildInfo::findOrFail($child_id);
+        $parentAccount = $childInfo->parentAccount;
+
+        return view('resetPassword-parent', compact('childInfo', 'parentAccount'));
+    }
+    public function resetPassSubmit(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'username' => 'required|string|unique:parent_accounts,username',
+        'password' => 'required|string|min:8|confirmed',
+        'parent_id' => 'required'
+    ]);
+
+    $parentAccount = ParentAccount::findOrFail($request->input('parent_id'));
+
+    $parentAccount->email = $request->input('email');
+    $parentAccount->username = $request->input('username');
+    $parentAccount->password = Hash::make($request->input('password'));
+    $parentAccount->save();
+
+    return Redirect::route('login')->with('success', 'Your account has been updated successfully. Please login using your new credentials');
+}
+
     private function getRelatedData()
     {
         $user = Auth::guard('parent')->user();

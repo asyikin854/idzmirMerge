@@ -12,12 +12,12 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>New Customers</h3>
+    <h3>New Leads</h3>
 @endsection
 
 @section('breadcrumb-items')
     <li class="breadcrumb-item active">Customer</li>
-    <li class="breadcrumb-item active">New Customer</li>
+    <li class="breadcrumb-item active">New Leads</li>
 @endsection
 
 @section('content')

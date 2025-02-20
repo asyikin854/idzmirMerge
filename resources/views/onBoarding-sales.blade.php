@@ -10,12 +10,12 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Registered Customers</h3>
+    <h3>On Boarding Customers</h3>
 @endsection
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item active">Customer</li>
-    <li class="breadcrumb-item active">Registered Customer</li>
+    <li class="breadcrumb-item">Customer</li>
+    <li class="breadcrumb-item active">On Boarding</li>
 @endsection
 
 @section('content')
@@ -25,12 +25,6 @@
             <!-- Complex headers (rowspan and colspan) Starts-->
             <div class="col-sm-12">
                 <div class="card">
-                    @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                 @endif
                     <div class="card-header pb-0 card-no-border">
                         <h3>Customer list</h3>
                     </div>
@@ -46,6 +40,7 @@
                                         <th>Father Name</th>
                                         <th>Mother Name</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,6 +59,9 @@
                                                 <span class="badge rounded-pill badge-warning">Inactive</span>
                                             @endif
                                         </td>
+                                        <td><a href="{{route('regOnBoarding-sales', $childInfo->id)}}">
+                                            <button class="btn btn-info">-> FA</button>
+                                        </a></td>
                                     </tr>
                                   @empty
                                     <tr>

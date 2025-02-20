@@ -39,9 +39,9 @@
                             </svg><span>All Users</span></a>
                         <ul class="sidebar-submenu">
                             <li><a href="{{ route('admin.parents') }}">Lists Parent</a></li>
-                            <li><a href="{{ route('admin.cs.list') }}">Lists Customer Service</a></li>
+                            <li><a href="{{ route('admin.cs.list') }}">Lists Operation Manager</a></li>
                             <li><a href="{{ route('admin.therapist.list') }}">Lists Therapist</a></li>
-                            <li><a href="{{ route('admin.sales.list') }}">Lists Sales Lead</a></li>
+                            <li><a href="{{ route('admin.sales.list') }}">Lists Customer Service</a></li>
                         </ul>
                     </li>
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a

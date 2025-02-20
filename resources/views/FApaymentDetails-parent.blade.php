@@ -1,18 +1,12 @@
-@extends('layouts.simple.master-parent')
-@section('title', 'Invoice')
+@extends('layouts.authentication.master')
+@section('title', 'Payment Details')
 
 @section('css')
+
 @endsection
 
 @section('style')
-@endsection
 
-@section('breadcrumb-title')
-<h3>Billing</h3>
-@endsection
-
-@section('breadcrumb-items')
-<li class="breadcrumb-item">Billing</li>
 @endsection
 
 @section('content')
@@ -21,24 +15,35 @@
       <div class="col-sm-12">
          <div class="card">
             <div class="card-body">
+               @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
                <div class="invoice">
                   <div>
                      <div>
                         <div class="row">
                            <div class="col-sm-6">
                               <div class="media">
-                                 <div class="media-left"><img class="media-object img-60" src="{{asset('assets/images/logo/logoidzmir.png')}}" alt="" style="width: 100px"></div>
+                                 <div class="media-left"><img class="media-object img-60" src="{{asset('assets/images/logo/logo1.png')}}" alt="" style="width: 100px"></div>
                                  <div class="media-body m-l-20 text-right">
                                     <h4 class="media-heading">IdzmirKidsHub</h4>
-                                    <p>IdzmirKidsHub@gmail.com<br><span>014-414542342</span></p>
+                                    <p>system@idzmirkidshub.com<br><span>014-414542342</span></p>
                                  </div>
                               </div>
                               <!-- End Info-->
                            </div>
                            <div class="col-sm-6">
                               <div class="text-md-end text-xs-center">
-                                 <h3>Invoice #<span class="counter">2</span></h3>
-                                 <p>Issued: May<span> 27, 2015</span><br>                                                            Payment Due: June <span>27, 2015</span></p>
+                                 <h3>Booking ID #<span>{{ $sessionId }}</span></h3>
+                                 <p>Issued: {{ $parentAccount->created_at}}</p>
                               </div>
                               <!-- End Title-->
                            </div>
@@ -47,19 +52,34 @@
                      <hr>
                      <!-- End InvoiceTop-->
                      <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                            <div class="media">
-                              <div class="media-left"><img class="media-object rounded-circle img-60" src="{{asset('assets/images/user/1.jpg')}}" alt=""></div>
-                              <div class="media-body m-l-20">
-                                 <h4 class="media-heading">Muhaimin</h4>
-                                 <p>muhaimin@gmail.com<br><span>015-23432423</span></p>
+                              <div class="media-body m-l-40">
+                                 <p class="media-heading">Name: {{ $childInfo->child_name ?? 'N/A'}}</p>
+                                 <p class="media-heading">IC/Passport No: {{ $childInfo->child_ic ?? ''}} {{$childInfo->child_passport ?? ''}} </p>
                               </div>
+                              @if($fatherInfo)
+                              <div class="media-body m-l-20">
+                                 <h4 class="media-heading">{{ $fatherInfo->father_name ?? 'N/A'}}</h4>
+                                 <p>{{ $fatherInfo->father_email ?? 'N/A'}}<br><span>{{ $fatherInfo->father_phone ?? 'N/A'}}</span></p>
+                              </div>
+                              @else
+                              <p>There are no father Information</p>
+                              @endif
+                              @if($motherInfo)
+                              <div class="media-body m-l-20">
+                                 <h4 class="media-heading">{{ $motherInfo->mother_name ?? 'N/A'}}</h4>
+                                 <p>{{ $motherInfo->mother_email ?? 'N/A'}}<br><span>{{ $motherInfo->mother_phone ?? 'N/A'}}</span></p>
+                              </div>
+                              @else
+                              <p>There are no mother information</p>
+                              @endif
                            </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                            <div class="text-md-end" id="project">
                               <h6>Program</h6>
-                              <p>Full-Assesment</p>
+                              <p>{{ $package->package_name }}</p>
                            </div>
                         </div>
                      </div>
@@ -78,95 +98,63 @@
                                     <td class="Rate">
                                        <h6 class="p-2 mb-0">Date</h6>
                                     </td>
+                                    <td>
+                                       <h6 class="p-2 mb-0">Type</h6>
+                                    </td>
                                  </tr>
+                                 @foreach ($childSchedules as $slot)
                                  <tr>
                                     <td>
-                                       <label>Session 1</label>
+                                       <label>Session {{ $slot->session }}</label>
                                     </td>
                                     <td>
-                                       <p class="itemtext">15.00</p>
+                                       <p class="itemtext">{{ $slot->time }}</p>
                                     </td>
                                     <td>
-                                       <p class="itemtext">2/2/2023</p>
+                                       <p class="itemtext">{{ $slot->date }}</p>
+                                    </td>
+                                    <td>
+                                       @if ($slot->type === 'screening')
+                                       <p class="itemtext">Consultation</p>
+                                       @else
+                                       <p class="itemtext">Assessment</p>
+                                       @endif
                                     </td>
                                  </tr>
-                                 <tr>
-                                    <td>
-                                       <label>Session 2</label>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">10.00</p>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">4/2/2023</p>
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                       <label>Session 3</label>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">13.00</p>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">13/2/2023</p>
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                       <label>Session 4</label>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">09.00</p>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">28/2/2024</p>
-                                    </td>
-                                 </tr>
-
-                                 <tr>
-                                    <td colspan="3" class="item">
-                                       <h6 class="p-2 mb-0">Additional Session</h6>
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                       <label>none</label>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">-</p>
-                                    </td>
-                                    <td>
-                                       <p class="itemtext">-</p>
-                                    </td>
-                                 </tr>
+                                 @endforeach
+                                 
                                  <tr>
                                     <td></td>
                                     <td class="Rate">
                                        <h6 class="mb-0 p-2">Total Session</h6>
                                     </td>
                                     <td class="payment">
-                                       <h6 class="mb-0 p-2">4</h6>
+                                       <h6 class="mb-0 p-2">{{ $package->session_quantity }} + Consultation Slot</h6>
                                     </td>
                                  </tr>
                                  <tr>
                                     <td></td>
                                     <td></td>
-                                    <td class="payment"><h6 class="mb-0 p-2">RM 600</h6></td>
+                                    <td class="payment"><h6 class="mb-0 p-2">RM {{ $totalPrice }}</h6></td>
                                  </tr>
                               </tbody>
                            </table>
                         </div>
                         <!-- End Table-->
                         <div class="row">
-                           <div class="col-md-8">
+                           {{-- <div class="col-md-8">
                               <div>
                                  <p class="legal"><strong>Thank you for trusting us!</strong>  Payment is expected within 7 days; please process this invoice within that time to continue our program</p>
                               </div>
-                           </div>
+                           </div> --}}
                            <div class="col-md-4">
-                              <form class="text-end">
-                                 <button class="btn btn-success">Proceed to Payment</button>
+                              <form class="text-end" action="{{ route('FApaymentSubmit-parent')}}" method="POST">
+                                 @csrf
+                                 <input type="hidden" name="child_id" value="{{$childInfo->id}}">
+                                 <input type="hidden" name="parent_id" value="{{$parentAccount->id}}">
+                                 <input type="hidden" name="totalPrice" value="{{$totalPrice}}">
+                                 <input type="hidden" name="session_id" value="{{$sessionId}}">
+                                 <button class="btn btn-success">Submit Payment</button>
                               </form>
                            </div>
                         </div>
@@ -174,7 +162,7 @@
                      <!-- End InvoiceBot-->
                   </div>
                   <div class="col-sm-12 text-center mt-3">
-                     <button class="btn btn btn-primary me-2" type="button" onclick="myFunction()">Print</button>
+                     <button class="btn btn btn-primary me-2" type="button" onclick="window.print()">Print</button>
                      <button class="btn btn-secondary" type="button">Cancel</button>
                   </div>
                   <!-- End Invoice-->

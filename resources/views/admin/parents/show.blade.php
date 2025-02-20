@@ -55,6 +55,8 @@
                                 </tr>
                             </table>
                           </div>
+                          @include('admin.parents.editParentModal') 
+
                           @else
                             <h5>There is no parent account for this student</h5>
                           @endif
@@ -102,6 +104,8 @@
                                 </tr>
                             </table>
                           </div>
+                          @include('admin.parents.editMotherModal') 
+
                           @else
                             <h5>There are no mother Information</h5>
                           @endif
@@ -148,7 +152,9 @@
                                         data-target="#editFatherModal">Edit</button></th>
                                 </tr>
                             </table>
-                          </div>                      
+                          </div>
+                          @include('admin.parents.editFatherModal')    
+                   
                           @else
                                 <p>There are no father Information</p>
                           @endif
@@ -190,7 +196,7 @@
                                     <th>Address</th>
                                     <td>{{ $childInfo->child_address }} <br> {{ $childInfo->child_posscode }} <br> {{ $childInfo->child_city }}, {{ $childInfo->child_country }}</td>
                                     <th>Program</th>
-                                    <td>{{ $childInfo->package->package_name }} | {{ $childInfo->package->package_step }} </td>
+                                    <td>{{ $childInfo->package->package_name ?? 'N/A'}} | {{ $childInfo->package->package_step ?? 'N/A' }} </td>
                                 </tr>
                                 <tr>
                                     <th colspan="4" class="text-center"><button class="btn btn-warning" 
@@ -305,11 +311,8 @@
             </div>
           </div>
     </div></div>
-
-    @include('admin.parents.editMotherModal') 
-    @include('admin.parents.editFatherModal') 
     @include('admin.parents.editChildModal') 
-    @include('admin.parents.editParentModal') 
+
 @endsection
 
 @section('script')

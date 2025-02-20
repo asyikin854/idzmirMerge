@@ -1,5 +1,5 @@
 @extends('layouts.simple.master-admin')
-@section('title', 'Customer Service List')
+@section('title', 'Operation Manager List')
 
 @section('css')
     
@@ -10,11 +10,11 @@
 @endsection
 
 @section('breadcrumb-title')
-    <h3>Customer Service</h3>
+    <h3>Operation Manager</h3>
 @endsection
 
 @section('breadcrumb-items')
-    <li class="breadcrumb-item active">Lists Customer Service</li>
+    <li class="breadcrumb-item active">Lists Operation Manager</li>
 @endsection
 
 @section('content')
@@ -38,10 +38,10 @@
                     </div>
                  @endif
                     <div class="card-header pb-0 card-no-border">
-                        <h3>Customer Service List</h3>
+                        <h3>Operation Manager List</h3>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Customer Service +</button><p></p>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Operation Manager +</button><p></p>
 
                         <div class="table-responsive">
                             <table class="display" id="basic-6">
@@ -79,7 +79,7 @@
                                     </tr>
                                   @empty
                                     <tr>
-                                      <td colspan="6">There are no Customer Service</td>
+                                      <td colspan="6">There are no Operation Manager</td>
                                     </tr>
                                   @endforelse
                                 </tbody>
@@ -97,7 +97,7 @@
         <div class="modal-dialog modal-lg" role="document">
            <div class="modal-content">
               <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel">Add New Customer Service</h5>
+                 <h5 class="modal-title" id="exampleModalLabel">Add New Operation Manager</h5>
                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -139,7 +139,7 @@
         <div class="modal-dialog modal-lg" role="document">
            <div class="modal-content">
               <div class="modal-header">
-                 <h5 class="modal-title" id="editCsModalLabel">Edit Customer Service Details</h5>
+                 <h5 class="modal-title" id="editCsModalLabel">Edit Operation Manager Details</h5>
                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
