@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         events: calendarSlots, // Load the slot data from the backend (calendarSlots is passed in Blade)
         eventClick: function (info) {
             var selectedSlotId = info.event.id;
-            // var selectedSlotDate = dayjs(info.event.start).format('YYYY-MM-DD'); // Format date as YYYY-MM-DD
             var selectedSlotDate = new Date(info.event.start); // Get the Date object for the selected slot
             var selectedSlotStartTime = info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format start time
             var selectedSlotEndTime = info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format end time
@@ -213,19 +212,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ** Helper function to get the week number of the date **
-    // Helper function to get the week number of the date, starting from Tuesday
-function getWeekNumber(date) {
-    var firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    var pastDaysOfYear = (date - firstDayOfYear) / 86400000; // Days passed in the year
-    var dayOfWeek = firstDayOfYear.getDay(); // Get the first day of the year's weekday
-
-    // Adjust the start of the week to Tuesday (day index 2)
-    var shiftDays = (dayOfWeek <= 2) ? dayOfWeek - 2 : dayOfWeek - 9;
-    firstDayOfYear.setDate(firstDayOfYear.getDate() + shiftDays);
-
-    var weekNumber = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-
-    return weekNumber;
-}
-
+    function getWeekNumber(date) {
+        // Clone the date to avoid modifying the original date
+        const clonedDate = new Date(date);
+    
+        // Set the start of the week to Sunday
+        const startOfWeek = new Date(clonedDate);
+        startOfWeek.setDate(clonedDate.getDate() - clonedDate.getDay()); // Move to the previous Sunday
+    
+        // Calculate the week number
+        const startOfYear = new Date(clonedDate.getFullYear(), 0, 1); // First day of the year
+        const pastDaysOfYear = (startOfWeek - startOfYear) / 86400000; // Days passed in the year
+        const weekNumber = Math.ceil((pastDaysOfYear + 1) / 7); // Calculate week number
+    
+        return weekNumber;
+    }
 });

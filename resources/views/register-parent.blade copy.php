@@ -45,7 +45,7 @@
                            <small>Details required for registration</small>
                         </a>
                      </li>
-                     {{-- <li>
+                     <li>
                         <a href="#step-4">
                            <h4>4</h4>
                            <h5>Parent's Permission</h5>
@@ -58,7 +58,7 @@
                            <h5>Create Account</h5>
                            <small>Parent's account for login</small>
                         </a>
-                     </li> --}}
+                     </li>
                      <li>                          </li>
                   </ul>
                   
@@ -246,28 +246,28 @@
                               <input class="form-control" maxlength="12" name="father_ic" id="father_ic" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_race">Race </label>
-                              <input class="form-control" name="father_race" id="father_race" type="text">
+                              <label for="father_race">Race *</label>
+                              <input class="form-control" name="father_race" id="father_race" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_occ">Occupation </label>
-                              <input class="form-control" name="father_occ" id="father_occ" type="text">
+                              <label for="father_occ">Occupation *</label>
+                              <input class="form-control" name="father_occ" id="father_occ" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_email">Email *</label>
                               <input class="form-control" name="father_email" id="father_email" type="email" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_address">Address </label>
-                              <input class="form-control" name="father_address" id="father_address" type="text">
+                              <label for="father_address">Address *</label>
+                              <input class="form-control" name="father_address" id="father_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_posscode">Postcode </label>
-                              <input class="form-control" name="father_posscode" id="father_posscode" type="number" maxlength="5">
+                              <label for="father_posscode">Postcode *</label>
+                              <input class="form-control" name="father_posscode" id="father_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="father_city">City </label>
-                              <input class="form-control" name="father_city" id="father_city" type="text">
+                              <label for="father_city">City *</label>
+                              <input class="form-control" name="father_city" id="father_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="father_work_address">Work Address </label>
@@ -300,28 +300,28 @@
                               <input class="form-control" maxlength="12" name="mother_ic" id="mother_ic" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_race">Race </label>
-                              <input class="form-control" name="mother_race" id="mother_race" type="text">
+                              <label for="mother_race">Race *</label>
+                              <input class="form-control" name="mother_race" id="mother_race" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_occ">Occupation </label>
-                              <input class="form-control" name="mother_occ" id="mother_occ" type="text">
+                              <label for="mother_occ">Occupation *</label>
+                              <input class="form-control" name="mother_occ" id="mother_occ" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_email">Email *</label>
                               <input class="form-control" name="mother_email" id="mother_email" type="email" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_address">Address </label>
-                              <input class="form-control" name="mother_address" id="mother_address" type="text">
+                              <label for="mother_address">Address *</label>
+                              <input class="form-control" name="mother_address" id="mother_address" type="text" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_posscode">Postcode </label>
-                              <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" maxlength="5">
+                              <label for="mother_posscode">Postcode *</label>
+                              <input class="form-control" name="mother_posscode" id="mother_posscode" type="number" maxlength="5" required>
                            </div>
                            <div class="form-group mb-3">
-                              <label for="mother_city">City </label>
-                              <input class="form-control" name="mother_city" id="mother_city" type="text">
+                              <label for="mother_city">City *</label>
+                              <input class="form-control" name="mother_city" id="mother_city" type="text" required>
                            </div>
                            <div class="form-group mb-3">
                               <label for="mother_work_address">Work Address </label>
@@ -344,13 +344,10 @@
                                  <option value="more than RM 10,000">more than RM 10,000</option>
                              </select>
                            </div>
-                           <div class="form-group mb-3">
-                              <button type="submit" class="btn btn-primary" id="submitBtn">Finish</button>
-                           </div>
                         </div>
                      </div>
                   </div>
-                  {{-- <div id="step-4">
+                  <div id="step-4">
                      <div class="wizard-title" style="width: 90%">
                         <h2>Parent's Permission</h2>
                         <h5 class="text-muted mb-4">Permission to use photographs and video of your child (Please read and answer the statement below)</h5>
@@ -412,13 +409,15 @@
                                  <input class="form-control"  id="confirm_password" type="password" placeholder="Enter again" required>
                                  <br><span id="passwordMatchMessage" style="color: red;"></span>
                               </div>
-
+                              <div class="form-group mb-3">
+                                 <button type="submit" class="btn btn-primary" id="submitBtn">Finish</button>
+                              </div>
                            </div>
 
 
                 
                         </div>
-                     </div> --}}
+                     </div>
                  
                   </div>
                </form>
@@ -513,7 +512,12 @@
          document.getElementById('mother_name'),
          document.getElementById('mother_ic'),
          document.getElementById('mother_phone'),
+         document.getElementById('mother_race'),
+         document.getElementById('mother_occ'),
          document.getElementById('mother_email'),
+         document.getElementById('mother_address'),
+         document.getElementById('mother_posscode'),
+         document.getElementById('mother_city'),
      ];
      toggleFields('mother_checkbox', 'mother_input', specificMotherFields);
  
@@ -521,7 +525,12 @@
          document.getElementById('father_name'),
          document.getElementById('father_ic'),
          document.getElementById('father_phone'),
+         document.getElementById('father_race'),
+         document.getElementById('father_occ'),
          document.getElementById('father_email'),
+         document.getElementById('father_address'),
+         document.getElementById('father_posscode'),
+         document.getElementById('father_city'),
      ];
      toggleFields('father_checkbox', 'father_input', specificFatherFields);
  

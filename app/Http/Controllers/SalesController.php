@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Slot;
@@ -88,7 +89,7 @@ class SalesController extends Controller
         }
         $salesInfo = $user;
         $salesName = $user->name;
-        $Customer = NewCustomer::findOrFail($id);
+        $customer = NewCustomer::findOrFail($id);
         $packages = Package::where('type', 'screening')->get();
 
         return view ('regNewCust-sales', compact('customer', 'salesName', 'packages'));
@@ -203,8 +204,7 @@ class SalesController extends Controller
 
         return redirect()->route('scheduleSlot-sales', ['child_id' => $child_id, 'package_id' => $package_id]);
     }
-
-    public function scheduleSlotView($child_id, $package_id)
+    public function bookConsultView($child_id, $package_id)
     {
         $user = Auth::guard('sales')->user();
         if (!$user) {
@@ -212,90 +212,134 @@ class SalesController extends Controller
         }
         $salesInfo = $user;
         $salesName = $user->name;
-        // Find child and package information
         $childInfo = ChildInfo::find($child_id);
         $package = Package::find($package_id);
     
-        if (!$childInfo || !$package) {
-            abort(404);
-        }
+        $schedules = ChildSchedule::where('type', 'screening')->get();
     
-        // Get the package type (either 'individual' or 'grouping')
-        $packageType = $package->type;
-        $isWeekly = $package->is_weekly === 'yes'; // Check if the package is weekly
+        $events = $schedules->map(function ($schedule) {
+            $formattedTime = ($schedule->time);
+            $sessionDateTime = ($schedule->date . ' ' . $schedule->time);
+            $currentDateTime = new \DateTime();
     
-        // Fetch all ChildSchedule sessions for the current child where the package type matches
-        $childSchedules = ChildSchedule::where('type', $packageType)->get();
+            $color = '#007bff'; // Default color (blue)
+                if ($schedule->status === 'approved') {
+                    $color = '#28a745'; // Green for present
+                } elseif ($schedule->status === 'pending') {
+                    $color = '#dc3545'; // Red for absent
+                }
     
-        $slotsModel = $packageType === 'screening' ? new Slot() : new SlotRTS();
-    
-        // Fetch slots starting from one day ahead until the end of the current month
-        $slots = $slotsModel::where('date', '>=', now()->addDay())
-            ->where('date', '<=', now()->endOfMonth())
-            ->get();
-    
-        // Check if the package is weekly
-        if ($isWeekly) {
-            // Calculate how many slots are needed per week
-            $weeksInMonth = 4;
-            $slotsPerWeek = $package->session_quantity / $weeksInMonth;
-    
-            // Filter slots to only show slots that are grouped by week
-            $slots = $slots->groupBy(function ($slot) {
-                return Carbon::parse($slot->date)->format('W'); // Group by week number
-            });
-    
-            // Remove weeks where the current week has passed
-            $currentWeek = now()->format('W');
-            $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
-                return $weekNumber >= $currentWeek;
-            });
-    
-            // Flatten the collection for FullCalendar
-            $slots = $slots->flatten();
-        } else {
-            // Check if the number of available slots is less than the package's session quantity
-            $availableSlots = $slots->count();
-            $requiredSlots = $package->session_quantity;
-    
-            if ($availableSlots < $requiredSlots) {
-                // If there are not enough slots, fetch slots for the next month
-                $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
-                    ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
-                    ->get();
-            }
-        }
-    
-        // Map the slots for FullCalendar
-        $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
-            $bookedSessions = $childSchedules->where('date', $slot->date)
-                ->where('time', $slot->start_time)
-                ->count();
-            $isFull = $bookedSessions >= $package->quota;
     
             return [
-                'id' => $slot->id,
-                'title' => $isFull ? 'Slot is Full' : 'Available Slot',
-                'start' => $slot->date . 'T' . $slot->start_time,
-                'end' => $slot->date . 'T' . $slot->end_time,
-                'quota' => $package->quota - $bookedSessions,
-                'isFull' => $isFull
+                'title' => "\nSession: " . $schedule->childInfo->package->package_name . "\n" . $schedule->childInfo->child_name,
+                'start' => $schedule->date . 'T' . $formattedTime,
+                'details' => "Package: " . $schedule->childInfo->package->package_name . "<br>Session: " . $schedule->session . "<br>Date & Time: " . $schedule->date . " / " . $schedule->time .
+                            "<br>Student: " . $schedule->childInfo->child_name . "<br>Therapist: " . $schedule->therapist . "<br>Status: " . $schedule->status,
+                'attendance' => $schedule->attendance, // Add attendance info
+                'color' => $color,
             ];
         });
     
-        return view('scheduleSlot-sales', [
-            'package' => $package,
-            'childInfo' => $childInfo,
-            'slots' => $slots,
-            'sessionQuantity' => $package->session_quantity,
-            'child_id' => $child_id,
-            'isWeekly' => $package->weekly === 'yes',
-            'salesName' => $salesName
-        ]);
+        return view('bookConsult-sales', compact('events', 'salesName', 'child_id', 'childInfo', 'package'));
     }
+
+    // public function scheduleSlotView($child_id, $package_id)
+    // {
+    //     $user = Auth::guard('sales')->user();
+    //     if (!$user) {
+    //         return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
+    //     }
+    //     $salesInfo = $user;
+    //     $salesName = $user->name;
+    //     // Find child and package information
+    //     $childInfo = ChildInfo::find($child_id);
+    //     $package = Package::find($package_id);
+    
+    //     if (!$childInfo || !$package) {
+    //         abort(404);
+    //     }
+    
+    //     // Get the package type (either 'individual' or 'grouping')
+    //     $packageType = $package->type;
+    //     $isWeekly = $package->is_weekly === 'yes'; // Check if the package is weekly
+    
+    //     // Fetch all ChildSchedule sessions for the current child where the package type matches
+    //     $childSchedules = ChildSchedule::where('type', $packageType)->get();
+    
+    //     $slotsModel = $packageType === 'screening' ? new Slot() : new SlotRTS();
+    
+    //     // Fetch slots starting from one day ahead until the end of the current month
+    //     $slots = $slotsModel::where('date', '>=', now()->addDay())
+    //         ->where('date', '<=', now()->endOfMonth())
+    //         ->get();
+    
+    //     // Check if the package is weekly
+    //     if ($isWeekly) {
+    //         // Calculate how many slots are needed per week
+    //         $weeksInMonth = 4;
+    //         $slotsPerWeek = $package->session_quantity / $weeksInMonth;
+    
+    //         // Filter slots to only show slots that are grouped by week
+    //         $slots = $slots->groupBy(function ($slot) {
+    //             return Carbon::parse($slot->date)->format('W'); // Group by week number
+    //         });
+    
+    //         // Remove weeks where the current week has passed
+    //         $currentWeek = now()->format('W');
+    //         $slots = $slots->filter(function ($slotGroup, $weekNumber) use ($currentWeek) {
+    //             return $weekNumber >= $currentWeek;
+    //         });
+    
+    //         // Flatten the collection for FullCalendar
+    //         $slots = $slots->flatten();
+    //     } else {
+    //         // Check if the number of available slots is less than the package's session quantity
+    //         $availableSlots = $slots->count();
+    //         $requiredSlots = $package->session_quantity;
+    
+    //         if ($availableSlots < $requiredSlots) {
+    //             // If there are not enough slots, fetch slots for the next month
+    //             $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
+    //                 ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
+    //                 ->get();
+    //         }
+    //     }
+    
+    //     // Map the slots for FullCalendar
+    //     $slots = $slots->map(function ($slot) use ($childSchedules, $package) {
+    //         $bookedSessions = $childSchedules->where('date', $slot->date)
+    //             ->where('time', $slot->start_time)
+    //             ->count();
+    //         $isFull = $bookedSessions >= $package->quota;
+    
+    //         return [
+    //             'id' => $slot->id,
+    //             'title' => $isFull ? 'Slot is Full' : 'Available Slot',
+    //             'start' => $slot->date . 'T' . $slot->start_time,
+    //             'end' => $slot->date . 'T' . $slot->end_time,
+    //             'quota' => $package->quota - $bookedSessions,
+    //             'isFull' => $isFull
+    //         ];
+    //     });
+    
+    //     return view('scheduleSlot-sales', [
+    //         'package' => $package,
+    //         'childInfo' => $childInfo,
+    //         'slots' => $slots,
+    //         'sessionQuantity' => $package->session_quantity,
+    //         'child_id' => $child_id,
+    //         'isWeekly' => $package->weekly === 'yes',
+    //         'salesName' => $salesName
+    //     ]);
+    // }
 
     public function scheduleSlot(Request $request, $child_id, $package_id)
     {
+        $validatedData = $request->validate([
+            'consult_date' => "required|date",
+            'consult_day' => "required|string",
+            'consult_time' => "required|string",
+        ]);
         $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
         $package = Package::find($package_id);
         $type = $package->type;
@@ -352,6 +396,11 @@ class SalesController extends Controller
         if ($hasWeekendSlot) {
             $basePrice = $package->package_wkend_price; // Set to weekend price
         }
+        $consultDetails = [
+            'consult_date' => $validatedData['consult_date'],
+            'consult_day' => $validatedData['consult_day'],
+            'consult_time' => $validatedData['consult_time'],
+        ];
 
     session([
         'type' => $type,
@@ -359,12 +408,7 @@ class SalesController extends Controller
         'package' => $package,
         'fatherInfo' => $childInfo->fatherInfo,
         'motherInfo' => $childInfo->motherInfo,
-        'parentAccount' => $childInfo->parentAccount,
         'selectedSlots' => $selectedSlots,
-        'basePrice' => $basePrice,
-        'additionalSessions' => $additionalSessions,
-        'additionalPrice' => $additionalPrice,
-        'totalPrice' => $basePrice + $additionalPrice,
         'child_id' => $child_id,
         'sessionId' => $sessionId,
         'sessionCounter' => $sessionCounter
@@ -747,7 +791,6 @@ public function slotBookingView($child_id)
         if ($availableSlots < $requiredSlots) {
             // If there are not enough slots, fetch slots for the next month
             $slots = $slotsModel::where('date', '>=', now()->startOfMonth()->addMonth())
-                ->where('date', '<=', now()->startOfMonth()->addMonth()->endOfMonth())
                 ->get();
         }
     }
@@ -968,10 +1011,15 @@ public function confirmBookSlot(Request $request, $child_id)
             $recipientEmails[] = $childInfo->motherInfo->mother_email;
         }
 
-        if (!empty($recipientEmails)) {
-            Mail::to($recipientEmails)->send(new ParentCredentials($parent_username, $parent_password));
+        try {
+            if (!empty($recipientEmails)) {
+                Mail::to($recipientEmails)->send(new ParentCredentials($parent_username, $parent_password));
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send email: ' . $e->getMessage());
+            // Optionally, you can log the recipient emails as well
+            \Log::error('Recipient emails: ', $recipientEmails);
         }
-
         // Insert selected slots into the ChildSchedule table
         foreach ($selectedSlots as $slotData) {
             $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d');

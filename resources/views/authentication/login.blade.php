@@ -70,7 +70,7 @@
                         <button class="btn btn-primary" type="submit" style="background-color: #1a1a2e">Sign in</button>
                      </div>
 
-                     <p class="mt-4 mb-0">For new customer please register<a class="ms-2" href="{{  route('register-parent') }}">Register</a></p>
+                     {{-- <p class="mt-4 mb-0">For new customer please register<a class="ms-2" href="{{  route('register-parent') }}">Register</a></p> --}}
                   </form>
                </div>
             </div>

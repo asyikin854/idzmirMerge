@@ -59,10 +59,10 @@
                             <h4>Hi There,</h4>
                             <p>Your parent account has been created. You can view your account and your schedule for Full Assessment.</p>
                              <p>  Below are your login credentials:</p>
-                            <p><strong>Username:</strong> {{ $parent_username }}</p>
-                            <p><strong>Temporary Password:</strong> {{ $parent_password }}</p>
+                            <p><strong>Username:</strong> {{ $username }}</p>
+                            <p><strong>Temporary Password:</strong> {{ $password }}</p>
                             <p style="margin-bottom: 0">You can login to your account by clicking below button</p>
-                            <div class="text-center"><a href="https://system.idzmirkidshub.com/authentication/login" style="padding: 10px; background-color: #7366ff; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px">LOGIN NOW </a></div>
+                            <div class="text-center"><a href="{{route('login')}}" style="padding: 10px; background-color: #7366ff; color: #fff; display: inline-block; border-radius: 4px; margin-bottom: 18px">LOGIN NOW </a></div>
                           </td>
                         </tr>
                       </tbody>

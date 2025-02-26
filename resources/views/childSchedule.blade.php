@@ -105,12 +105,12 @@
             </div>
 
             <!-- Add More Sessions Button -->
-            @if ($package->consultation != 'Yes')
+            {{-- @if ($package->consultation != 'Yes')
                     <div class="mt-3">
                         <label for="additionalSessionsInput">Additional Sessions (RM 100/Sessions):</label>
                         <input type="number" id="additionalSessionsInput" value="0" min="0" class="form-control" style="width: 100px;" />
                     </div>
-                @endif
+                @endif --}}
 
             <!-- Hidden form inputs -->
             <form action="{{ route('childSchedule.submit', ['child_id' => $child_id, 'package_id' => $package->id]) }}" method="POST" onsubmit="return confirmSubmit()">
@@ -119,6 +119,25 @@
                 <input type="hidden" name="totalPrice" id="totalPrice" />
                 <input type="hidden" name="basePrice" id="basePrice">
                 <input type="hidden" name="additional_sessions" id="additionalSessions" value="0" />
+                <br><hr><br>
+                @if ($package->consultation === 'Yes')
+                <h5>Consultation Appointment</h5>
+                <div class="table-responsive">
+                    <table class="table table-border">
+                        <tr>
+                            <th>Slot</th>
+                            <th>Date</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                        </tr><tr>
+                            <td>Consultation Appointment</td>
+                            <td><input type="date" name="consult_date" id="consultationDate" class="form-control" required></td>
+                            <td><input type="text" name="consult_day" id="day" class="form-control" readonly></td>
+                            <td><input type="time" name="consult_time" id="time" class="form-control" required></td>
+                        </tr>
+                    </table>
+                </div>
+                @endif
                 <button type="submit" class="btn btn-primary mt-3">Confirm</button>
             </form>
         </div>

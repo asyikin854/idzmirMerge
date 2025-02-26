@@ -70,42 +70,42 @@
                                         cols="30" rows="9" class="form-control">{{$report->remark1}}</textarea></td>
                                 </tr><tr>
                                     <td data-label="Item">Enter : by his/ her self</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_1" value="1" {{ $report->ques1_1 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_1" value="0" {{ !$report->ques1_1 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_1" value="1" {{ $report->ques1_1 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_1" value="0" {{ $report->ques1_1 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">With prompting</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_2" value="1" {{ $report->ques1_2 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_2" value="0" {{ !$report->ques1_2 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_2" value="1" {{ $report->ques1_2 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_2" value="0" {{ $report->ques1_2 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Difficulties separate with parents</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_3" value="1" {{ $report->ques1_3 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_3" value="0" {{ !$report->ques1_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_3" value="1" {{ $report->ques1_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_3" value="0" {{ $report->ques1_3 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">With crying and refuse</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_4" value="1" {{ $report->ques1_4 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_4" value="0" {{ !$report->ques1_4 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_4" value="1" {{ $report->ques1_4 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_4" value="0" {{ $report->ques1_4 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Greeting with prompt</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_5" value="1"  {{ $report->ques1_5 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_5" value="0"  {{ !$report->ques1_5 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_5" value="1" {{ $report->ques1_5 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_5" value="0" {{ $report->ques1_5 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Greeting by him/herself</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_6" value="1"  {{ $report->ques1_6 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_6" value="0"  {{ !$report->ques1_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_6" value="1" {{ $report->ques1_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_6" value="0" {{ $report->ques1_6 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Mute</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_7" value="1"  {{ $report->ques1_7 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_7" value="0"  {{ !$report->ques1_7 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_7" value="1" {{ $report->ques1_7 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_7" value="0" {{ $report->ques1_7 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Refuse to enter</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques1_8" value="1"  {{ $report->ques1_8 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques1_8" value="0"  {{ !$report->ques1_8 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques1_8" value="1" {{ $report->ques1_8 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques1_8" value="0" {{ $report->ques1_8 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                     
@@ -119,96 +119,96 @@
                                     <th colspan="3">2.1 Moto & Praxis Skills</th>
                                 </tr><tr>
                                     <td data-label="Item">Range of Motion (upper/lower extrem)</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_1" value="1"  {{ $report->ques2_1 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_1" value="0"  {{ !$report->ques2_1 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_1" value="1" {{ $report->ques2_1 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_1" value="0" {{ $report->ques2_1 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Muscle Tone</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_2" value="1"  {{ $report->ques2_2 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_2" value="0"  {{ !$report->ques2_2 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_2" value="1" {{ $report->ques2_2 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_2" value="0" {{ $report->ques2_2 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Muscle Strength</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_3" value="1"  {{ $report->ques2_3 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_3" value="0"  {{ !$report->ques2_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_3" value="1" {{ $report->ques2_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_3" value="0" {{ $report->ques2_3 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Muscle Endurance</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_4" value="1"  {{ $report->ques2_4 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_4" value="0"  {{ !$report->ques2_4 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_4" value="1" {{ $report->ques2_4 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_4" value="0" {{ $report->ques2_4 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Joint Mobility</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_5" value="1"  {{ $report->ques2_5 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_5" value="0"  {{ !$report->ques2_5 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_5" value="1" {{ $report->ques2_5 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_5" value="0" {{ $report->ques2_5 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Trunk control & balance</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_6" value="1"  {{ $report->ques2_6 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_6" value="0"  {{ !$report->ques2_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_6" value="1" {{ $report->ques2_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_6" value="0" {{ $report->ques2_6 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <th colspan="3">Gross Motor Function</th>
                                 </tr><tr>
                                     <td data-label="Item">a. Standing</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7a" value="1"  {{ $report->ques2_7a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7a" value="0" {{ !$report->ques2_7a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7a" value="1" {{ $report->ques2_7a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7a" value="0" {{ $report->ques2_7a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Crawling</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7b" value="1"  {{ $report->ques2_7b ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7b" value="0" {{ !$report->ques2_7b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7b" value="1" {{ $report->ques2_7b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7b" value="0" {{ $report->ques2_7b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Walking</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7c" value="1"  {{ $report->ques2_7c ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7c" value="0"  {{ !$report->ques2_7c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7c" value="1" {{ $report->ques2_7c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7c" value="0" {{ $report->ques2_7c === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">d. Jumping</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7d" value="1"  {{ $report->ques2_7d ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7d" value="0"  {{ !$report->ques2_7d ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7d" value="1" {{ $report->ques2_7d === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7d" value="0" {{ $report->ques2_7d === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">e. Broad Jump</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7e" value="1"  {{ $report->ques2_7e ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7e" value="0"  {{ !$report->ques2_7e ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7e" value="1" {{ $report->ques2_7e === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7e" value="0" {{ $report->ques2_7e === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">f. Kick Ball</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7f" value="1"  {{ $report->ques2_7f ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7f" value="0"  {{ !$report->ques2_7f ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7f" value="1" {{ $report->ques2_7f === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7f" value="0" {{ $report->ques2_7f === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">g. Throw Ball</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7g" value="1"  {{ $report->ques2_7g ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_7g" value="0"  {{ !$report->ques2_7g ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_7g" value="1" {{ $report->ques2_7g === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_7g" value="0" {{ $report->ques2_7g === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <th colspan="3">Fine Motor Function</th>    
                                 </tr><tr>
                                     <td data-label="Item">a. Grasp & release</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8a" value="1"  {{ $report->ques2_8a ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8a" value="0"  {{ !$report->ques2_8a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8a" value="1" {{ $report->ques2_8a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8a" value="0" {{ $report->ques2_8a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Reaching</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8b" value="1"  {{ $report->ques2_8b ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8b" value="0"  {{ !$report->ques2_8b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8b" value="1" {{ $report->ques2_8b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8b" value="0" {{ $report->ques2_8b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Put block in a cup</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8c" value="1"  {{ $report->ques2_8c ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8c" value="0"  {{ !$report->ques2_8c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8c" value="1" {{ $report->ques2_8c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8c" value="0" {{ $report->ques2_8c === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">d. Scribbles</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8d" value="1"  {{ $report->ques2_8d ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8d" value="0"  {{ !$report->ques2_8d ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8d" value="1" {{ $report->ques2_8d === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8d" value="0" {{ $report->ques2_8d === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">e. Tower of cubes</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8e" value="1"  {{ $report->ques2_8e ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8e" value="0"  {{ !$report->ques2_8e ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8e" value="1" {{ $report->ques2_8e === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8e" value="0" {{ $report->ques2_8e === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">f. Mature pencil grasping</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8f" value="1"  {{ $report->ques2_8f ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8f" value="0"  {{ !$report->ques2_8f ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8f" value="1" {{ $report->ques2_8f === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8f" value="0" {{ $report->ques2_8f === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">g. Immature pencil grasping</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8g" value="1"  {{ $report->ques2_8g ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8g" value="0"  {{ !$report->ques2_8g ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8g" value="1" {{ $report->ques2_8g === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8g" value="0" {{ $report->ques2_8g === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">h. Imitate vertical line</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8h" value="1"  {{ $report->ques2_8h ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8h" value="0"  {{ !$report->ques2_8h ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8h" value="1" {{ $report->ques2_8h === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8h" value="0" {{ $report->ques2_8h === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">i. Copying</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8i" value="1"  {{ $report->ques2_8i ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques2_8i" value="0"  {{ !$report->ques2_8i ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques2_8i" value="1" {{ $report->ques2_8i === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques2_8i" value="0" {{ $report->ques2_8i === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                     
@@ -220,32 +220,32 @@
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Tacticle</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_1" value="1"  {{ $report->ques3_1 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_1" value="0"  {{ !$report->ques3_1 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_1" value="1" {{ $report->ques3_1 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_1" value="0" {{ $report->ques3_1 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Auditary</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_2" value="1" {{ $report->ques3_2 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_2" value="0" {{ !$report->ques3_2 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_2" value="1" {{ $report->ques3_2 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_2" value="0" {{ $report->ques3_2 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Visual</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_3" value="1" {{ $report->ques3_3 ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_3" value="0" {{ !$report->ques3_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_3" value="1" {{ $report->ques3_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_3" value="0" {{ $report->ques3_3 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Olfactory</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_4" value="1" {{ $report->ques3_4 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_4" value="0" {{ !$report->ques3_4 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_4" value="1" {{ $report->ques3_4 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_4" value="0" {{ $report->ques3_4 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Gustatory</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_5" value="1" {{ $report->ques3_5 ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_5" value="0" {{ !$report->ques3_5 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_5" value="1" {{ $report->ques3_5 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_5" value="0" {{ $report->ques3_5 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Vestibular</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_6" value="1" {{ $report->ques3_6 ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_6" value="0" {{ !$report->ques3_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_6" value="1" {{ $report->ques3_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_6" value="0" {{ $report->ques3_6 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr> 
                                     <td data-label="Item">Proprioception</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques3_7" value="1" {{ $report->ques3_7 ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques3_7" value="0" {{ !$report->ques3_7 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques3_7" value="1" {{ $report->ques3_7 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques3_7" value="0" {{ $report->ques3_7 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                                 
@@ -260,28 +260,28 @@
                                 </tr>
                                 <tr>
                                     <td data-label="Item">a. Alphabet</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1a" value="1" {{ $report->ques4_1a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_1a" value="0" {{ !$report->ques4_1a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1a" value="1" {{ $report->ques4_1a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_1a" value="0" {{ $report->ques4_1a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Numbers</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1b" value="1" {{ $report->ques4_1b ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_1b" value="0" {{ !$report->ques4_1b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1b" value="1" {{ $report->ques4_1b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_1b" value="0" {{ $report->ques4_1b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Shapes</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1c" value="1" {{ $report->ques4_1c ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_1c" value="0" {{ !$report->ques4_1c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1c" value="1" {{ $report->ques4_1c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_1c" value="0" {{ $report->ques4_1c === 0 ? 'checked' : '' }}></td>
                                 </tr><tr> 
                                     <td data-label="Item">d. Colors</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1d" value="1" {{ $report->ques4_1d ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_1d" value="0" {{ !$report->ques4_1d ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_1d" value="1" {{ $report->ques4_1d === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_1d" value="0" {{ $report->ques4_1d === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Memory function</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_2" value="1" {{ $report->ques4_2 ? 'checked' : '' }} ></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_2" value="0" {{ !$report->ques4_2 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_2" value="1" {{ $report->ques4_2 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_2" value="0" {{ $report->ques4_2 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr> 
                                     <td data-label="Item">Attention</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_3" value="1" {{ $report->ques4_3 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_3" value="0" {{ !$report->ques4_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_3" value="1" {{ $report->ques4_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_3" value="0" {{ $report->ques4_3 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Concentration</td>
                                     <td data-label="Concentration" colspan="2">{{$report->ques4_4}}</td>
@@ -290,8 +290,8 @@
                                     <td data-label="Problem Solving" colspan="2">{{$report->ques4_5}}</td>
                                 </tr><tr>
                                     <td data-label="Item">Writing skill</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques4_6" value="1" {{ $report->ques4_6 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques4_6" value="0" {{ !$report->ques4_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques4_6" value="1" {{ $report->ques4_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques4_6" value="0" {{ $report->ques4_6 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                     
@@ -305,57 +305,57 @@
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Independent/no helper</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_1" value="1" {{ $report->ques5_1 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_1" value="0" {{ !$report->ques5_1 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_1" value="1" {{ $report->ques5_1 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_1" value="0" {{ $report->ques5_1 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">With supervision</td>
                                     <td data-label="With supervision" colspan="2">{{$report->ques5_2}}</td>
                                 </tr><tr>
                                     <td data-label="Item">Maximum assistance</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_3" value="1" {{ $report->ques5_3 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_3" value="0" {{ !$report->ques5_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_3" value="1" {{ $report->ques5_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_3" value="0" {{ $report->ques5_3 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Toilet trained</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_4" value="1" {{ $report->ques5_4 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_4" value="0" {{ !$report->ques5_4 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_4" value="1" {{ $report->ques5_4 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_4" value="0" {{ $report->ques5_4 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <th colspan="3">Instrumental Activity Daily Living (IADL)</th>    
                                 </tr><tr>
                                     <td data-label="Item">Money Management</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_5" value="1" {{ $report->ques5_5 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_5" value="0" {{ !$report->ques5_5 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_5" value="1" {{ $report->ques5_5 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_5" value="0" {{ $report->ques5_5 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Time concept</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_6" value="1" {{ $report->ques5_6 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_6" value="0" {{ !$report->ques5_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_6" value="1" {{ $report->ques5_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_6" value="0" {{ $report->ques5_6 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <th colspan="3">Simple house hold activities</th>   
                                 </tr><tr>
                                     <td data-label="Item">a. Folding clothes</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7a" value="1" {{ $report->ques5_7a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_7a" value="0" {{ !$report->ques5_7a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7a" value="1" {{ $report->ques5_7a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_7a" value="0" {{ $report->ques5_7a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Hanging clothes</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7b" value="1" {{ $report->ques5_7b ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_7b" value="0" {{ !$report->ques5_7b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7b" value="1" {{ $report->ques5_7b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_7b" value="0" {{ $report->ques5_7b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Sweep floor</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7c" value="1" {{ $report->ques5_7c ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_7c" value="0"  {{ !$report->ques5_7c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_7c" value="1" {{ $report->ques5_7c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_7c" value="0" {{ $report->ques5_7c === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <th colspan="3">Simple domestic activities</th>    
                                 </tr><tr>
                                     <td data-label="Item">a. Making drinks</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8a" value="1" {{ $report->ques5_8a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_8a" value="0"  {{ !$report->ques5_8a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8a" value="1" {{ $report->ques5_8a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_8a" value="0" {{ $report->ques5_8a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Prepare simple food</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8b" value="1" {{ $report->ques5_8b ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_8b" value="0"  {{ !$report->ques5_8b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8b" value="1" {{ $report->ques5_8b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_8b" value="0" {{ $report->ques5_8b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Use phone</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8c" value="1" {{ $report->ques5_8c ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques5_8c" value="0"  {{ !$report->ques5_8c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques5_8c" value="1" {{ $report->ques5_8c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques5_8c" value="0" {{ $report->ques5_8c === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                                 
@@ -369,32 +369,32 @@
                                 </tr>
                                 <tr>
                                     <td data-label="Item">a. Tempered Tantrum</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1a" value="1" {{ $report->ques6_1a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1a" value="0" {{ !$report->ques6_1a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1a" value="1" {{ $report->ques6_1a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1a" value="0" {{ $report->ques6_1a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Manipulative</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1b" value="1"  {{ $report->ques6_1b ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1b" value="0"  {{ !$report->ques6_1b ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1b" value="1" {{ $report->ques6_1b === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1b" value="0" {{ $report->ques6_1b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">c. Easily distracted</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1c" value="1"  {{ $report->ques6_1c ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1c" value="0"  {{ !$report->ques6_1c ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1c" value="1" {{ $report->ques6_1c === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1c" value="0" {{ $report->ques6_1c === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">d. Passive</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1d" value="1"  {{ $report->ques6_1d ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1d" value="0"  {{ !$report->ques6_1d ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1d" value="1" {{ $report->ques6_1d === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1d" value="0" {{ $report->ques6_1d === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">e. Cooperative</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1e" value="1"  {{ $report->ques6_1e ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1e" value="0"  {{ !$report->ques6_1e ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1e" value="1" {{ $report->ques6_1e === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1e" value="0" {{ $report->ques6_1e === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">f. Isolation</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1f" value="1"  {{ $report->ques6_1f ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1f" value="0"  {{ !$report->ques6_1f ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1f" value="1" {{ $report->ques6_1f === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1f" value="0" {{ $report->ques6_1f === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">g. Reluctant</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1g" value="1"  {{ $report->ques6_1g ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques6_1g" value="0"  {{ !$report->ques6_1g ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques6_1g" value="1" {{ $report->ques6_1g === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques6_1g" value="0" {{ $report->ques6_1g === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                                 
@@ -408,8 +408,8 @@
                                 </tr>
                                 <tr>
                                     <td data-label="Item">a. Repetitive prompting</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_1a" value="1"  {{ $report->ques7_1a ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_1a" value="0"  {{ !$report->ques7_1a ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_1a" value="1" {{ $report->ques7_1a === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_1a" value="0" {{ $report->ques7_1a === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">b. Verbal prompting</td>
                                     <td data-label="b. Verbal Prompting" colspan="2">{{$report->ques7_1b}}</td>
@@ -426,35 +426,35 @@
                                     <td data-label="b. Object" colspan="2">{{$report->ques7_2b}}</td>
                                 </tr><tr>
                                     <td data-label="Item">Initiate / answer quesi_n</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_3" value="1"  {{ $report->ques7_3 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_3" value="0"  {{ !$report->ques7_3 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_3" value="1" {{ $report->ques7_3 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_3" value="0" {{ $report->ques7_3 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Verbal Respond</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_4" value="1" {{ $report->ques7_4 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_4" value="0"  {{ !$report->ques7_4 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_4" value="1" {{ $report->ques7_4 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_4" value="0" {{ $report->ques7_4 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Voice clarity</td>
                                     <td data-label="Voice clarity" colspan="2">{{$report->ques7_5}}</td>
                                 </tr><tr>
                                     <td data-label="Item">Facial Expression</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_6" value="1" {{ $report->ques7_6 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_6" value="0"  {{ !$report->ques7_6 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_6" value="1" {{ $report->ques7_6 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_6" value="0" {{ $report->ques7_6 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Body language</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_7" value="1" {{ $report->ques7_7 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_7" value="0" {{ !$report->ques7_7 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_7" value="1" {{ $report->ques7_7 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_7" value="0" {{ $report->ques7_7 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Taking turn</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_8" value="1" {{ $report->ques7_8 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_8" value="0" {{ !$report->ques7_8 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_8" value="1" {{ $report->ques7_8 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_8" value="0" {{ $report->ques7_8 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Sharing</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_9" value="1" {{ $report->ques7_9 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_9" value="0" {{ !$report->ques7_9 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_9" value="1" {{ $report->ques7_9 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_9" value="0" {{ $report->ques7_9 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
                                     <td data-label="Item">Stay in grouping</td>
-                                    <td data-label="Yes"><input type="radio" disabled name="ques7_10" value="1" {{ $report->ques7_10 ? 'checked' : '' }}></td>
-                                    <td data-label="No"><input type="radio" disabled name="ques7_10" value="0"  {{ !$report->ques7_10 ? 'checked' : '' }}></td>
+                                    <td data-label="Yes"><input type="radio" disabled name="ques7_10" value="1" {{ $report->ques7_10 === 1 ? 'checked' : '' }}></td>
+                                    <td data-label="No"><input type="radio" disabled name="ques7_10" value="0" {{ $report->ques7_10 === 0 ? 'checked' : '' }}></td>
                                 </tr>
                                 <tr><td colspan="5">&nbsp;</td></tr>
                     

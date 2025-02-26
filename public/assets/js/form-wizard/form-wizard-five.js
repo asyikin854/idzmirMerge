@@ -305,44 +305,56 @@
         toggleFieldsBasedOnNationality(); 
         const form = document.getElementById('registrationForm');
         const submitBtn = document.getElementById('submitBtn');
-        const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirm_password');
-        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+        // const password = document.getElementById('password');
+        // const confirmPassword = document.getElementById('confirm_password');
+        // const passwordMatchMessage = document.getElementById('passwordMatchMessage');
 
-        // Password Match Check Function
-        function checkPasswordMatch() {
-            if (password.value !== confirmPassword.value) {
-                passwordMatchMessage.textContent = 'Passwords do not match.';
-                passwordMatchMessage.style.color = 'red';
-                submitBtn.disabled = true;
-            } else {
-                passwordMatchMessage.textContent = 'Passwords match.';
-                passwordMatchMessage.style.color = 'green';
-                submitBtn.disabled = false;
-            }
-        }
+        // // Password Match Check Function
+        // function checkPasswordMatch() {
+        //     if (password.value !== confirmPassword.value) {
+        //         passwordMatchMessage.textContent = 'Passwords do not match.';
+        //         passwordMatchMessage.style.color = 'red';
+        //         submitBtn.disabled = true;
+        //     } else {
+        //         passwordMatchMessage.textContent = 'Passwords match.';
+        //         passwordMatchMessage.style.color = 'green';
+        //         submitBtn.disabled = false;
+        //     }
+        // }
 
-        password.addEventListener('keyup', checkPasswordMatch);
-        confirmPassword.addEventListener('keyup', checkPasswordMatch);
+        // password.addEventListener('keyup', checkPasswordMatch);
+        // confirmPassword.addEventListener('keyup', checkPasswordMatch);
 
         // Check for required fields when the submit button is clicked
         function checkRequiredFields(event) {
             let isValid = true;
-
+            const missingFields = []; // Array to store names of missing fields
+        
             // Loop through required inputs and validate
             $(form).find(':input[required]').each(function () {
-                if (!this.value) {
+                if (!this.value.trim()) {
                     isValid = false;
                     $(this).addClass('is-invalid'); // Highlight empty fields
+                    const fieldName = $(this).attr('name') || $(this).attr('id'); // Get field name or ID
+                    missingFields.push(fieldName); // Add missing field name to the array
                 } else {
                     $(this).removeClass('is-invalid'); // Remove highlight if valid
                 }
             });
-
+        
             if (!isValid) {
                 event.preventDefault(); // Prevent form submission if invalid
-                alert('Please fill in all required fields.');
+        
+                // Create a message listing the missing fields
+                let message = 'The following required fields are missing:\n\n';
+                missingFields.forEach((field, index) => {
+                    message += `${index + 1}. ${field}\n`; // Add each missing field to the message
+                });
+        
+                alert(message); // Show the alert with the list of missing fields
             }
+        
+            return isValid; // Return validation status
         }
 
         // Attach the validation check to the submit button

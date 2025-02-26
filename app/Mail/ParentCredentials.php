@@ -11,15 +11,15 @@ use Illuminate\Queue\SerializesModels;
 
 class ParentCredentials extends Mailable
 {
-    use Queueable, SerializesModels;
+use Queueable, SerializesModels;
 
     public $parent_username;
     public $parent_password;
 
     public function __construct($parent_username, $parent_password)
     {
-        $this->username = $parent_username;
-        $this->password = $parent_password;
+        $this->parent_username = $parent_username;
+        $this->parent_password = $parent_password;
     }
 
     public function build()
@@ -27,8 +27,8 @@ class ParentCredentials extends Mailable
         return $this->subject('Your Parent Account Credentials')
                     ->view('emails.parent_credentials')
                     ->with([
-                        'username' => $this->username,
-                        'password' => $this->password,
+                        'username' => $this->parent_username,
+                        'password' => $this->parent_password,
                     ]);
     }
 }

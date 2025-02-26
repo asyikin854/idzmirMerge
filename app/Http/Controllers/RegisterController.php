@@ -106,15 +106,6 @@ class RegisterController extends Controller
             'mother_work_posscode' => 'nullable|string',
             'mother_work_city' => 'nullable|string',
             'house_income' => 'required|string',
-            'parent_sign' => 'required|string',
-            'sign_date' => 'required',
-            'sign_name' => 'required|string',
-            'sign_time' => 'required|string',
-            'agree_disagree' => 'required|string',
-            'username' => 'required|string',
-            'email' => 'required|email|unique:parent_accounts,email',
-            'password' => 'required|string',
-
         ]);
         // Create a new ChildInfo record
         $childInfo = ChildInfo::create([
@@ -179,29 +170,32 @@ class RegisterController extends Controller
             'mother_work_city' => $validatedData['mother_work_city'],
             // Add other fields from MotherInfo table
         ]);
-    }
+    }   
+    $child_id = $childInfo->id;
 
         // Create a new ParentPermission record linked to ChildInfo
-        $parentPermission = ParentsPermission::create([
-            'child_id' => $childInfo->id,
-            'parent_sign' => $validatedData['parent_sign'],
-            'sign_date' => $validatedData['sign_date'],
-            'sign_name' => $validatedData['sign_name'],
-            'sign_time' => $validatedData['sign_time'],
-            'agree_disagree' => $validatedData['agree_disagree'],
-        ]);
+        // $parentPermission = ParentsPermission::create([
+        //     'child_id' => $childInfo->id,
+        //     'parent_sign' => $validatedData['parent_sign'],
+        //     'sign_date' => $validatedData['sign_date'],
+        //     'sign_name' => $validatedData['sign_name'],
+        //     'sign_time' => $validatedData['sign_time'],
+        //     'agree_disagree' => $validatedData['agree_disagree'],
+        // ]);
         
-        $parentAccount = ParentAccount::create([
-            'child_id' => $childInfo->id,
-            'password' => bcrypt($validatedData['password']),
-            'email' => $validatedData['email'],
-            'username' => $validatedData['username'],
-        ]);
+        // $parentAccount = ParentAccount::create([
+        //     'child_id' => $childInfo->id,
+        //     'password' => bcrypt($validatedData['password']),
+        //     'email' => $validatedData['email'],
+        //     'username' => $validatedData['username'],
+        // ]);
         // Optionally, you can add additional logic or redirection here
 
         // Redirect the user after successful form submission
-        return view('register2-parent', ['childInfo' => $childInfo, 'motherInfo' => $childInfo->motherInfo, 
-        'fatherInfo' => $childInfo->fatherInfo, 'parentPermission' => $childInfo->parentPermission]);
+        // return view('register2-parent', ['childInfo' => $childInfo, 'motherInfo' => $childInfo->motherInfo, 
+        // 'fatherInfo' => $childInfo->fatherInfo, 'parentPermission' => $childInfo->parentPermission]);
+        return redirect()->route('product-parent', compact('child_id'));
+    
     }
     public function register2($id)
     {
@@ -221,8 +215,8 @@ class RegisterController extends Controller
     {
         $childInfo = ChildInfo::find($child_id);
         $packages = $childInfo->child_nationality === 'Malaysian' ?
-            Package::where('citizenship', 'yes')->where('consultation', 'Yes')->orderBy('package_step', 'asc')->get() :
-            Package::where('citizenship', 'no')->where('consultation', 'Yes')->orderBy('package_step', 'asc')->get();
+            Package::where('citizenship', 'yes')->orderBy('package_step', 'asc')->get() :
+            Package::where('citizenship', 'no')->orderBy('package_step', 'asc')->get();
 
         return view('product-parent', compact('packages', 'childInfo'));
     }
@@ -261,7 +255,6 @@ class RegisterController extends Controller
     
         // Fetch slots starting from one day ahead until the end of the current month
         $slots = $slotsModel::where('date', '>=', now()->addDay())
-            ->where('date', '<=', now()->endOfMonth())
             ->get();
     
         // Check if the package is weekly
@@ -400,11 +393,8 @@ class RegisterController extends Controller
             'sessionCounter' => $sessionCounter
         ]);
 
-        if ($consultation === 'Yes') {
-            return redirect()->route('consultSchedule-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
-        } else {
+
             return redirect()->route('checkout-parent', ['child_id' => $child_id, 'package_id' => $package_id]);
-        }
     }
 
     public function consultScheduleView($child_id, $package_id)

@@ -292,7 +292,7 @@
                                     <td>{{ $childSchedule->time }}</td>
                                     <td>{{ $childSchedule->therapist}} </td>
                                     <td>{{ $childSchedule->attendance ?? 'N/A' }} </td>
-                                    <td><a href="{{route('rescheduleView-cs', $childSchedule->id)}}"><button class="btn btn-info">Edit</button></a></td>
+                                    <td><a href="{{route('schedules.edit', $childSchedule->id)}}"><button class="btn btn-info">Edit</button></a></td>
                                 </tr>
                             @empty
                                 <tr>

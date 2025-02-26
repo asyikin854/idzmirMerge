@@ -36,6 +36,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+                            <a href="{{route('register-parent')}}" target="_blank"><button class="btn btn-primary">Add Existing Customer +</button></a>
                             <table class="display" id="basic-6">
                                 <thead>
                                     <tr>

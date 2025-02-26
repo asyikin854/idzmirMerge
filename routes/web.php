@@ -133,6 +133,7 @@ Route::post('chip/callback/', function (Request $request) {
 
     // Update order status
     Log::info("CALLBACK: Transaction ID $request->id verification successful");
+    $adminEmail = "icares.idzmirkidshub@gmail.com";
     $payment = Payment::where('payment_id', $request->id)->first();
     if ($payment) {
         $payment->status = $request->status;
@@ -143,6 +144,7 @@ Route::post('chip/callback/', function (Request $request) {
             if ($parentAccount && $parentAccount->email) {
                 try {
                     Mail::to($parentAccount->email)->send(new PaymentSuccessMail($payment));
+                    Mail::to($adminEmail)->send(new PaymentSuccessAdmin($payment));
                     Log::info("CALLBACK: Payment success email sent to " . $parentAccount->email);
                 } catch (\Exception $e) {
                     Log::error("CALLBACK: Failed to send payment success email: " . $e->getMessage());
@@ -248,7 +250,7 @@ Route::get('/custDetails2-sales/{id}', [SalesController::class, 'custDetails2'])
 Route::post('/addCustomer', [SalesController::class, 'addCustomer'])->name('addCustomer');
 Route::get('/regNewCust-sales/{id}', [SalesController::class, 'regNewCust'])->name('regNewCust-sales');
 Route::post('customer/{id}/registerCust', [SalesController::class, 'registerCust'])->name('registerCust-sales');
-Route::get('/scheduleSlotView/{child_id}/{package_id}', [SalesController::class, 'scheduleSlotView'])->name('scheduleSlot-sales');
+Route::get('/scheduleSlotView/{child_id}/{package_id}', [SalesController::class, 'bookConsultView'])->name('scheduleSlot-sales');
 Route::post('/scheduleSlot/{child_id}/{package_id}', [SalesController::class, 'scheduleSlot'])->name('scheduleSlot.submit');
 Route::get('/confirmSchedule-sales/{child_id}/{package_id}', [SalesController::class, 'confirmScheduleView'])->name('confirmSchedule-sales');
 Route::post('/confirmSchedule', [SalesController::class, 'confirmSchedule'])->name('confirmSchedule.submit');

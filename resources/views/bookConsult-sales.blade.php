@@ -1,5 +1,5 @@
 @extends('layouts.simple.master-sales')
-@section('title', 'All Sessions')
+@section('title', 'Consultation Session')
 
 @section('css')
     
@@ -7,7 +7,6 @@
 
 @section('style')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/calendar.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/datatables.css') }}">
 
 @endsection
 
@@ -40,10 +39,34 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-xxl-9 box-col-12">
                         <div class="calendar-default" id="calendar-container">
                             <div id="calendar"></div>
                         </div>
+                    </div>
+                    <br><br><hr><br>
+                    <div class="col-xxl-3 box-col-12">
+                        <form action="{{route('scheduleSlot.submit', ['child_id' => $child_id, 'package_id' => $package->id])}}" method="POST">
+                            @csrf
+                        <h5>Consultation Appointment</h5>
+                        <div class="table-responsive">
+                            <table class="table table-border">
+                                <tr>
+                                    <th>Slot</th>
+                                    <th>Date</th>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                </tr><tr>
+                                    <td>Consultation Appointment</td>
+                                    <td><input type="date" name="consult_date" id="consultationDate" class="form-control" required></td>
+                                    <td><input type="text" name="consult_day" id="day" class="form-control" readonly></td>
+                                    <td><input type="time" name="consult_time" id="time" class="form-control" required></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                     </div>
                     
                     
@@ -72,6 +95,19 @@
 @section('script')
 <script>
     var calendarEvents = @json($events);
+    document.getElementById('consultationDate').addEventListener('change', function() {
+        const dateInput = this.value; // Get the selected date
+        const dayInput = document.getElementById('day'); // Get the day input field
+
+        if (dateInput) {
+            const date = new Date(dateInput); // Convert to Date object
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayOfWeek = days[date.getDay()]; // Get the day of the week
+            dayInput.value = dayOfWeek; // Update the day input field
+        } else {
+            dayInput.value = ''; // Clear if no date is selected
+        }
+    });
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

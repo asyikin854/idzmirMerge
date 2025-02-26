@@ -276,6 +276,12 @@ public function update(Request $request, $id)
         'remark' => 'nullable'
     ]);
 
+    $schedule = DB::table('child_schedules')->where('id', $id)->first();
+
+    if (!$schedule) {
+        return redirect()->back()->with('error', 'Schedule not found.');
+    }
+
     // Find the schedule and update it
     DB::table('child_schedules')->where('id', $id)->update([
         'session' => $validated['session'],
@@ -287,8 +293,10 @@ public function update(Request $request, $id)
         'remark' => $validated['remark']
     ]);
 
+    $childInfoId = $schedule->child_id;
+
     // Redirect back to the schedules list
-    return redirect()->route('schedules.index')->with('success', 'Schedule updated successfully.');
+    return redirect()->route('admin.parents.show', ['id' => $childInfoId])->with('success', 'Schedule updated successfully.');
 }
 
 public function listCs()
