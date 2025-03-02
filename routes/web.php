@@ -99,7 +99,9 @@ Route::post('/childSchedule/{child_id}/{package_id}', [RegisterController::class
 Route::get('/consultSchedule-parent/{child_id}/{package_id}', [RegisterController::class, 'consultScheduleView'])->name('consultSchedule-parent');
 Route::post('/consultSchedule/{child_id}/{package_id}', [RegisterController::class, 'consultSchedule'])->name('consultSchedule.submit');
 // Route to view the checkout page after schedule submission (GET)
-Route::get('/checkout-parent/{child_id}/{package_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
+Route::get('/bookSummaryExistCust/{child_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
+Route::post('/submitExistCust/{child_id}', [RegisterController::class, 'submitExistCust'])->name('submitExistCust');
+Route::get('/successAddExistCust', [RegisterController::class, 'successAddExistCust'])->name('successAddExistCust');
 
 // Route to handle the payment submission (POST)
 Route::post('/submitPayment', [RegisterController::class, 'submitPayment'])->name('submitPayment');
@@ -219,6 +221,7 @@ Route::get('/unassignedList-cs', [CsController::class, 'csUnassignedList'])->nam
 Route::get('/assignedSession-cs', [CsController::class, 'csAssignedSession'])->name('assignedSession-cs');
 Route::get('/assignedDetails-cs/{id}', [CsController::class, 'csAssignedDetails'])->name('assignedDetails-cs');
 Route::get('/approvedReportList-cs', [CsController::class, 'csApprovedReportList'])->name('approvedReportList-cs');
+Route::post('/bulk-download-reports', [CsController::class, 'bulkDownloadReports'])->name('bulkDownloadReports-cs');
 Route::get('/stdReportList-cs', [CsController::class, 'csStdReportList'])->name('stdReportList-cs');
 Route::get('/allSession-cs', [CsController::class, 'csAllSession'])->name('allSession-cs');
 
@@ -234,10 +237,21 @@ Route::get('sendEmail-cs', [EmailController::class, 'csCompose'])->name('compose
 Route::post('csSend', [EmailController::class, 'csSend'])->name('sendEmail-cs');
 Route::get('csInbox', [EmailController::class, 'csInbox'])->name('inbox-cs');
 
-
+//customer service (new sales lead)
 Route::get('/dashboard-sales', [SalesController::class, 'salesDashboard'])->name('sales.dashboard');
+//New leads
 Route::get('/newCustomer-sales', [SalesController::class, 'newCustomer'])->name('newCustomer-sales');
 Route::get('/custDetails-sales/{id}', [SalesController::class, 'custDetails'])->name('custDetails-sales');
+Route::post('/addCustomer', [SalesController::class, 'addCustomer'])->name('addCustomer');
+//Register new customer from leads
+Route::get('/custDetails2-sales/{id}', [SalesController::class, 'custDetails2'])->name('custDetails2-sales');
+Route::get('/regNewCust-sales/{id}', [SalesController::class, 'regNewCust'])->name('regNewCust-sales');
+Route::post('customer/{id}/registerCust', [SalesController::class, 'registerCust'])->name('registerCust-sales');
+Route::get('/scheduleSlotView/{child_id}/{package_id}', [SalesController::class, 'bookConsultView'])->name('scheduleSlot-sales');
+Route::post('/scheduleSlot/{child_id}/{package_id}', [SalesController::class, 'scheduleSlot'])->name('scheduleSlot.submit');
+Route::get('/confirmSchedule-sales/{child_id}/{package_id}', [SalesController::class, 'confirmScheduleView'])->name('confirmSchedule-sales');
+Route::post('/confirmSchedule', [SalesController::class, 'confirmSchedule'])->name('confirmSchedule.submit');
+//On Boarding management
 Route::get('/onBoarding-sales', [SalesController::class, 'onBoarding'])->name('onBoarding-sales');
 Route::get('/regOnBoarding-sales/{id}', [SalesController::class, 'regOnBoarding'])->name('regOnBoarding-sales');
 Route::put('/submitRegOnBoard-sales/{id}', [SalesController::class, 'submitRegOnBoard'])->name('submitRegOnBoard-sales');
@@ -245,15 +259,8 @@ Route::get('/slotBookingView-sales/{child_id}', [SalesController::class, 'slotBo
 Route::post('/slotBooking-sales/{child_id}', [SalesController::class, 'slotBooking'])->name('submitBooking-sales');
 Route::get('/bookingSummary-sales/{child_id}', [SalesController::class, 'bookingSummary'])->name('bookingSummary-sales');
 Route::post('/confirmBookSlot-sales/{child_id}', [SalesController::class, 'confirmBookSlot'])->name('confirmBookSlot-sales');
+//Existing customer management
 Route::get('/registeredCustomer-sales', [SalesController::class, 'registeredCustomer'])->name('registeredCustomer-sales');
-Route::get('/custDetails2-sales/{id}', [SalesController::class, 'custDetails2'])->name('custDetails2-sales');
-Route::post('/addCustomer', [SalesController::class, 'addCustomer'])->name('addCustomer');
-Route::get('/regNewCust-sales/{id}', [SalesController::class, 'regNewCust'])->name('regNewCust-sales');
-Route::post('customer/{id}/registerCust', [SalesController::class, 'registerCust'])->name('registerCust-sales');
-Route::get('/scheduleSlotView/{child_id}/{package_id}', [SalesController::class, 'bookConsultView'])->name('scheduleSlot-sales');
-Route::post('/scheduleSlot/{child_id}/{package_id}', [SalesController::class, 'scheduleSlot'])->name('scheduleSlot.submit');
-Route::get('/confirmSchedule-sales/{child_id}/{package_id}', [SalesController::class, 'confirmScheduleView'])->name('confirmSchedule-sales');
-Route::post('/confirmSchedule', [SalesController::class, 'confirmSchedule'])->name('confirmSchedule.submit');
 Route::get('/consultationSessions-sales', [SalesController::class, 'consultationSessions'])->name('consultationSessions-sales');
 Route::get('/allSession-sales', [SalesController::class, 'allSession'])->name('allSession-sales');
 Route::get('/paymentStatus-sales', [SalesController::class, 'paymentStatus'])->name('paymentStatus-sales');

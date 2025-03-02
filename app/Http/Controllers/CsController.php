@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Slot;
 use App\Models\Package;
+use App\Models\Payment;
 use App\Models\SlotRTS;
 use App\Models\ChildInfo;
 use Illuminate\Support\Str;
@@ -427,6 +428,25 @@ class CsController extends Controller
         foreach ($childInfos as $childInfo) {
             $childInfo->age = Carbon::parse($childInfo->child_dob)->age;
             $childInfo->number = $childInfo->childSchedule->count();
+
+            $sessionIds = $childInfo->childSchedule->pluck('session_id')->unique();
+
+            // Fetch payment statuses for these session_ids
+            $paymentStatuses = Payment::whereIn('session_id', $sessionIds)
+                ->pluck('status')
+                ->unique()
+                ->toArray();
+    
+            // Determine overall payment status
+            if (in_array('failed', $paymentStatuses)) {
+                $childInfo->payment_status = 'Failed';
+            } elseif (in_array('pending', $paymentStatuses)) {
+                $childInfo->payment_status = 'Pending';
+            } elseif (in_array('paid', $paymentStatuses)) {
+                $childInfo->payment_status = 'Paid';
+            } else {
+                $childInfo->payment_status = 'No Payment'; // If no matching session_id in Payment table
+            }
         }
 
         $message = null;
@@ -636,22 +656,56 @@ class CsController extends Controller
             return redirect()->route('stdReportList-cs')->with('success', 'Report updated successfully.');
         }
     }
-    public function csApprovedReportList()
+    public function csApprovedReportList(Request $request)
     {
         $user = Auth::guard('cs')->user();
         if (!$user) {
             return Redirect::route('login')->with('error', 'The session has expired. Please log back into your account.');
         }
+    
         $csInfo = $user;
         $csName = $user->name;
-        $schedules = ChildSchedule::where('attendance', 'present')
-        ->whereHas('sessionReport', function ($query) {
-            $query->where('status', 'approved');
-        })
-        ->with('childInfo')
-        ->get();
-        return view ('approvedReportList-cs', compact('schedules', 'csName'));
+    
+        // Start query
+        $query = ChildSchedule::where('attendance', 'present')
+            ->whereHas('sessionReport', function ($q) {
+                $q->where('status', 'approved');
+            })
+            ->with('childInfo');
+    
+        // Apply filters if they exist
+        if ($request->filled('name')) {
+            $query->whereHas('childInfo', function ($q) use ($request) {
+                $q->where('child_name', 'like', '%' . $request->name . '%');
+            });
+        }
+    
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->date);
+        }
+    
+        // Get the filtered results
+        $schedules = $query->get();
+    
+        return view('approvedReportList-cs', compact('schedules', 'csName'));
     }
+
+    public function bulkDownloadReports(Request $request)
+{
+    $selectedReports = $request->input('selected_reports', []);
+
+    if (empty($selectedReports)) {
+        return redirect()->back()->with('error', 'No reports selected.');
+    }
+
+    // Fetch the selected reports
+    $reports = SessionReport::whereIn('id', $selectedReports)->get();
+
+    // Generate a ZIP file or PDF containing all selected reports
+    // Example: Use a package like "maatwebsite/excel" for Excel or "barryvdh/laravel-dompdf" for PDF
+    // Return the file for download
+}
+    
     public function csApprovedReport($id)
     {
         $user = Auth::guard('cs')->user();

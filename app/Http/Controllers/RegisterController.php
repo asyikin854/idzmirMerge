@@ -528,7 +528,7 @@ public function checkoutParent($child_id, $package_id)
     $sessionId = session('sessionId');
     $sessionCounter = session('sessionCounter');
 
-    return view('checkout-parent', [
+    return view('bookSummaryExistCust', [
         'type' => $type,
         'package' => $package,
         'childInfo' => $childInfo,
@@ -545,6 +545,147 @@ public function checkoutParent($child_id, $package_id)
         'sessionId' => $sessionId,
         'sessionCounter' => $sessionCounter
     ]);
+}
+
+public function submitExistCust(Request $request, $child_id)
+{
+    DB::beginTransaction(); // Start a database transaction
+
+    try {
+        $type = session('type');
+        $package_id = session('package_id');
+        $childInfo = session('childInfo');
+        $package = session('package');
+        $fatherInfo = session('fatherInfo');
+        $motherInfo = session('motherInfo');
+        $parentAccount = session('parentAccount');
+        $totalPrice = session('totalPrice');
+        $selectedSlots = session('selectedSlots');
+        $consultDetails = session('consultDetails');
+        $additionalSessions = session('additionalSessions');
+        $additionalPrice = session('additionalPrice');
+        $basePrice = session('basePrice');
+        $sessionId = session('sessionId');
+        $sessionCounter = session('sessionCounter');
+        $reference = Str::uuid();
+
+        // Retrieve child info
+        $childInfo = ChildInfo::find($child_id);
+        if (!$childInfo) {
+            throw new \Exception('Child information not found.');
+        }
+
+        // Retrieve or create ParentAccount
+        $parentAccount = ParentAccount::firstOrNew(['child_id' => $childInfo->id]);
+
+        // Generate Username & Password
+        $parent_username = strtolower(Str::slug($childInfo->child_name)) . random_int(1000, 9999);
+        $parent_password = Str::random(10);
+        $hashedPassword = Hash::make($parent_password);
+
+        // Store in ParentAccount Model
+        $parentAccount->username = $parent_username;
+        $parentAccount->password = $hashedPassword;
+        $parentAccount->save();
+
+        // Send credentials to parent's email
+        $recipientEmails = [];
+        if ($childInfo->fatherInfo && $childInfo->fatherInfo->father_email) {
+            $recipientEmails[] = $childInfo->fatherInfo->father_email;
+        }
+        if ($childInfo->motherInfo && $childInfo->motherInfo->mother_email) {
+            $recipientEmails[] = $childInfo->motherInfo->mother_email;
+        }
+
+        try {
+            if (!empty($recipientEmails)) {
+                Mail::to($recipientEmails)->send(new ParentCredentials($parent_username, $parent_password));
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send email: ' . $e->getMessage());
+            // Optionally, you can log the recipient emails as well
+            \Log::error('Recipient emails: ', $recipientEmails);
+        }
+        // Insert selected slots into the ChildSchedule table
+        foreach ($selectedSlots as $slotData) {
+            $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d');
+            $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i');
+            $slotDay = $slotData->day;
+
+            // Check if this schedule already exists
+            $exists = ChildSchedule::where('child_id', $child_id)
+                ->where('session_id', $sessionId)
+                ->where('date', $slotDate)
+                ->where('time', $slotTime)
+                ->where('type', $type) // Check the type to avoid duplicating regular session
+                ->exists();
+
+            if (!$exists) {
+                ChildSchedule::create([
+                    'child_id' => $child_id,
+                    'session_id' => $sessionId,
+                    'day' => $slotDay,
+                    'date' => $slotDate,
+                    'time' => $slotTime,
+                    'price' => $totalPrice,
+                    'status' => 'pending',
+                    'session' => $sessionCounter,
+                    'type' => $type,
+                ]);
+                $sessionCounter++;
+            }
+        }
+
+        // Insert consultation slot if it does not already exist
+        if ($consultDetails) {
+            $consultDate = Carbon::parse($consultDetails['consult_date'])->format('Y-m-d');
+            $consultTime = Carbon::parse($consultDetails['consult_time'])->format('H:i');
+            $consultDay = $consultDetails['consult_day'];
+
+            // Check if this consultation schedule already exists
+            $exists = ChildSchedule::where('child_id', $child_id)
+                ->where('session_id', $sessionId)
+                ->where('date', $consultDate)
+                ->where('time', $consultTime)
+                ->where('type', 'screening') // Check the type to avoid duplicating consultation session
+                ->exists();
+
+            if (!$exists) {
+                ChildSchedule::create([
+                    'child_id' => $child_id,
+                    'session_id' => $sessionId,
+                    'day' => $consultDay,
+                    'date' => $consultDate,
+                    'time' => $consultTime,
+                    'price' => $totalPrice,
+                    'status' => 'pending',
+                    'session' => $sessionCounter,
+                    'type' => 'screening',
+                ]);
+            }
+        }
+        DB::commit(); // Commit the transaction
+
+        // Return success response
+    return redirect()->route('successAddExistCust')->with('success', 'Customer Account Created and Invoice has been sent');
+
+    } catch (Exception $e) {
+        DB::rollBack(); // Roll back the transaction on error
+
+        // Return error response
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while confirming the booking. Please try again.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+
+}
+
+public function successAddExistCust()
+{
+    $childInfos = ChildInfo::all();
+    return view ('successAddExistCust', compact('childInfos'));
 }
 
 public function submitPayment(Request $request)

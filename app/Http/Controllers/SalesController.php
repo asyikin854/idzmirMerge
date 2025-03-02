@@ -340,6 +340,7 @@ class SalesController extends Controller
             'consult_day' => "required|string",
             'consult_time' => "required|string",
         ]);
+
         $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
         $package = Package::find($package_id);
         $type = $package->type;
@@ -347,55 +348,63 @@ class SalesController extends Controller
         if (!$childInfo || !$package) {
             abort(404);
         }
-    
-        $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
-        $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
-        $totalSessions = $package->session_quantity + $additionalSessions;
-        $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
-    
-        // Validate selected slots
-        if (!$selectedSlots || !is_array($selectedSlots)) {
-            return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+
+        // Determine the price based on the consult_day
+        if (strtolower($validatedData['consult_day']) === 'friday' || strtolower($validatedData['consult_day']) === 'saturday') {
+            $price = $package->package_wkend_price;
+        } else {
+            $price = $package->package_wkday_price;
         }
-        $hasWeekendSlot = false;
-        $basePrice = $package->package_wkday_price; // Default to weekday price
+        $totalPrice = $price;
     
-        // Sort the selected slots by date before inserting
-        usort($selectedSlots, function($a, $b) {
-            $dateA = Carbon::createFromFormat('m/d/Y', $a->date)->format('Y-m-d');
-            $dateB = Carbon::createFromFormat('m/d/Y', $b->date)->format('Y-m-d');
-            return strcmp($dateA, $dateB); // Sort in ascending order
-        });
+        // $selectedSlots = json_decode($request->input('selected_slots')); // Array of selected slots
+        // $additionalSessions = $request->input('additional_sessions', 0); // Optional additional sessions
+        // $totalSessions = $package->session_quantity + $additionalSessions;
+        // $additionalPrice = $additionalSessions * 100; // Calculate additional session price (RM 100 per session)
+    
+        // // Validate selected slots
+        // if (!$selectedSlots || !is_array($selectedSlots)) {
+        //     return back()->withErrors(['error' => 'No valid slots selected. Please select at least one slot.']);
+        // }
+        // $hasWeekendSlot = false;
+        // $basePrice = $package->package_wkday_price; // Default to weekday price
+    
+        // // Sort the selected slots by date before inserting
+        // usort($selectedSlots, function($a, $b) {
+        //     $dateA = Carbon::createFromFormat('m/d/Y', $a->date)->format('Y-m-d');
+        //     $dateB = Carbon::createFromFormat('m/d/Y', $b->date)->format('Y-m-d');
+        //     return strcmp($dateA, $dateB); // Sort in ascending order
+        // });
     
         $sessionId = (string) Str::uuid(); // Generate a unique session ID
         $sessionCounter = 1; // Initialize session counter
     
         // Loop through the sorted selected slots
-        foreach ($selectedSlots as $index => $slotData) {
-            $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
-            $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
-            $slotDay = $slotData->day;
+        // foreach ($selectedSlots as $index => $slotData) {
+        //     $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
+        //     $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
+        //     $slotDay = $slotData->day;
     
-            // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
-            $existingBookings = ChildSchedule::where('date', $slotDate)
-                                ->where('time', $slotTime)
-                                ->where('day', $slotDay)
-                                ->count();
+        //     // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
+        //     $existingBookings = ChildSchedule::where('date', $slotDate)
+        //                         ->where('time', $slotTime)
+        //                         ->where('day', $slotDay)
+        //                         ->count();
     
-            if ($existingBookings >= 10) {
-                // Skip this slot if the quota is full
-                continue;
-            }
+        //     if ($existingBookings >= 10) {
+        //         // Skip this slot if the quota is full
+        //         continue;
+        //     }
     
-            // Calculate price based on weekday or weekend
-            if (in_array($slotDay, ['Friday', 'Saturday'])) {
-                $hasWeekendSlot = true; // Set the flag if a weekend slot is found
-                break; // No need to check further, we found a weekend slot
-            }
-        }
-        if ($hasWeekendSlot) {
-            $basePrice = $package->package_wkend_price; // Set to weekend price
-        }
+        //     // Calculate price based on weekday or weekend
+        //     if (in_array($slotDay, ['Friday', 'Saturday'])) {
+        //         $hasWeekendSlot = true; // Set the flag if a weekend slot is found
+        //         break; // No need to check further, we found a weekend slot
+        //     }
+        // }
+        // if ($hasWeekendSlot) {
+        //     $basePrice = $package->package_wkend_price; // Set to weekend price
+        // }
         $consultDetails = [
             'consult_date' => $validatedData['consult_date'],
             'consult_day' => $validatedData['consult_day'],
@@ -406,9 +415,10 @@ class SalesController extends Controller
         'type' => $type,
         'childInfo' => $childInfo,
         'package' => $package,
+        'totalPrice' => $totalPrice,
         'fatherInfo' => $childInfo->fatherInfo,
         'motherInfo' => $childInfo->motherInfo,
-        'selectedSlots' => $selectedSlots,
+        'consultDetails' => $consultDetails,
         'child_id' => $child_id,
         'sessionId' => $sessionId,
         'sessionCounter' => $sessionCounter
@@ -435,13 +445,14 @@ public function confirmScheduleView($child_id, $package_id)
     $motherInfo = session('motherInfo');
     $parentAccount = session('parentAccount');
     $totalPrice = session('totalPrice');
-    $selectedSlots = session('selectedSlots');
-    $additionalSessions = session('additionalSessions');
-    $additionalPrice = session('additionalPrice');
+    $consultDetails = session('consultDetails');
+    // $selectedSlots = session('selectedSlots');
+    // $additionalSessions = session('additionalSessions');
+    // $additionalPrice = session('additionalPrice');
     $basePrice = session('basePrice');
     $sessionId = session('sessionId');
     $sessionCounter = session('sessionCounter');
-
+    
     return view('confirmSchedule-sales', [
         'type' => $type,
         'package' => $package,
@@ -450,11 +461,12 @@ public function confirmScheduleView($child_id, $package_id)
         'motherInfo' => $motherInfo,
         'parentAccount' => $parentAccount,
         'totalPrice' => $totalPrice,
-        'selectedSlots' => $selectedSlots,
-        'additionalSessions' => $additionalSessions,
-        'additionalPrice' => $additionalPrice,
+        'consultDetails' => $consultDetails,
+        // 'selectedSlots' => $selectedSlots,
+        // 'additionalSessions' => $additionalSessions,
+        // 'additionalPrice' => $additionalPrice,
         'child_id' => $child_id,
-        'basePrice' => $basePrice,
+        // 'basePrice' => $basePrice,
         'sessionId' => $sessionId,
         'sessionCounter' => $sessionCounter,
         'salesName' => $salesName
@@ -468,17 +480,18 @@ public function confirmSchedule(Request $request)
     $child_id = $request->input('child_id');
     $totalPrice = $request->input('total_price');
     $session_id = $request->input('session_id');
-    $selectedSlots = session('selectedSlots'); // Retrieve slots from session
+    $consultDetails = $request->input('consultDetails');
+    // $selectedSlots = session('selectedSlots'); // Retrieve slots from session
     $sessionCounter = session('sessionCounter'); // Retrieve slots from session
     $type = session('type');
     $reference = Str::uuid();
     
     
     // Insert selected slots into the ChildSchedule table
-    foreach ($selectedSlots as $slotData) {
-        $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Format the date correctly
-        $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
-        $slotDay = $slotData->day;
+
+        $slotDate = Carbon::createFromFormat('m/d/Y', $consultDetails->consult_date)->format('Y-m-d'); // Format the date correctly
+        $slotTime = Carbon::createFromFormat('h:i A', $consultDetails->consult_time)->format('H:i'); // Convert to 'HH:MM' format
+        $slotDay = $consultDetails->consult_day;
         // Insert each selected slot into ChildSchedule
         ChildSchedule::create([
             'child_id' => $child_id,
@@ -488,11 +501,11 @@ public function confirmSchedule(Request $request)
             'time' => $slotTime, // Store only the start time
             'price' => $totalPrice, // Store the total price
             'status' => 'pending', // Status for the schedule, not related to payment
-            'session' => $sessionCounter, // Store session counter
+            'session' => 'consultation', // Store session counter
             'type' => $type
         ]);
-        $sessionCounter++;
-    }
+        // $sessionCounter++;
+    
     $request->validate([
         'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx',
     ]);
@@ -510,7 +523,7 @@ public function confirmSchedule(Request $request)
         'reference' => $reference,
         'total_amount' => $totalPrice,
         'payment_method' => 'qr/transfer',
-        'status' => 'success', // Initial status is 'pending'
+        'status' => 'paid', // Initial status is 'pending'
         'session_id' => $session_id,
         'filename' => $filename,
         'path' => $path,

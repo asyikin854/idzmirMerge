@@ -44,6 +44,8 @@
                           <th scope="col">Age</th>
                           <th scope="col">No. of Session</th>
                           <th scope="col">Package</th>
+                          <th scope="col">Payment</th>
+
                         </tr>
                       </thead>
                       <tbody>
@@ -55,6 +57,17 @@
                             <td>{{ $childInfo->age}}</td>
                             <td>{{ $childInfo->number}}</td>
                             <td>{{ $childInfo->package->package_name}}</td>
+                            <td>
+                              @if ($childInfo->payment_status === 'Paid')
+                                  <span class="badge bg-success">Paid</span>
+                              @elseif ($childInfo->payment_status === 'Pending')
+                                  <span class="badge bg-warning">Pending</span>
+                              @elseif ($childInfo->payment_status === 'Failed')
+                                  <span class="badge bg-danger">Failed</span>
+                              @else
+                                  <span class="badge bg-secondary">No Payment</span>
+                              @endif
+                          </td>
                         </tr>
                         @empty
                             <tr>

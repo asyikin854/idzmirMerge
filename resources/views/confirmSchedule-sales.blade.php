@@ -33,8 +33,9 @@
                   <!-- Hidden fields to send necessary data -->
                   <input type="hidden" name="child_id" value="{{ $child_id }}">
                   <input type="hidden" name="total_price" value="{{ $totalPrice }}">
-                  <input type="hidden" name="selected_slots" value="{{ json_encode($selectedSlots) }}">
-                  <input type="hidden" name="additional_sessions" value="{{ $additionalSessions }}">
+                  <input type="hidden" name="consultDetails" value="{{ json_encode($consultDetails) }}">
+                  {{-- <input type="hidden" name="selected_slots" value="{{ json_encode($selectedSlots) }}">
+                  <input type="hidden" name="additional_sessions" value="{{ $additionalSessions }}"> --}}
                   <input type="hidden" name="session_id" value="{{ $sessionId }}">
                   <input type="hidden" name="package_id" value="{{ $package->id}} ">
                   <input type="hidden" name="type" value="{{ $type }} ">
@@ -84,12 +85,32 @@
                         </div>
                      </div>
                      <ul class="qty">
-                        <li>{{$childInfo->package->package_name}} <span>RM {{$basePrice}} </span></li>
-                        <li>Additional Session = {{$additionalSessions}} <span>RM {{$additionalPrice}} </span></li>
+                        <li>{{$childInfo->package->package_name}}</li>
                      </ul>
                      <ul class="sub-total total">
                         <li>Total <span class="count">RM {{$totalPrice}} </span></li>
                      </ul>
+                     <div class="col">
+                        <div class="table-responsive">
+                           <table class="table table-border">
+                              <thead>
+                                 <tr>
+                                    <th>Session</th>
+                                    <th>Date</th>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                 </tr>
+                              </thead><tbody>
+                                 <tr>
+                                    <td>Consultation</td>
+                                    <td>{{ $consultDetails['consult_date'] ?? 'N/A' }}</td>
+                                    <td>{{ $consultDetails['consult_day'] ?? 'N/A'}}</td>
+                                    <td>{{ $consultDetails['consult_time'] ?? 'N/A'}}</td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
                      <div class="animate-chk">
                         <div class="row">
                            <div class="col">
