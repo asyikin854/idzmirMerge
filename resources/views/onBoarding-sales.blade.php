@@ -53,15 +53,21 @@
                                         <td>{{$childInfo->fatherInfo->father_name ?? 'N/A' }}</td>
                                         <td>{{$childInfo->motherInfo->mother_name ?? 'N/A' }}</td>
                                         <td>
-                                            @if ($childInfo->status === 'active')
-                                                <span class="badge rounded-pill badge-success">Active</span>
-                                            @elseif ($childInfo->status === 'inactive')
-                                                <span class="badge rounded-pill badge-warning">Inactive</span>
+                                            @if ($childInfo->status === 'in progress')
+                                                <span class="badge rounded-pill badge-warning">In Progress</span>
+                                            @elseif ($childInfo->status === 'done')
+                                                <span class="badge rounded-pill badge-success">Done</span>
                                             @endif
                                         </td>
-                                        <td><a href="{{route('regOnBoarding-sales', $childInfo->id)}}">
-                                            <button class="btn btn-info">-> FA</button>
-                                        </a></td>
+                                        <td>
+                                            @if ($childInfo->status === 'done')
+                                                <a href="{{route('regOnBoarding-sales', $childInfo->id)}}">
+                                                    <button class="btn btn-info">-> FA</button>
+                                                </a>
+                                            @else
+                                                <button class="btn btn-info" disabled>-> FA</button>
+                                            @endif
+                                        </td>
                                     </tr>
                                   @empty
                                     <tr>

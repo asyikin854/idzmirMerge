@@ -486,12 +486,20 @@ public function confirmSchedule(Request $request)
     $type = session('type');
     $reference = Str::uuid();
     
-    
-    // Insert selected slots into the ChildSchedule table
+    $consultDetails = json_decode($consultDetails);
 
-        $slotDate = Carbon::createFromFormat('m/d/Y', $consultDetails->consult_date)->format('Y-m-d'); // Format the date correctly
-        $slotTime = Carbon::createFromFormat('h:i A', $consultDetails->consult_time)->format('H:i'); // Convert to 'HH:MM' format
-        $slotDay = $consultDetails->consult_day;
+    // Check if decoding was successful and if consultDetails is an object
+    if (!is_object($consultDetails)) {
+        return redirect()->back()->with('error', 'Invalid consultation details format.');
+    }
+    $consultDetails->consult_date = trim($consultDetails->consult_date);
+    $consultDetails->consult_time = trim($consultDetails->consult_time);
+    // Carbon::createFromFormat('m/d/Y', $consultDetails->consult_date)->format('Y-m-d'); // Format the date correctly
+    // Carbon::createFromFormat('h:i A', $consultDetails->consult_time)->format('H:i'); // Convert to 'HH:MM' format
+    // Insert selected slots into the ChildSchedule table
+    $slotDate = $consultDetails->consult_date;
+    $slotTime = $consultDetails->consult_time;
+    $slotDay = $consultDetails->consult_day;
         // Insert each selected slot into ChildSchedule
         ChildSchedule::create([
             'child_id' => $child_id,
@@ -562,14 +570,26 @@ public function confirmSchedule(Request $request)
         $currentDate = now();
     
         // Loop through each ChildInfo and determine the status
-        $childInfos->each(function ($childInfo) use ($currentDate) {
-            // Check if there are any ChildSchedule records for the current month or any future month
-            $hasActiveSchedule = $childInfo->childSchedule()
-                ->where('date', '>=', $currentDate->startOfMonth()->toDateString()) // Check for current or future months
-                ->exists();
+        $childInfos->each(function ($childInfo) {
+            // Get all ChildSchedule records (without date filtering)
+            $schedules = $childInfo->childSchedule;
     
-            // Set the status based on the condition
-            $childInfo->status = $hasActiveSchedule ? 'active' : 'inactive';
+            // Determine the status based on attendance
+            if ($schedules->isEmpty()) {
+                // If there are no schedules, set status to 'in progress'
+                $childInfo->status = 'in progress';
+            } else {
+                // Check if any schedule has attendance marked as 'present'
+                $hasPresentAttendance = $schedules->contains('attendance', 'present');
+    
+                if ($hasPresentAttendance) {
+                    // If any attendance is 'present', status is 'done'
+                    $childInfo->status = 'done';
+                } else {
+                    // If no attendance is 'present', status is 'in progress'
+                    $childInfo->status = 'in progress';
+                }
+            }
         });
     
         

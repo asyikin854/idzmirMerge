@@ -97,6 +97,7 @@
     var calendarEvents = @json($events);
     document.getElementById('consultationDate').addEventListener('change', function() {
         const dateInput = this.value; // Get the selected date
+        const dateValue = dateInput.value;
         const dayInput = document.getElementById('day'); // Get the day input field
 
         if (dateInput) {
