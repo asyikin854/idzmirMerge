@@ -221,6 +221,7 @@ Route::get('/unassignedList-cs', [CsController::class, 'csUnassignedList'])->nam
 Route::get('/assignedSession-cs', [CsController::class, 'csAssignedSession'])->name('assignedSession-cs');
 Route::get('/assignedDetails-cs/{id}', [CsController::class, 'csAssignedDetails'])->name('assignedDetails-cs');
 Route::get('/approvedReportList-cs', [CsController::class, 'csApprovedReportList'])->name('approvedReportList-cs');
+Route::get('/download-report/{id}', [CsController::class, 'downloadReport'])->name('downloadReport-cs');
 Route::post('/bulk-download-reports', [CsController::class, 'bulkDownloadReports'])->name('bulkDownloadReports-cs');
 Route::get('/stdReportList-cs', [CsController::class, 'csStdReportList'])->name('stdReportList-cs');
 Route::get('/allSession-cs', [CsController::class, 'csAllSession'])->name('allSession-cs');

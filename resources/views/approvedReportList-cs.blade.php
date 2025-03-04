@@ -75,14 +75,14 @@
                         <tbody>
                             @forelse ($schedules as $schedule)
                             <tr>
-                                <td><input type="checkbox" name="selected_reports[]" value="{{ $schedule->id }}"></td>
+                                <td><input type="checkbox" name="selected_reports[]" value="{{ $schedule->sessionReport->id }}"></td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $schedule->childInfo->child_name }}</td>
                                 <td>{{ $schedule->session }}</td>
                                 <td>{{ $schedule->day }}, {{ $schedule->time }}</td>
                                 <td>{{ $schedule->date }}</td>
                                 <td>{{ $schedule->childInfo->package->package_name }}</td>
-                                <td><a href="{{ route('approvedReport-cs', $schedule->id) }}"><button class="btn btn-info">View</button></a></td>
+                                <td><a href="{{ route('approvedReport-cs', $schedule->id) }}"><button type="button" class="btn btn-info">View</button></a></td>
                             </tr>
                             @empty
                             <tr>

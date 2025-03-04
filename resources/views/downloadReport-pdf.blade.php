@@ -1,31 +1,42 @@
-@extends('layouts.simple.master-cs')
-@section('title', 'Report Approval')
-
-@section('css')
-@endsection
-
-@section('style')
-@endsection
-
-@section('breadcrumb-title')
-    <h3>Approved Session Skill Report</h3>
-@endsection
-
-@section('breadcrumb-items')
-    <li class="breadcrumb-item">Report Approval</li>
-    <li class="breadcrumb-item active">Approved Session Skill Report</li>
-@endsection     
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Approval</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <h5>Report Form</h5>
-                        <a href="{{ route('downloadReport-cs', $report->id) }}" class="btn btn-primary float-right">
-                            <i class="fa fa-download"></i> Download Report
-                        </a>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered" style="border: 1px solid #000000">
@@ -485,8 +496,5 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('script')
-    <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
-@endsection
+</body>
+</html>

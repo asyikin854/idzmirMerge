@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use ZipArchive;
 use Carbon\Carbon;
 use App\Models\Slot;
 use App\Models\Package;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\ChildSchedule;
 use App\Models\SessionReport;
 use App\Models\TherapistInfo;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -690,21 +692,7 @@ class CsController extends Controller
         return view('approvedReportList-cs', compact('schedules', 'csName'));
     }
 
-    public function bulkDownloadReports(Request $request)
-{
-    $selectedReports = $request->input('selected_reports', []);
 
-    if (empty($selectedReports)) {
-        return redirect()->back()->with('error', 'No reports selected.');
-    }
-
-    // Fetch the selected reports
-    $reports = SessionReport::whereIn('id', $selectedReports)->get();
-
-    // Generate a ZIP file or PDF containing all selected reports
-    // Example: Use a package like "maatwebsite/excel" for Excel or "barryvdh/laravel-dompdf" for PDF
-    // Return the file for download
-}
     
     public function csApprovedReport($id)
     {
@@ -856,4 +844,103 @@ class CsController extends Controller
         return view('allSession-cs', compact('events', 'csName'));
     }
     
+
+
+//Session Report download function
+public function downloadReport($id)
+{
+    // Fetch the report
+    $report = SessionReport::findOrFail($id);
+
+    // Load the view and pass data
+    $pdf = PDF::loadView('downloadReport-pdf', compact('report'));
+
+    // Download the PDF
+    return $pdf->download('report_' . $report->std_name . $report->id . '.pdf');
 }
+
+public function bulkDownloadReports(Request $request)
+{
+    $selectedReports = $request->input('selected_reports', []);
+
+    if (empty($selectedReports)) {
+        return redirect()->back()->with('error', 'No reports selected.');
+    }
+    // Create a temporary directory in the public folder
+    $tempDir = public_path('temp_reports');
+    if (!file_exists($tempDir)) {
+        mkdir($tempDir, 0777, true);
+    }
+    // dd($tempDir);
+    // Verify the temporary directory was created
+    if (!is_dir($tempDir)) {
+        return redirect()->back()->with('error', 'Failed to create temporary directory.');
+    }
+
+    // Generate PDFs for selected reports
+    $zip = new ZipArchive;
+    $zipFileName = 'reports_' . time() . '.zip';
+    $zipFilePath = public_path($zipFileName); // Save ZIP file in the public folder
+
+    // Verify the ZIP file can be created
+    if ($zip->open($zipFilePath, ZipArchive::CREATE) !== TRUE) {
+        return redirect()->back()->with('error', 'Failed to create ZIP file.');
+    }
+
+    foreach ($selectedReports as $reportId) {
+        $report = SessionReport::find($reportId);
+        if ($report) {
+            $pdf = PDF::loadView('downloadReport-pdf', compact('report'));
+            $pdfPath = $tempDir . '/report_' . $report->std_name . $report->id . '.pdf';
+            $pdf->save($pdfPath);
+
+            // Debug: Check if the PDF was saved successfully   
+            if (!file_exists($pdfPath)) {
+                \Log::error('Failed to save PDF for report: ' . $report->std_name);
+                continue; // Skip this report and continue with the next one
+            }
+
+            \Log::info('PDF saved at: ' . $pdfPath);
+
+            // Verify the file exists before adding it to the ZIP
+            if (file_exists($pdfPath)) {
+                $success = $zip->addFile($pdfPath, 'report_' . $report->std_name . $report->id . '.pdf');
+                if ($success) {
+                    \Log::info('File added to ZIP: ' . $pdfPath);
+                } else {
+                    \Log::error('Failed to add file to ZIP: ' . $pdfPath);
+                }
+            } else {
+                \Log::error('File not found: ' . $pdfPath);
+            }
+        }
+    }
+
+    // Debug: Check the number of files added to the ZIP
+    \Log::info('Number of files in ZIP: ' . $zip->numFiles);
+
+    if ($zip->numFiles === 0) {
+        \Log::error('No files were added to the ZIP archive.');
+    }
+
+    $zip->close();
+
+    // Clean up temporary files
+    array_map('unlink', glob("$tempDir/*"));
+
+    // Verify the temporary files were deleted
+    if (count(glob("$tempDir/*")) > 0) {
+        return redirect()->back()->with('error', 'Failed to clean up temporary files.');
+    }
+
+    // Verify the ZIP file exists
+    if (!file_exists($zipFilePath)) {
+        return redirect()->back()->with('error', 'ZIP file not found.');
+    }
+
+    // Return the ZIP file for download
+    return response()->download($zipFilePath)->deleteFileAfterSend(true);
+}
+}
+
+
