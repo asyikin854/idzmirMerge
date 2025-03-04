@@ -73,15 +73,12 @@
                                     <th style="width: 350px">item</th>
                                     <th style="text-align: left">Yes</th>
                                     <th style="text-align: left">No</th>
-                                    <th>Progress Notes</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td rowspan="9">1.0</td>
                                     <th colspan="3">S-Subjective Assesment</th>
-                                    <td data-label="Progress Notes" rowspan="9"><textarea disabled name="remark1" 
-                                        cols="30" rows="9" class="form-control">{{$report->remark1}}</textarea></td>
                                 </tr><tr>
                                     <td data-label="Item">Enter : by his/ her self</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques1_1" value="1" {{ $report->ques1_1 === 1 ? 'checked' : '' }}></td>
@@ -121,13 +118,15 @@
                                     <td data-label="Yes"><input type="radio" disabled name="ques1_8" value="1" {{ $report->ques1_8 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques1_8" value="0" {{ $report->ques1_8 === 0 ? 'checked' : '' }}></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea disabled name="remark1" 
+                                        cols="30" rows="9" class="form-control">{{$report->remark1}}</textarea></td>
+                                </tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                     
                                 <tr>
                                     <td rowspan="26">2.0</td>
                                     <th colspan="3">O-Objective Assesment</th>
-                                    <td data-label="Progress Notes" rowspan="26"><textarea name="remark2" disabled 
-                                        cols="30" rows="26" class="form-control">{{$report->remark2}} </textarea></td>
                                 </tr>
                                 <tr>
                                     <th colspan="3">2.1 Moto & Praxis Skills</th>
@@ -140,6 +139,7 @@
                                     <td data-label="Yes"><input type="radio" disabled name="ques2_2" value="1" {{ $report->ques2_2 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques2_2" value="0" {{ $report->ques2_2 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
+                                    <td rowspan="22">2.0</td>
                                     <td data-label="Item">Muscle Strength</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques2_3" value="1" {{ $report->ques2_3 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques2_3" value="0" {{ $report->ques2_3 === 0 ? 'checked' : '' }}></td>
@@ -224,13 +224,16 @@
                                     <td data-label="Yes"><input type="radio" disabled name="ques2_8i" value="1" {{ $report->ques2_8i === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques2_8i" value="0" {{ $report->ques2_8i === 0 ? 'checked' : '' }}></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark2" disabled 
+                                        cols="30" rows="26" class="form-control">{{$report->remark2}} </textarea></td>
+                                </tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                     
                                 <tr>
                                     <td rowspan="8">3.0</td>
                                     <th colspan="3">Sensory Regulation Skills</th>
-                                    <td data-label="Progress Notes" rowspan="8"><textarea name="remark3" disabled 
-                                        cols="30" rows="8" class="form-control">{{$report->remark3}}</textarea></td>
+
                                 </tr>
                                 <tr>
                                     <td data-label="Item">Tacticle</td>
@@ -260,14 +263,15 @@
                                     <td data-label="Item">Proprioception</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques3_7" value="1" {{ $report->ques3_7 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques3_7" value="0" {{ $report->ques3_7 === 0 ? 'checked' : '' }}></td>
+                                </tr><tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark3" disabled 
+                                        cols="30" rows="8" class="form-control">{{$report->remark3}}</textarea></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                                 
                                 <tr>
                                     <td rowspan="11">4.0</td>
                                     <th colspan="3">4.1 Cognitive Regulation Skill</th>
-                                    <td data-label="Progress Notes" rowspan="11"><textarea name="remark4" disabled 
-                                        cols="30" rows="11" class="form-control">{{$report->remark4}}</textarea></td>
                                 </tr>
                                 <tr>
                                     <th colspan="3">Basic Concept</th>
@@ -293,6 +297,7 @@
                                     <td data-label="Yes"><input type="radio" disabled name="ques4_2" value="1" {{ $report->ques4_2 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques4_2" value="0" {{ $report->ques4_2 === 0 ? 'checked' : '' }}></td>
                                 </tr><tr> 
+                                    <td rowspan="4">4.0</td>
                                     <td data-label="Item">Attention</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques4_3" value="1" {{ $report->ques4_3 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques4_3" value="0" {{ $report->ques4_3 === 0 ? 'checked' : '' }}></td>
@@ -306,14 +311,16 @@
                                     <td data-label="Item">Writing skill</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques4_6" value="1" {{ $report->ques4_6 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques4_6" value="0" {{ $report->ques4_6 === 0 ? 'checked' : '' }}></td>
+                                </tr><tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark4" disabled 
+                                        cols="30" rows="11" class="form-control">{{$report->remark4}}</textarea></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                     
                                 <tr>
                                     <td rowspan="17">5.0</td>
                                     <th colspan="3">5.1 Occupational Performance</th>
-                                    <td data-label="Progress Notes" rowspan="17"><textarea name="remark5" disabled 
-                                        cols="30" rows="17" class="form-control">{{$report->remark5}}</textarea></td>
+
                                 </tr><tr>
                                     <th colspan="3">Activity Daily Living (ADL)</th>
                                 </tr>
@@ -367,17 +374,20 @@
                                     <td data-label="Yes"><input type="radio" disabled name="ques5_8b" value="1" {{ $report->ques5_8b === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques5_8b" value="0" {{ $report->ques5_8b === 0 ? 'checked' : '' }}></td>
                                 </tr><tr>
+                                    <td></td>
                                     <td data-label="Item">c. Use phone</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques5_8c" value="1" {{ $report->ques5_8c === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques5_8c" value="0" {{ $report->ques5_8c === 0 ? 'checked' : '' }}></td>
+                                </tr><tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark5" disabled 
+                                        cols="30" rows="17" class="form-control">{{$report->remark5}}</textarea></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                                 
                                 <tr>
                                     <td rowspan="9">6.0</td>
                                     <th colspan="3">6.1 Emotional Regulation Skills</th>
-                                    <td data-label="Progress Notes" rowspan="9"><textarea name="remark6" disabled 
-                                        cols="30" rows="9" class="form-control">{{$report->remark6}}</textarea></td>
+
                                 </tr><tr>
                                     <th colspan="3">Behaviour</th>
                                 </tr>
@@ -409,14 +419,15 @@
                                     <td data-label="Item">g. Reluctant</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques6_1g" value="1" {{ $report->ques6_1g === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques6_1g" value="0" {{ $report->ques6_1g === 0 ? 'checked' : '' }}></td>
+                                </tr><tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark6" disabled 
+                                        cols="30" rows="9" class="form-control">{{$report->remark6}}</textarea></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                                 
                                 <tr>
                                     <td rowspan="16">7.0</td>
                                     <th colspan="3">7.1 Communication & Social Skills</th>
-                                    <td data-label="Progress Notes" rowspan="16"><textarea name="remark7" disabled 
-                                        cols="30" rows="16" class="form-control">{{$report->remark7}}</textarea></td>
                                 </tr><tr>
                                     <th colspan="3">Following Instruction</th>
                                 </tr>
@@ -433,6 +444,7 @@
                                 </tr><tr>
                                     <th colspan="3">Eye contact</th>    
                                 </tr><tr>
+                                    <td rowspan="10"></td>
                                     <td data-label="Item">a. Person</td>
                                     <td data-label="a. Person" colspan="2">{{$report->ques7_2a}}</td>
                                 </tr><tr>
@@ -469,12 +481,15 @@
                                     <td data-label="Item">Stay in grouping</td>
                                     <td data-label="Yes"><input type="radio" disabled name="ques7_10" value="1" {{ $report->ques7_10 === 1 ? 'checked' : '' }}></td>
                                     <td data-label="No"><input type="radio" disabled name="ques7_10" value="0" {{ $report->ques7_10 === 0 ? 'checked' : '' }}></td>
+                                </tr><tr>
+                                    <td data-label="Progress Notes" colspan="4"><textarea name="remark7" disabled 
+                                        cols="30" rows="16" class="form-control">{{$report->remark7}}</textarea></td>
                                 </tr>
-                                <tr><td colspan="5">&nbsp;</td></tr>
+                                <tr><td colspan="4">&nbsp;</td></tr>
                     
                                 <tr>
                                     <td>8.0</td>
-                                    <td colspan="3">Academic Performance</td>
+                                    <td colspan="2">Academic Performance</td>
                                     <td data-label="Item">{{$report->ques8_0}}</td>
                                 </tr>
                             </tbody>
