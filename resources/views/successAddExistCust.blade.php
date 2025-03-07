@@ -14,6 +14,7 @@
           <div class="card">
              <div class="card-header">
                 <h5>Existing Customer Record has been added successfully</h5>
+                <span>Verification email and invoice has been sent to parent.</span>
                 <span>Refresh the Registered Customer in customer service to view the new record submitted</span>
              </div>
           </div>
@@ -33,9 +34,10 @@
                             <tr>
                                 <td>{{$loop->iteration}} </td>
                                 <td>{{$childInfo->child_name}} </td>
-                                <td>{{$childInfo->package->package_name}} </td>
+                                <td>{{$childInfo->package->package_name ?? 'N/A'}} </td>
                                 <td>{{$childInfo->created_at}} </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

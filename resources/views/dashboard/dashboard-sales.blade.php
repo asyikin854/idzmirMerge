@@ -112,61 +112,6 @@
           </div>
         </div>
       </div>
-      <div class="col-xxl-4 col-ed-7 col-xl-7 col-md-6 box-col-7"> 
-        <div class="card">
-          <div class="card-header card-no-border">
-            <div class="header-top"> 
-              <h5>Activity Hours</h5>
-              <div class="dropdown icon-dropdown">
-                <button class="btn dropdown-toggle" id="activitydropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="icon-more-alt"></i></button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="activitydropdown"><a class="dropdown-item" href="#">Today</a><a class="dropdown-item" href="#">Tomorrow</a><a class="dropdown-item" href="#">Yesterday </a></div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body pt-0">
-            <div class="row m-0 overall-card">
-              <div class="col-xl-8">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                <div class="chart-right">
-                  <div class="row">
-                    <div class="col-xl-12">
-                      <div class="card-body p-0">
-                        <div class="activity-wrap">
-                          <div id="activity-chart"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-4 p-0">
-                <div class="row g-sm-3 g-2 mt-0">
-                  <div class="col-xl-12 col-md-6 col-sm-4">
-                    <div class="light-card balance-card">
-                      <div> <span class="f-light">Time Spent</span>
-                        <h6 class="mt-1 mb-0">30<span class="badge badge-light-success rounded-pill ms-1">140%</span></h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-12 col-md-6 col-sm-4">
-                    <div class="light-card balance-card">
-                      <div> <span class="f-light">Lessons taken</span>
-                        <h6 class="mt-1 mb-0">45<span class="badge badge-light-success rounded-pill ms-1">86%</span></h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-12 col-md-6 col-sm-4">
-                    <div class="light-card balance-card">
-                      <div> <span class="f-light">Exams passed</span>
-                        <h6 class="mt-1 mb-0">12<span class="badge badge-light-success rounded-pill ms-1">120%</span></h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       </div>
     </div>
   </div>

@@ -20,9 +20,13 @@ use Illuminate\Http\Request;
 use App\Models\ChildSchedule;
 use App\Models\ParentAccount;
 use Chip\Model\ClientDetails;
+use App\Mail\ParentCredentials;
 use Chip\Model\PurchaseDetails;
 use App\Models\ParentsPermission;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -318,6 +322,12 @@ class RegisterController extends Controller
     
         public function childSchedule(Request $request, $child_id, $package_id)
         {
+            $validatedData = $request->validate([
+                'consult_date' => "nullable|date",
+                'consult_day' => "nullable|string",
+                'consult_time' => "nullable|string",
+            ]);
+
             $childInfo = ChildInfo::with('fatherInfo', 'motherInfo', 'parentAccount')->find($child_id); // Eager load the related models
             $package = Package::find($package_id);
             $type = $package->type;
@@ -375,6 +385,21 @@ class RegisterController extends Controller
             if ($hasWeekendSlot) {
                 $basePrice = $package->package_wkend_price; // Set to weekend price
             }
+                    
+            $allNull = true;
+            foreach ($validatedData as $value) {
+                if ($value !== null) {
+                    $allNull = false;
+                    break;
+                }
+            }
+        
+            // Set consultDetails based on whether all values are null
+            $consultDetails = $allNull ? null : [
+                'consult_date' => $validatedData['consult_date'],
+                'consult_day' => $validatedData['consult_day'],
+                'consult_time' => $validatedData['consult_time'],
+            ];
 
         session([
             'type' => $type,
@@ -384,6 +409,7 @@ class RegisterController extends Controller
             'motherInfo' => $childInfo->motherInfo,
             'parentAccount' => $childInfo->parentAccount,
             'selectedSlots' => $selectedSlots,
+            'consultDetails' => $consultDetails,
             'basePrice' => $basePrice,
             'additionalSessions' => $additionalSessions,
             'additionalPrice' => $additionalPrice,
@@ -521,7 +547,7 @@ public function checkoutParent($child_id, $package_id)
     $parentAccount = session('parentAccount');
     $totalPrice = session('totalPrice');
     $selectedSlots = session('selectedSlots');
-    $consultSlot = session('consultSlot', []);
+    $consultDetails = session('consultDetails');
     $additionalSessions = session('additionalSessions');
     $additionalPrice = session('additionalPrice');
     $basePrice = session('basePrice');
@@ -537,7 +563,7 @@ public function checkoutParent($child_id, $package_id)
         'parentAccount' => $parentAccount,
         'totalPrice' => $totalPrice,
         'selectedSlots' => $selectedSlots,
-        'consultSlot' => $consultSlot,
+        'consultDetails' => $consultDetails,
         'additionalSessions' => $additionalSessions,
         'additionalPrice' => $additionalPrice,
         'child_id' => $child_id,

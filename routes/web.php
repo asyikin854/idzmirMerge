@@ -99,7 +99,7 @@ Route::post('/childSchedule/{child_id}/{package_id}', [RegisterController::class
 Route::get('/consultSchedule-parent/{child_id}/{package_id}', [RegisterController::class, 'consultScheduleView'])->name('consultSchedule-parent');
 Route::post('/consultSchedule/{child_id}/{package_id}', [RegisterController::class, 'consultSchedule'])->name('consultSchedule.submit');
 // Route to view the checkout page after schedule submission (GET)
-Route::get('/bookSummaryExistCust/{child_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
+Route::get('/bookSummaryExistCust/{child_id}/{package_id}', [RegisterController::class, 'checkoutParent'])->name('checkout-parent');
 Route::post('/submitExistCust/{child_id}', [RegisterController::class, 'submitExistCust'])->name('submitExistCust');
 Route::get('/successAddExistCust', [RegisterController::class, 'successAddExistCust'])->name('successAddExistCust');
 

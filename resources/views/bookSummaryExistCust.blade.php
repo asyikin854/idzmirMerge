@@ -100,6 +100,7 @@
                                        <h6 class="p-2 mb-0">Consultation Slot</h6>
                                     </td>
                                  </tr>
+                                 @if($consultDetails)
                                  <tr>
                                     <td>
                                        <label>Consultation</label>
@@ -111,6 +112,11 @@
                                        <p class="itemtext">{{ $consultDetails['consult_date'] }}</p>
                                     </td>
                                  </tr>
+                                 @else
+                                    <tr>
+                                       <td>None</td>
+                                    </tr>
+                                 @endif
                                  <tr>
                                     <td colspan="3" class="item">
                                        <h6 class="p-2 mb-0">Additional Session</h6>
