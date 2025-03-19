@@ -173,6 +173,20 @@
     var packageWkdayPrice = {{ $package->package_wkday_price }};
     var packageWkendPrice = {{ $package->package_wkend_price }};
     var isWeekly = {{ $package->weekly == 'yes' ? 'true' : 'false' }};
+    document.getElementById('consultationDate').addEventListener('change', function() {
+        const dateInput = this.value; // Get the selected date
+        const dateValue = dateInput.value;
+        const dayInput = document.getElementById('day'); // Get the day input field
+
+        if (dateInput) {
+            const date = new Date(dateInput); // Convert to Date object
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayOfWeek = days[date.getDay()]; // Get the day of the week
+            dayInput.value = dayOfWeek; // Update the day input field
+        } else {
+            dayInput.value = ''; // Clear if no date is selected
+        }
+    });
     function confirmSubmit(){
         var isConfirmed = confirm('Once submitted you are unable to change the selected slots. Are you confirm?');
 
