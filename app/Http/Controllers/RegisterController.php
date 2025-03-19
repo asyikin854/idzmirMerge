@@ -362,8 +362,13 @@ class RegisterController extends Controller
             // Loop through the sorted selected slots
             foreach ($selectedSlots as $index => $slotData) {
                 $slotDate = Carbon::createFromFormat('m/d/Y', $slotData->date)->format('Y-m-d'); // Ensure proper date format
-                $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Store start time in 'HH:MM' format
-                $slotDay = $slotData->day;
+            
+                // Check if the time is already in 'HH:MM' format
+                if (preg_match('/^\d{2}:\d{2}$/', $slotData->start_time)) {
+                    $slotTime = $slotData->start_time; // Use the time as is
+                } else {
+                    $slotTime = Carbon::createFromFormat('h:i A', $slotData->start_time)->format('H:i'); // Convert to 'HH:MM' format
+                }
         
                 // Check if the slot is available by counting the number of bookings in child_schedules for the same date, time, and day
                 $existingBookings = ChildSchedule::where('date', $slotDate)

@@ -52,7 +52,7 @@
                                         <td>{{$payments->total_amount}}</td>
                                         <td>{{$payments->payment_method}}</td>
                                         <td>
-                                          @if ($payments->status === 'paid')
+                                          @if ($payments->status === 'paid' || $payments->status === 'success')
                                               <span class="badge rounded-pill badge-success">Success</span>
                                           @elseif ($payments->status === 'pending')
                                               <span class="badge rounded-pill badge-warning">Pending</span>
