@@ -47,6 +47,7 @@
                                         <th>Father Name</th>
                                         <th>Mother Name</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,6 +66,12 @@
                                                 <span class="badge rounded-pill badge-warning">Inactive</span>
                                             @endif
                                         </td>
+                                        <td>            
+                                            @if ($childInfo->childSchedule->isEmpty())
+                                            <a href="{{route('product-parent', ['child_id' => $childInfo->id])}}">
+                                                <button class="btn btn-info">Continue Progress</button>
+                                            </a>
+                                        @endif</td>
                                     </tr>
                                   @empty
                                     <tr>
