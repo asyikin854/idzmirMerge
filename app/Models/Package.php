@@ -34,6 +34,11 @@ class Package extends Model
     ];
     public function childInfo()
     {
-        return $this->hasMany(ChildInfo::class, 'package', 'package_name');
+        return $this->hasMany(ChildInfo::class, 'package_id');
     }
+    public function childSchedule()
+    {
+        return $this->hasMany(childSchedule::class, 'package_id');
+    }
+
 }

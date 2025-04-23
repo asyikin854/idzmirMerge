@@ -79,7 +79,7 @@
                                 <td><select name="status" id="status" class="form-select" required>
                                     <option selected disabled>status</option>
                                     <option value="approved">approved</option>
-                                    <option value="pending">reject</option>    
+                                    <option value="disapproved">reject</option>    
                                 </select></td>
                             </tr>
                         </tbody>

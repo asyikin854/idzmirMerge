@@ -23,6 +23,39 @@
             <div class="card-body">
                 <div class="row" id="wrap">
                     <div class="col-xxl-3 box-col-12">
+                        <h4>Processing Sessions</h4>
+                        <div class="table-responsive">
+                            <table class="table table-border">
+                                <thead>
+                                    <tr>
+                                      <th>Session</th>
+                                      <th>Date</th>
+                                      <th>Time</th>
+                                      <th>Day</th>
+                                      <th>Therapist</th>
+                                      <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($progressSchedule as $schedules)
+                                        <tr>
+                                            <td>Session {{ $schedules->session }}</td>
+                                            <td>{{ $schedules->date }}</td>
+                                            <td>{{ $schedules->time }}</td>
+                                            <td>{{ $schedules->day }}</td>
+                                            <td>{{ $schedules->therapist}} </td>
+                                            <td>{{ $schedules->status}} </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7">There are no in progress sessions</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><br>
+                    <div class="col-xxl-3 box-col-12">
                         <div class="md-sidebar mb-3"><a class="btn btn-primary md-sidebar-toggle"
                                 href="javascript:void(0)">calendar filter</a>
                             <div class="md-sidebar-aside job-left-aside custom-scrollbar">
@@ -43,7 +76,42 @@
                             <div id="calendar"></div>
                         </div>
                     </div>
-                    
+                    <br><br>
+                    <div class="col-xxl-3 box-col-12" style="margin-top: 20px">
+                        <h4>Sessions History</h4>
+                        <div class="table-responsive">
+                            <table class="table table-border">
+                                <thead>
+                                    <tr>
+                                      <th>Session</th>
+                                      <th>Date</th>
+                                      <th>Time</th>
+                                      <th>Day</th>
+                                      <th>Therapist</th>
+                                      <th>Attendance</th>
+                                      <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($scheduleHistory as $schedule)
+                                        <tr>
+                                            <td>Session {{ $schedule->session }}</td>
+                                            <td>{{ $schedule->date }}</td>
+                                            <td>{{ $schedule->time }}</td>
+                                            <td>{{ $schedule->day }}</td>
+                                            <td>{{ $schedule->therapist}} </td>
+                                            <td>{{ $schedule->attendance}} </td>
+                                            <td>{{ $schedule->status}} </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6">There are no session history</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

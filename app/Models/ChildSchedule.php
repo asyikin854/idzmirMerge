@@ -11,6 +11,7 @@ class ChildSchedule extends Model
 
     protected $fillable = [
         'child_id',
+        'package_id',
         'session',
         'day',
         'time',
@@ -32,4 +33,9 @@ class ChildSchedule extends Model
     {
         return $this->hasOne(SessionReport::class, 'schedules_id');
     }
+    public function package()
+    {
+        return $this->belongsTo(Package::class, 'package_id');
+    }
+    
 }

@@ -280,6 +280,14 @@ class ParentController extends Controller
         }
         $user = Auth::guard('parent')->user();
         $childInfo = $user->childInfo;
+
+        $progressSchedule = ChildSchedule::where('child_id', $childInfo->id)
+        ->whereIn('status', ['pending', 'reschedule'])
+        ->get();
+
+        $scheduleHistory = ChildSchedule::where('child_id', $childInfo->id)
+        ->whereIn('status', ['disapproved', 'rescheduled'])
+        ->get();
     
         $childSchedule = ChildSchedule::where('child_id', $childInfo->id)
             ->where('status', 'approved')
@@ -320,7 +328,7 @@ class ParentController extends Controller
             });
             
     
-        return view('/schedule-parent', compact('events'))->with($data);
+        return view('/schedule-parent', compact('events', 'progressSchedule', 'scheduleHistory'))->with($data);
     }
     private function convertTimeFormat($time)
     {
@@ -352,6 +360,8 @@ class ParentController extends Controller
     public function rescheduleView($id)
     {
         $user = Auth::guard('parent')->user();
+        $data = $this->getRelatedData();
+
         if ($data instanceof RedirectResponse) {
             return $data;
         }
@@ -416,11 +426,21 @@ class ParentController extends Controller
         $schedule = ChildSchedule::findOrFail($id);
     
         // Update the schedule's date, day, and time
-        $schedule->update([
-            'day' => $validatedData['day'],   // Corrected from $validatedDate to $validatedData
+        ChildSchedule::create([
+            'child_id' => $schedule->child_id,
+            'session_id' => $schedule->session_id,
+            'day' => $validatedData['day'],
             'date' => $validatedData['date'],
             'time' => $validatedData['start_time'],
-            'status' => 'request',  // Automatically set status to 'request'
+            'price' => $schedule->price,
+            'status' => 'request',
+            'session' => $schedule->session,
+            'type' => $schedule->type,
+            'package_id' => $schedule->package_id,
+        ]);
+
+        $schedule->update([
+            'status' => 'reschedule',  // Automatically set status to 'request'
         ]);
     
         // Redirect back to the reschedule view with a success message

@@ -15,6 +15,7 @@ use App\Models\ChildSchedule;
 use App\Models\SessionReport;
 use App\Models\TherapistInfo;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -760,26 +761,54 @@ class CsController extends Controller
     {
         $validatedData = $request->validate([
             'therapist' => 'nullable|string',
-            'status' => 'required|string',
+            'status' => 'required|string|in:pending,approved,disapproved',
         ]);
     
-        $schedule = ChildSchedule::findOrFail($id);
+        DB::transaction(function () use ($validatedData, $id) {
+            $schedule = ChildSchedule::findOrFail($id);
+            $sessionId = $schedule->session_id;
+            
+            $updateData = [
+                'status' => $validatedData['status']
+            ];
+            
+            // Only add therapist to update if it's provided
+            if (array_key_exists('therapist', $validatedData)) {
+                $updateData['therapist'] = $validatedData['therapist'];
+            }
+    
+            // Update the current schedule
+            $schedule->update($updateData);
+    
+            // Handle rescheduled sessions
+            if (in_array($validatedData['status'], ['approved', 'disapproved'])) {
+                $newStatus = $validatedData['status'] === 'approved' ? 'rescheduled' : 'approved';
+                
+                ChildSchedule::where('session_id', $sessionId)
+                    ->where('status', 'reschedule')
+                    ->update(['status' => $newStatus]);
+            }
+        });
+    
+        $schedule = ChildSchedule::findOrFail($id); // Re-fetch to get updated data
         $childInfo = $schedule->childInfo;
-
-        $schedule->update([
-            'therapist' => $validatedData['therapist'],
-            'status' => $validatedData['status'],
-        ]);
-        if ($validatedData['status'] === 'pending') {
-            // Redirect to the 'stdDetails-cs' page if status is 'pending'
-            return redirect()->route('stdDetails-cs', ['id' => $childInfo->id])->with('success', 'Therapist assigned, status pending.');
-        } elseif ($validatedData['status'] === 'approved') {
-            // Redirect to the 'approveRescheduleList-cs' page if status is 'approved'
-            return redirect()->route('approveRescheduleList-cs')->with('success', 'Therapist assigned and schedule approved successfully!');
-        }
     
-        // Default fallback if no known status is passed
-        return redirect()->back()->with('error', 'Invalid status value provided.');
+        // Redirect logic using if-else
+        if ($validatedData['status'] === 'disapproved') {
+            return redirect()
+                ->route('stdDetails-cs', ['id' => $childInfo->id])
+                ->with('success', 'Reschedule request disapproved and original session restored.');
+        } 
+        elseif ($validatedData['status'] === 'approved') {
+            return redirect()
+                ->route('approveRescheduleList-cs')
+                ->with('success', 'Therapist assigned and reschedule approved!');
+        }
+        else {
+            return redirect()
+                ->back()
+                ->with('error', 'Invalid status value provided.');
+        }
     }
     public function csApproveReschedule (Request $request)
     {
