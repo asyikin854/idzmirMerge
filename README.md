@@ -2,6 +2,7 @@
 
 A comprehensive Rehabilitation Management System tailored for an institution specializing in therapy for children with autism - streamline operations, enhance communication among all stakeholders annd ensure and efficient management process.
 
+-[Live View »](https://system.idzmirkidshub.com/)
 
 ## 🧩 Features
 
