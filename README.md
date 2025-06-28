@@ -9,9 +9,9 @@ A comprehensive Rehabilitation Management System tailored for an institution spe
 - 🔐 Role-based access (Admin, Operation Manager, Customer Service, Therapist, Parent)
 - 📅 FullCalendar integration for dynamic scheduling
 - ✅ Program selection, session booking, attendance tracking, rescheduling requests
-- 📤 Email notifications
+- 📤 Email - send, receive and display
 - 💳 Online Payment integrations (CHIP payment gateway)
-- 📊 Admin dashboard with reports
+- 📊 Downloadable Session Skill Reports
 
 ---
 
