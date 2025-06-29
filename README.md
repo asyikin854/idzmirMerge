@@ -29,7 +29,7 @@ A comprehensive Rehabilitation Management System tailored for an institution spe
 > Clone the repo and set it up locally
 
 ```bash
-git clone https://github.com/yourusername/project-name.git
+git clone https://github.com/asyikin854/idzmirMerge.git
 cd project-name
 composer install
 cp .env.example .env
